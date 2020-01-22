@@ -1,0 +1,6 @@
+framework module Pods_StrideLearningApp {
+  umbrella header "Pods-StrideLearningApp-umbrella.h"
+
+  export *
+  module * { export * }
+}
