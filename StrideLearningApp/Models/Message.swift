@@ -15,7 +15,6 @@ class Message: NSObject {
     var text: String?
     var timestamp: NSNumber?
     var toId: String?
-    var toName: String?
     
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String

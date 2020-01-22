@@ -21,6 +21,33 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             return
         }
         
+        //check password length
+        let textCount: String = passwordTextField.text!
+        if textCount.count < 6 {
+            let alert=UIAlertController(title: "Error", message: "Password needs to be at least 6 characters.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                //do something
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        //check if passwords match
+        if self.passwordTextField.text != self.passwordConfirmTextField.text {
+            print("Passwords don't match")
+            let alert=UIAlertController(title: "Error", message: "Passwords don't match.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                self.passwordTextField.text=""
+                self.passwordConfirmTextField.text=""
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
             
             if let error = error {

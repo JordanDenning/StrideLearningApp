@@ -298,7 +298,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleSend()
-        //lets us use return for sending message on keyboard
         return true
     }
 }
