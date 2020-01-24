@@ -9,10 +9,6 @@
 import UIKit
 import Firebase
 
-
-import UIKit
-import Firebase
-
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func handleRegister() {
@@ -21,10 +17,50 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             return
         }
         
-        //check password length
-        let textCount: String = passwordTextField.text!
-        if textCount.count < 6 {
-            let alert=UIAlertController(title: "Error", message: "Password needs to be at least 6 characters.", preferredStyle: UIAlertController.Style.alert)
+        //email validation
+        func isValidEmail(email: String) -> Bool {
+            let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+            let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+            let result = emailTest.evaluate(with: email)
+            return result
+        }
+        
+        var validEmail = isValidEmail(email: emailTextField.text!)
+        
+        if (validEmail) {
+            print("Valid email")
+        }
+        
+        else {
+            print("Invalid email")
+            let alert=UIAlertController(title: "Error", message: "Invalid email.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                //do something
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+            
+        }
+        
+        //password validation
+        func isValidPassword(password: String) -> Bool {
+            let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,}"
+            let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
+            let result = passwordTest.evaluate(with: password)
+            return result
+        }
+        
+        var validPassword = isValidPassword(password: passwordTextField.text!)
+        
+        if (validPassword) {
+            print("Valid password")
+        }
+        
+        else {
+            print("Invalid password")
+            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must be at least 6 characters with at least one letter and one special character.", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
             let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
                 //do something
