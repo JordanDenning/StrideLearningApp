@@ -35,12 +35,81 @@ class LoginController: UIViewController {
         return button
     }()
     
+    lazy var forgotPasswordButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(r: 80, g: 101, b: 161)
+        button.setTitle("Forgot password?", for: UIControl.State())
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(.white, for: UIControl.State())
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
+        
+        return button
+    }()
+    
     @objc func handleLoginRegister() {
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
             handleLogin()
         } else {
             handleRegister()
         }
+    }
+    
+    @objc func handleForgotPassword() {
+        
+        let alertController = UIAlertController(title: "Reset Password", message: "", preferredStyle: .alert)
+            alertController.addTextField { (forgotPasswordTextField) in
+                forgotPasswordTextField.placeholder = "Enter Email"
+            }
+            let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+                
+                let forgotPasswordTextField = alertController.textFields![0]
+                
+                guard let email = forgotPasswordTextField.text else {
+                    print("Form is not valid")
+                    return
+                }
+                Auth.auth().sendPasswordReset(withEmail: email) { error in
+                    if error != nil
+                   {
+                        // Error - Unidentified Email
+                        print("Email does not exist")
+                        let alert=UIAlertController(title: "Error", message: "Email does not exist.", preferredStyle: UIAlertController.Style.alert)
+                        //create a UIAlertAction object for the button
+                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            //dismiss alert
+                        })
+                        alert.addAction(okAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                   }
+                    else
+                   {
+                        // Success - Sent recovery email
+                        print("Email sent!")
+                        let alert=UIAlertController(title: "Email sent.", message: "Please check your email for a password reset link.", preferredStyle: UIAlertController.Style.alert)
+                        //create a UIAlertAction object for the button
+                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            //dismiss alert
+                        })
+                        alert.addAction(okAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                   }
+
+                }
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                //do something
+            })
+
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+
+            self.present(alertController, animated: true, completion: nil)
+        
+
     }
     
     func handleLogin() {
@@ -186,6 +255,8 @@ class LoginController: UIViewController {
         passwordConfirmTextFieldHeightAnchor?.isActive = true
         passwordConfirmTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
         
+        hideForgotPasswordButton()
+        
     }
     
     override func viewDidLoad() {
@@ -195,13 +266,16 @@ class LoginController: UIViewController {
         
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
+        view.addSubview(forgotPasswordButton)
         view.addSubview(profileImageView)
         view.addSubview(loginRegisterSegmentedControl)
         
         setupInputsContainerView()
         setupLoginRegisterButton()
+        setupForgotPasswordButton()
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()
+
     }
     
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
@@ -308,6 +382,25 @@ class LoginController: UIViewController {
         loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func setupForgotPasswordButton() {
+        //need x, y, width, height constraints
+        forgotPasswordButton.isHidden = true
+        forgotPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        forgotPasswordButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 12).isActive = true
+        forgotPasswordButton.widthAnchor.constraint(equalTo: loginRegisterButton.widthAnchor).isActive = true
+        forgotPasswordButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func hideForgotPasswordButton() {
+        if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
+            forgotPasswordButton.isHidden = true
+        }
+        
+        else {
+            forgotPasswordButton.isHidden = false
+        }
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {

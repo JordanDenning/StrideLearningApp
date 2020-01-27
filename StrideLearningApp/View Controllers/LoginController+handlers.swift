@@ -36,7 +36,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             let alert=UIAlertController(title: "Error", message: "Invalid email.", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
             let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                //do something
+                //dismiss alert
             })
             alert.addAction(okAction)
             present(alert, animated: true, completion: nil)
@@ -63,7 +63,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
             let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                //do something
+                //dismiss alert
             })
             alert.addAction(okAction)
             present(alert, animated: true, completion: nil)
@@ -86,8 +86,16 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
             
+            //error in creating account
             if let error = error {
                 print(error)
+                let alert=UIAlertController(title: "Error", message: "This email address is already in use by another account.", preferredStyle: UIAlertController.Style.alert)
+                //create a UIAlertAction object for the button
+                let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                    //dismiss alert
+                })
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
                 return
             }
             
@@ -101,15 +109,20 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     // ...
                 }
                 if !user.isEmailVerified {
-                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. Please click on the confirmation link in the email to activate your account.", preferredStyle: UIAlertController.Style.alert)
-                    let okAction = UIAlertAction(title: "OK", style: .default)
+                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address.", preferredStyle: UIAlertController.Style.alert)
 //                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {
 //                        (_) in
 //                        user.sendEmailVerification(completion: nil)
 //                    }
 
-                    alertVC.addAction(okAction)
                     self.present(alertVC, animated: true, completion: nil)
+                    
+                    // change to desired number of seconds
+//                    let alertTime = DispatchTime.now() + 8
+//                    DispatchQueue.main.asyncAfter(deadline: alertTime){
+//                      // your code with delay
+//                      alertVC.dismiss(animated: true, completion: nil)
+//                    }
                 }
 //                else {
 //                    //successfully authenticated user
