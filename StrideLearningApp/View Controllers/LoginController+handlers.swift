@@ -52,7 +52,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             return result
         }
         
-        var validPassword = isValidPassword(password: passwordTextField.text!)
+        let validPassword = isValidPassword(password: passwordTextField.text!)
         
         if (validPassword) {
             print("Valid password")
@@ -60,7 +60,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         
         else {
             print("Invalid password")
-            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must be at least 6 characters with at least one letter and one special character.", preferredStyle: UIAlertController.Style.alert)
+            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
             let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
                 //do something
@@ -93,6 +93,56 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             guard let uid = user?.user.uid else {
                 return
+            }
+            
+            //email address verification
+            if let user = Auth.auth().currentUser {
+                Auth.auth().currentUser?.sendEmailVerification { (error) in
+                    // ...
+                }
+                if !user.isEmailVerified {
+                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. Please click on the confirmation link in the email to activate your account.", preferredStyle: UIAlertController.Style.alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default)
+//                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {
+//                        (_) in
+//                        user.sendEmailVerification(completion: nil)
+//                    }
+
+                    alertVC.addAction(okAction)
+                    self.present(alertVC, animated: true, completion: nil)
+                }
+//                else {
+//                    //successfully authenticated user
+//                    let imageName = NSUUID().uuidString //get unique image name to use for uploading and storing
+//                    let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
+//                    //.child("profile_images") creates new child folder where these images will be stored
+//
+//                    if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
+//
+//                        storageRef.putData(uploadData, metadata: nil, completion: { (_, err) in
+//
+//                            if let error = error {
+//                                print(error)
+//                                return
+//                            }
+//
+//                            //successfully uploaded image to firebase after above code putData
+//
+//                            storageRef.downloadURL(completion: { (url, err) in
+//                                if let err = err {
+//                                    print(err)
+//                                    return
+//                                }
+//
+//                                guard let url = url else { return }
+//                                let values = ["name": name, "email": email, "profileImageUrl": url.absoluteString]
+//
+//                                self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+//                            })
+//
+//                        })
+//                    }
+//                }
             }
             
             //successfully authenticated user

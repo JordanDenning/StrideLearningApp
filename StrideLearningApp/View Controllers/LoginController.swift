@@ -55,11 +55,32 @@ class LoginController: UIViewController {
                 print(error)
                 return
             }
-            
+            if let user = Auth.auth().currentUser {
+                if !user.isEmailVerified {
+                    let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)
+//                    let okAction = UIAlertAction(title: "Okay", style: .default)
+                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {(_) in Auth.auth().currentUser?.sendEmailVerification { (error) in
+                        // ...
+                        }
+                    }
+                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+                    
+//                    alertVC.addAction(okAction)
+                    alertVC.addAction(resendAction)
+                    alertVC.addAction(cancelAction)
+                    self.present(alertVC, animated: true, completion: nil)
+                    return
+                }
+                else {
+                    self.messagesController?.fetchUserAndSetupNavBarTitle()
+
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
             //successfully logged in our user
-            self.messagesController?.fetchUserAndSetupNavBarTitle()
-            
-            self.dismiss(animated: true, completion: nil)
+//            self.messagesController?.fetchUserAndSetupNavBarTitle()
+//
+//            self.dismiss(animated: true, completion: nil)
             
         })
         
