@@ -57,7 +57,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         if (validPassword) {
             print("Valid password")
         }
-        
+            
         else {
             print("Invalid password")
             let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
@@ -102,13 +102,11 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 }
                 if !user.isEmailVerified {
                     let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. Please click on the confirmation link in the email to activate your account.", preferredStyle: UIAlertController.Style.alert)
-                    let okAction = UIAlertAction(title: "OK", style: .default)
 //                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {
 //                        (_) in
 //                        user.sendEmailVerification(completion: nil)
 //                    }
 
-                    alertVC.addAction(okAction)
                     self.present(alertVC, animated: true, completion: nil)
                 }
 //                else {
