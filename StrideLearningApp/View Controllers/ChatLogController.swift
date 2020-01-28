@@ -273,9 +273,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let childRef = ref.childByAutoId()
         //is it there best thing to include the name inside of the message node
         let toId = user!.id!
+        let toName = user!.name!
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-        let values = ["text": inputTextField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "timestamp": timestamp] as [String : Any]
         //        childRef.updateChildValues(values)
         
         childRef.updateChildValues(values) { (error, ref) in

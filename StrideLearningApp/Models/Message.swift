@@ -21,6 +21,7 @@ class Message: NSObject {
         self.fromId = dictionary["fromId"] as? String
         self.text = dictionary["text"] as? String
         self.toId = dictionary["toId"] as? String
+        self.toName = dictionary["toName"] as? String
         self.timestamp = dictionary["timestamp"] as? NSNumber
     }
     
