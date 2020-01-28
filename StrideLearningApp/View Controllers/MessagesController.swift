@@ -52,6 +52,11 @@ class MessagesController: UITableViewController {
         //        observeMessages()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        // Enable TabBar
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     var messages = [Message]()
     var messagesDictionary = [String: Message]()
     
