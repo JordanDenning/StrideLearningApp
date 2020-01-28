@@ -237,7 +237,8 @@ class MessagesController: UITableViewController {
         containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
-        self.navigationItem.titleView = titleView
+//        self.navigationItem.titleView = titleView
+        self.navigationItem.title = "Messages"
         
         //        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
     }
