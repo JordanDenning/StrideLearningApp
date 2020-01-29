@@ -50,14 +50,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }, withCancel: nil)
     }
     
-    lazy var inputTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Enter message..."
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.delegate = self
-        return textField
-    }()
-    
     let cellId = "cellId"
     
     override func viewDidLoad() {
@@ -78,6 +70,15 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         //
         //        setupKeyboardObservers()
     }
+    
+    lazy var inputTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter message..."
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.delegate = self
+        return textField
+    }()
+    
     
     lazy var inputContainerView: UIView = {
         let containerView = UIView()

@@ -9,11 +9,16 @@
 import UIKit
 import Firebase
 
-class NewMessageController: UITableViewController {
+class NewMessageController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate  {
     
     let cellId = "cellId"
     
     var users = [User]()
+    var filtered = [User]()
+    var searchActive : Bool = false
+    
+    var messagesController: MessagesController?
+    var searchController = UISearchController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +27,14 @@ class NewMessageController: UITableViewController {
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
+        navigationItem.title = "Contacts"
+        
         fetchUser()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        configureSearchController()
     }
     
     func fetchUser() {
@@ -47,18 +59,41 @@ class NewMessageController: UITableViewController {
         }, withCancel: nil)
     }
     
+    func configureSearchController() {
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search..."
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchController.searchBar
+    }
+
+    
     @objc func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
     
+    //MARK: TableView
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(searchActive){
+            return filtered.count
+        }
+
         return users.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
-        let user = users[indexPath.row]
+        let user: User
+        if(searchActive){
+            user = filtered[indexPath.row]
+        }
+        else{
+            user = users[indexPath.row]
+        }
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
         
@@ -73,16 +108,67 @@ class NewMessageController: UITableViewController {
         return 72
     }
     
-    var messagesController: MessagesController?
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true) {
             print("Dismiss completed")
-            let user = self.users[indexPath.row]
+            let user: User
+            if(self.searchActive){
+                user = self.filtered[indexPath.row]
+            }
+            else{
+                user = self.users[indexPath.row]
+            }
             //get the user you tap on
             self.messagesController?.showChatControllerForUser(user)
         }
     
     }
+    
+    //MARK: SearchResultsController
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true;
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+        filtered.removeAll()
+        tableView.reloadData()
+        //reloads OG data instead of filtered
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if !searchActive {
+            searchActive = true
+            tableView.reloadData()
+        }
+        
+        searchController.searchBar.resignFirstResponder()
+    }
+    
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text!
+        
+        filtered = users.filter({ (text) -> Bool in
+            let name: NSString = text.name! as NSString
+            let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return nameRange.location != NSNotFound
+        })
+        if(filtered.count == 0){
+            searchActive = false;
+            // display text saying no results found
+        } else {
+            searchActive = true;
+        }
+        self.tableView.reloadData()
+    }
+
 
 }

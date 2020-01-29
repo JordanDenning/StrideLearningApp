@@ -210,6 +210,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        searchController.dismiss(animated: true)
         let message: Message
         if(searchActive){
             message = filtered[indexPath.row]
@@ -232,6 +233,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             self.showChatControllerForUser(user)
             
         }, withCancel: nil)
+        
+        searchController.searchBar.text = ""
     }
     
     @objc func handleNewMessage() {
