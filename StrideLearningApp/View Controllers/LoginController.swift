@@ -176,6 +176,8 @@ class LoginController: UIViewController {
     func setupProfileImageView() {
         //need x, y, width, height constraints
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        profileImageView.topAnchor.constraint(equalTo:
+            view.topAnchor, constant: 80).isActive = true
         profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -50).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
