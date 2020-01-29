@@ -106,15 +106,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             //email address verification
             if let user = Auth.auth().currentUser {
                 Auth.auth().currentUser?.sendEmailVerification { (error) in
-                    // ...
+                    // send email verification
                 }
                 if !user.isEmailVerified {
                     let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address.", preferredStyle: UIAlertController.Style.alert)
-//                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {
-//                        (_) in
-//                        user.sendEmailVerification(completion: nil)
-//                    }
-
                     self.present(alertVC, animated: true, completion: nil)
                     
                     // change to desired number of seconds
@@ -124,38 +119,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
 //                      alertVC.dismiss(animated: true, completion: nil)
 //                    }
                 }
-//                else {
-//                    //successfully authenticated user
-//                    let imageName = NSUUID().uuidString //get unique image name to use for uploading and storing
-//                    let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
-//                    //.child("profile_images") creates new child folder where these images will be stored
-//
-//                    if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
-//
-//                        storageRef.putData(uploadData, metadata: nil, completion: { (_, err) in
-//
-//                            if let error = error {
-//                                print(error)
-//                                return
-//                            }
-//
-//                            //successfully uploaded image to firebase after above code putData
-//
-//                            storageRef.downloadURL(completion: { (url, err) in
-//                                if let err = err {
-//                                    print(err)
-//                                    return
-//                                }
-//
-//                                guard let url = url else { return }
-//                                let values = ["name": name, "email": email, "profileImageUrl": url.absoluteString]
-//
-//                                self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
-//                            })
-//
-//                        })
-//                    }
-//                }
             }
             
             //successfully authenticated user

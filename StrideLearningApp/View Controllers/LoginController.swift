@@ -101,7 +101,7 @@ class LoginController: UIViewController {
                 }
             })
             let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
-                //do something
+                //dismiss alert
             })
 
             alertController.addAction(okAction)
