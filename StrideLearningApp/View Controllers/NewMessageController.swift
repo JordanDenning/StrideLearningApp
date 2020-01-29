@@ -27,6 +27,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
+        navigationItem.title = "Contacts"
+        
         fetchUser()
         
         tableView.delegate = self
@@ -106,20 +108,19 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dismiss(animated: true) {
-            print("Dismiss completed")
-            let user: User
+//        searchController.dismiss(animated: true)
+        dismiss(animated: true)
+        let user: User
             if(self.searchActive){
                 user = self.filtered[indexPath.row]
+                self.messagesController?.showChatControllerForUser(user)
             }
             else{
                 user = self.users[indexPath.row]
+                self.messagesController?.showChatControllerForUser(user)
             }
-            //get the user you tap on
-            
-            self.messagesController?.showChatControllerForUser(user)
-        }
-    
+        //get the user you tap on
+       
     }
     
     //MARK: SearchResultsController

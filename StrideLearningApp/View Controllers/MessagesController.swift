@@ -206,6 +206,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        searchController.dismiss(animated: true)
         let message: Message
         if(searchActive){
             message = filtered[indexPath.row]
@@ -228,6 +229,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             self.showChatControllerForUser(user)
             
         }, withCancel: nil)
+        
+        searchController.searchBar.text = ""
     }
     
     @objc func handleNewMessage() {
@@ -311,7 +314,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
         self.navigationItem.titleView = titleView
-//        self.navigationItem.title = "Messages"
         
         //        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
     }
