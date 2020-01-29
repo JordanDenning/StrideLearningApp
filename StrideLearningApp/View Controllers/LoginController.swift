@@ -17,7 +17,7 @@ class LoginController: UIViewController {
         let view = UIView()
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 5
+        view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         return view
     }()
@@ -29,6 +29,7 @@ class LoginController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.white, for: UIControl.State())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 10
         
         button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
         
@@ -206,7 +207,7 @@ class LoginController: UIViewController {
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "strideProfile")
+        imageView.image = UIImage(named: "Stride_White")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         
@@ -260,7 +261,7 @@ class LoginController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
+        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
@@ -293,7 +294,9 @@ class LoginController: UIViewController {
     func setupProfileImageView() {
         //need x, y, width, height constraints
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -12).isActive = true
+        profileImageView.topAnchor.constraint(equalTo:
+            view.topAnchor, constant: 80).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -50).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
     }
