@@ -35,12 +35,81 @@ class LoginController: UIViewController {
         return button
     }()
     
+    lazy var forgotPasswordButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(r: 80, g: 101, b: 161)
+        button.setTitle("Forgot password?", for: UIControl.State())
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(.white, for: UIControl.State())
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
+        
+        return button
+    }()
+    
     @objc func handleLoginRegister() {
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
             handleLogin()
         } else {
             handleRegister()
         }
+    }
+    
+    @objc func handleForgotPassword() {
+        
+        let alertController = UIAlertController(title: "Reset Password", message: "", preferredStyle: .alert)
+            alertController.addTextField { (forgotPasswordTextField) in
+                forgotPasswordTextField.placeholder = "Enter Email"
+            }
+            let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+                
+                let forgotPasswordTextField = alertController.textFields![0]
+                
+                guard let email = forgotPasswordTextField.text else {
+                    print("Form is not valid")
+                    return
+                }
+                Auth.auth().sendPasswordReset(withEmail: email) { error in
+                    if error != nil
+                   {
+                        // Error - Unidentified Email
+                        print("Email does not exist")
+                        let alert=UIAlertController(title: "Error", message: "Email does not exist.", preferredStyle: UIAlertController.Style.alert)
+                        //create a UIAlertAction object for the button
+                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            //dismiss alert
+                        })
+                        alert.addAction(okAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                   }
+                    else
+                   {
+                        // Success - Sent recovery email
+                        print("Email sent!")
+                        let alert=UIAlertController(title: "Email sent.", message: "Please check your email for a password reset link.", preferredStyle: UIAlertController.Style.alert)
+                        //create a UIAlertAction object for the button
+                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            //dismiss alert
+                        })
+                        alert.addAction(okAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                   }
+
+                }
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+
+            self.present(alertController, animated: true, completion: nil)
+        
+
     }
     
     func handleLogin() {
@@ -55,11 +124,30 @@ class LoginController: UIViewController {
                 print(error)
                 return
             }
-            
+            if let user = Auth.auth().currentUser {
+                if !user.isEmailVerified {
+                    let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)
+//                    let okAction = UIAlertAction(title: "Okay", style: .default)
+                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {(_) in user.sendEmailVerification()
+                    }
+                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+                    
+//                    alertVC.addAction(okAction)
+                    alertVC.addAction(resendAction)
+                    alertVC.addAction(cancelAction)
+                    self.present(alertVC, animated: true, completion: nil)
+                    return
+                }
+                else {
+                    self.messagesController?.fetchUserAndSetupNavBarTitle()
+
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
             //successfully logged in our user
-            self.messagesController?.fetchUserAndSetupNavBarTitle()
-            
-            self.dismiss(animated: true, completion: nil)
+//            self.messagesController?.fetchUserAndSetupNavBarTitle()
+//
+//            self.dismiss(animated: true, completion: nil)
             
         })
         
@@ -101,6 +189,21 @@ class LoginController: UIViewController {
         return tf
     }()
     
+    let passwordSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let passwordConfirmTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Confirm Password"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.isSecureTextEntry = true
+        return tf
+    }()
+    
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "strideProfile")
@@ -130,17 +233,28 @@ class LoginController: UIViewController {
         
         // change height of nameTextField
         nameTextFieldHeightAnchor?.isActive = false
-        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/3)
+        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/4)
         nameTextFieldHeightAnchor?.isActive = true
         nameTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
         
+        // change height of emailTextField
         emailTextFieldHeightAnchor?.isActive = false
-        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/4)
         emailTextFieldHeightAnchor?.isActive = true
         
+        // change height of passwordTextField
         passwordTextFieldHeightAnchor?.isActive = false
-        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/4)
         passwordTextFieldHeightAnchor?.isActive = true
+        
+        // change height of passwordConfirmTextField
+        passwordConfirmTextFieldHeightAnchor?.isActive = false
+        passwordConfirmTextFieldHeightAnchor = passwordConfirmTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/4)
+        passwordConfirmTextFieldHeightAnchor?.isActive = true
+        passwordConfirmTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
+        
+        hideForgotPasswordButton()
+        
     }
     
     override func viewDidLoad() {
@@ -150,19 +264,23 @@ class LoginController: UIViewController {
         
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
+        view.addSubview(forgotPasswordButton)
         view.addSubview(profileImageView)
         view.addSubview(loginRegisterSegmentedControl)
         
         setupInputsContainerView()
         setupLoginRegisterButton()
+        setupForgotPasswordButton()
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()
+
     }
     
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
     var nameTextFieldHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
+    var passwordConfirmTextFieldHeightAnchor: NSLayoutConstraint?
     
     func setupLoginRegisterSegmentedControl() {
         //need x, y, width, height constraints
@@ -193,44 +311,67 @@ class LoginController: UIViewController {
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeparatorView)
         inputsContainerView.addSubview(passwordTextField)
+        inputsContainerView.addSubview(passwordSeparatorView)
+        inputsContainerView.addSubview(passwordConfirmTextField)
         
+        //nameTextField
         //need x, y, width, height constraints
         nameTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         nameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
         
         nameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
-        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        nameTextFieldHeightAnchor = nameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/4)
         nameTextFieldHeightAnchor?.isActive = true
         
+        //nameSeparatorView
         //need x, y, width, height constraints
         nameSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
         nameSeparatorView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
         nameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         nameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        //emailTextField
         //need x, y, width, height constraints
         emailTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         emailTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
         
         emailTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         
-        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/4)
         
         emailTextFieldHeightAnchor?.isActive = true
         
+        //emailSeparatorView
         //need x, y, width, height constraints
         emailSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
         emailSeparatorView.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        //passwordTextField
         //need x, y, width, height constraints
         passwordTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
         
         passwordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
-        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/4)
         passwordTextFieldHeightAnchor?.isActive = true
+        
+        //passwordSeparatorView
+        //need x, y, width, height constraints
+        passwordSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
+        passwordSeparatorView.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor).isActive = true
+        passwordSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        passwordSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //passwordConfirmTextField
+        //need x, y, width, height constraints
+        passwordConfirmTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        passwordConfirmTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor).isActive = true
+        
+        passwordConfirmTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        passwordConfirmTextFieldHeightAnchor = passwordConfirmTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/4)
+        passwordConfirmTextFieldHeightAnchor?.isActive = true
     }
     
     func setupLoginRegisterButton() {
@@ -239,6 +380,25 @@ class LoginController: UIViewController {
         loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func setupForgotPasswordButton() {
+        //need x, y, width, height constraints
+        forgotPasswordButton.isHidden = true
+        forgotPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        forgotPasswordButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 12).isActive = true
+        forgotPasswordButton.widthAnchor.constraint(equalTo: loginRegisterButton.widthAnchor).isActive = true
+        forgotPasswordButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func hideForgotPasswordButton() {
+        if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
+            forgotPasswordButton.isHidden = true
+        }
+        
+        else {
+            forgotPasswordButton.isHidden = false
+        }
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {

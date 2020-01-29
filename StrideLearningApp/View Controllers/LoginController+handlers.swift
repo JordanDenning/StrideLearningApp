@@ -9,10 +9,6 @@
 import UIKit
 import Firebase
 
-
-import UIKit
-import Firebase
-
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func handleRegister() {
@@ -21,15 +17,108 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             return
         }
         
+        //email validation
+        func isValidEmail(email: String) -> Bool {
+            let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+            let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+            let result = emailTest.evaluate(with: email)
+            return result
+        }
+        
+        var validEmail = isValidEmail(email: emailTextField.text!)
+        
+        if (validEmail) {
+            print("Valid email")
+        }
+        
+        else {
+            print("Invalid email")
+            let alert=UIAlertController(title: "Error", message: "Invalid email.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+            
+        }
+        
+        //password validation
+        func isValidPassword(password: String) -> Bool {
+            let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,}"
+            let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
+            let result = passwordTest.evaluate(with: password)
+            return result
+        }
+        
+        let validPassword = isValidPassword(password: passwordTextField.text!)
+        
+        if (validPassword) {
+            print("Valid password")
+        }
+        
+        else {
+            print("Invalid password")
+            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        //check if passwords match
+        if self.passwordTextField.text != self.passwordConfirmTextField.text {
+            print("Passwords don't match")
+            let alert=UIAlertController(title: "Error", message: "Passwords don't match.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                self.passwordTextField.text=""
+                self.passwordConfirmTextField.text=""
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
             
+            //error in creating account
             if let error = error {
                 print(error)
+                let alert=UIAlertController(title: "Error", message: "This email address is already in use by another account.", preferredStyle: UIAlertController.Style.alert)
+                //create a UIAlertAction object for the button
+                let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                    //dismiss alert
+                })
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
                 return
             }
             
             guard let uid = user?.user.uid else {
                 return
+            }
+            
+            //email address verification
+            if let user = Auth.auth().currentUser {
+                Auth.auth().currentUser?.sendEmailVerification { (error) in
+                    // send email verification
+                }
+                if !user.isEmailVerified {
+                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address.", preferredStyle: UIAlertController.Style.alert)
+                    self.present(alertVC, animated: true, completion: nil)
+                    
+                    // change to desired number of seconds
+//                    let alertTime = DispatchTime.now() + 8
+//                    DispatchQueue.main.asyncAfter(deadline: alertTime){
+//                      // your code with delay
+//                      alertVC.dismiss(animated: true, completion: nil)
+//                    }
+                }
             }
             
             //successfully authenticated user
