@@ -202,6 +202,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             message = messages[indexPath.row];
         }
         
+        cell.message = message
+        
         return cell
     }
     
