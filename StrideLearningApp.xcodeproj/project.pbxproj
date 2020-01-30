@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
 		9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
 		9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				9DC8EB6223D6602100DD3EB7 /* LoginController+handlers.swift */,
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
+				9DC2414723E2562400F81AB9 /* TabBarController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,
+				9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */,
 				9DC8EB6E23D6C64200DD3EB7 /* UserCell.swift in Sources */,
 				9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */,
 			);

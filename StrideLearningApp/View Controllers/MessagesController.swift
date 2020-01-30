@@ -39,13 +39,12 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     
      var searchController = UISearchController()
     
+    let image = UIImage(named: "new_message_icon")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
-        let image = UIImage(named: "new_message_icon")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         
         checkIfUserIsLoggedIn()
         
@@ -61,8 +60,10 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     
     
     override func viewWillAppear(_ animated: Bool) {
-        // Enable TabBar
-        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.navigationItem.title = "Messages"
+        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
     }
     
     func configureSearchController() {

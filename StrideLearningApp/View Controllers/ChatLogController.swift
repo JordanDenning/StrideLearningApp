@@ -63,9 +63,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         collectionView?.keyboardDismissMode = .interactive
         
-        self.tabBarController?.tabBar.isHidden = true
-        
-        
         //        setupInputComponents()
         //
         //        setupKeyboardObservers()
