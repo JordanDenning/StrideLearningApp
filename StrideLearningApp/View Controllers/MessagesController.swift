@@ -213,7 +213,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        searchController.dismiss(animated: true)
         let message: Message
         if(searchActive){
             message = filtered[indexPath.row]
@@ -329,7 +328,14 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
-        navigationController?.pushViewController(chatLogController, animated: true)
+        if(searchActive) {
+            searchController.dismiss(animated: false) {
+                self.navigationController?.pushViewController(chatLogController, animated: true)
+            }
+        }
+        else{
+            navigationController?.pushViewController(chatLogController, animated: true)
+        }
     }
     
     @objc func handleLogout() {

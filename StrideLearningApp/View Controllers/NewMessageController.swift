@@ -110,17 +110,29 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dismiss(animated: true) {
-            print("Dismiss completed")
-            let user: User
-            if(self.searchActive){
+        if(searchActive){
+            searchController.dismiss(animated: true, completion: nil)
+            dismiss(animated: true) {
+                print("Dismiss completed")
+                let user: User
                 user = self.filtered[indexPath.row]
+                //get the user you tap on
+                self.messagesController?.showChatControllerForUser(user)
             }
-            else{
-                user = self.users[indexPath.row]
+        }
+        else{
+            dismiss(animated: true) {
+                print("Dismiss completed")
+                let user: User
+                if(self.searchActive){
+                    user = self.filtered[indexPath.row]
+                }
+                else{
+                    user = self.users[indexPath.row]
+                }
+                //get the user you tap on
+                self.messagesController?.showChatControllerForUser(user)
             }
-            //get the user you tap on
-            self.messagesController?.showChatControllerForUser(user)
         }
     
     }
