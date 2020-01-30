@@ -19,30 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         window = UIWindow(frame: UIScreen.main.bounds)
+        
+        window?.rootViewController = UINavigationController(rootViewController: TabBarController())
+
         window?.makeKeyAndVisible()
-        
-        let tabBarController = UITabBarController()
-        
-        let profileVC = UIViewController()
-        profileVC.title = "Profile"
-        profileVC.view.backgroundColor = UIColor.orange
-        
-        let messagesVC = MessagesController()
-        
-        let plannerVC = UIViewController()
-        plannerVC.title = "Planner"
-        plannerVC.view.backgroundColor = UIColor.cyan
-        
-        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile"), tag: 0)
-        messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message"), tag: 1)
-        plannerVC.tabBarItem = UITabBarItem(title: "Planner", image: UIImage(named:"planner"), tag: 2)
-        
-        let controllers = [profileVC, messagesVC, plannerVC]
-        tabBarController.viewControllers = controllers.map { UINavigationController(rootViewController: $0)}
-        
-        messagesVC.hidesBottomBarWhenPushed = false
-        
-        window?.rootViewController = tabBarController
         //previous line replace using storyboards to just use viewcontroller code for layouts, better for when working in teams. Sets first view controller to tabBarController
         
         return true

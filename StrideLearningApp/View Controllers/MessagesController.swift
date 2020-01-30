@@ -33,32 +33,53 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-class MessagesController: UITableViewController {
+class MessagesController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
     
     let cellId = "cellId"
+    
+     var searchController = UISearchController()
+    
+    let image = UIImage(named: "new_message_icon")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
-        let image = UIImage(named: "new_message_icon")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         
         checkIfUserIsLoggedIn()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        configureSearchController()
+        
         //        observeMessages()
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
-        // Enable TabBar
-        self.tabBarController?.tabBar.isHidden = false
+        self.tabBarController?.navigationItem.title = "Messages"
+        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
+    }
+    
+    func configureSearchController() {
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search..."
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchController.searchBar
     }
     
     var messages = [Message]()
     var messagesDictionary = [String: Message]()
+    var filtered = [Message]()
+    var searchActive : Bool = false
     
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -120,14 +141,68 @@ class MessagesController: UITableViewController {
         })
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true;
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+        filtered.removeAll()
+        tableView.reloadData()
+        //reloads OG data instead of filtered
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if !searchActive {
+            searchActive = true
+            tableView.reloadData()
+        }
+        
+        searchController.searchBar.resignFirstResponder()
+    }
+    
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text!
+        
+        filtered = messages.filter({ (text) -> Bool in
+            let name: NSString = text.toName! as NSString
+            let msg: NSString = text.text! as NSString
+            let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            let msgRange = msg.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return nameRange.location != NSNotFound || msgRange.location != NSNotFound
+        })
+        if(filtered.count == 0){
+            searchActive = false;
+            // display text saying no results found
+        } else {
+            searchActive = true;
+        }
+        self.tableView.reloadData()
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
+        if(searchActive) {
+            return filtered.count
+        }
+        return messages.count;
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
-        let message = messages[indexPath.row]
+        let message: Message
+        if(searchActive){
+            message = filtered[indexPath.row]
+        } else {
+            message = messages[indexPath.row];
+        }
+        
         cell.message = message
         
         return cell
@@ -138,7 +213,12 @@ class MessagesController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let message = messages[indexPath.row]
+        let message: Message
+        if(searchActive){
+            message = filtered[indexPath.row]
+        } else {
+            message = messages[indexPath.row];
+        }
         
         guard let chatPartnerId = message.chatPartnerId() else {
             return
@@ -155,6 +235,8 @@ class MessagesController: UITableViewController {
             self.showChatControllerForUser(user)
             
         }, withCancel: nil)
+        
+        searchController.searchBar.text = ""
     }
     
     @objc func handleNewMessage() {
@@ -246,7 +328,14 @@ class MessagesController: UITableViewController {
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
-        navigationController?.pushViewController(chatLogController, animated: true)
+        if(searchActive) {
+            searchController.dismiss(animated: false) {
+                self.navigationController?.pushViewController(chatLogController, animated: true)
+            }
+        }
+        else{
+            navigationController?.pushViewController(chatLogController, animated: true)
+        }
     }
     
     @objc func handleLogout() {
