@@ -21,7 +21,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         let messagesVC = MessagesController()
         messagesVC.navigationItem.title = "Messages"
         
-        let plannerVC = UIViewController()
+        let plannerVC = PlannerController()
         plannerVC.title = "Planner"
         plannerVC.view.backgroundColor = UIColor.cyan
 
