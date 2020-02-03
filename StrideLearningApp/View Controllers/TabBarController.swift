@@ -13,7 +13,6 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         let profileVC = UIViewController()
         profileVC.navigationItem.title = "Profile"
         profileVC.view.backgroundColor = UIColor.orange
@@ -23,7 +22,6 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         
         let plannerVC = PlannerController()
         plannerVC.title = "Planner"
-        plannerVC.view.backgroundColor = UIColor.cyan
 
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile"), tag: 0)
         messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message"), tag: 0)

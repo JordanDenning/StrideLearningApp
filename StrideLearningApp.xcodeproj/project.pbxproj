@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A74F37023E4E6C400FE22E6 /* PlannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A74F36F23E4E6C400FE22E6 /* PlannerController.swift */; };
-		2A74F37223E4EAE500FE22E6 /* AddTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A74F37123E4EAE500FE22E6 /* AddTaskController.swift */; };
-		2A74F37423E4EB5F00FE22E6 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A74F37323E4EB5F00FE22E6 /* TaskCell.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
@@ -27,12 +24,10 @@
 		9DCDF44723D3995600C4E9A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */; };
 		E26776D0543BE553B34E47AE /* Pods_StrideLearningApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */; };
 		EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */; };
+		EE62C66223E676F200DE785E /* PlannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE62C66123E676F200DE785E /* PlannerController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2A74F36F23E4E6C400FE22E6 /* PlannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerController.swift; sourceTree = "<group>"; };
-		2A74F37123E4EAE500FE22E6 /* AddTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskController.swift; sourceTree = "<group>"; };
-		2A74F37323E4EB5F00FE22E6 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -53,6 +48,7 @@
 		A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.release.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.release.xcconfig"; sourceTree = "<group>"; };
 		EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.debug.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.debug.xcconfig"; sourceTree = "<group>"; };
 		EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		EE62C66123E676F200DE785E /* PlannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerController.swift; sourceTree = "<group>"; };
 		F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StrideLearningApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -111,8 +107,7 @@
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
 				9DC2414723E2562400F81AB9 /* TabBarController.swift */,
-				2A74F36F23E4E6C400FE22E6 /* PlannerController.swift */,
-				2A74F37123E4EAE500FE22E6 /* AddTaskController.swift */,
+				EE62C66123E676F200DE785E /* PlannerController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -130,7 +125,6 @@
 			children = (
 				9DC8EB6D23D6C64200DD3EB7 /* UserCell.swift */,
 				EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */,
-				2A74F37323E4EB5F00FE22E6 /* TaskCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -290,16 +284,14 @@
 				9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */,
 				9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */,
 				9DC8EB6B23D6877800DD3EB7 /* Message.swift in Sources */,
-				2A74F37423E4EB5F00FE22E6 /* TaskCell.swift in Sources */,
 				9DC8EB6723D6705900DD3EB7 /* Extensions.swift in Sources */,
 				9DC8EB6323D6602100DD3EB7 /* LoginController+handlers.swift in Sources */,
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,
 				9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */,
-				2A74F37223E4EAE500FE22E6 /* AddTaskController.swift in Sources */,
 				9DC8EB6E23D6C64200DD3EB7 /* UserCell.swift in Sources */,
-				2A74F37023E4E6C400FE22E6 /* PlannerController.swift in Sources */,
+				EE62C66223E676F200DE785E /* PlannerController.swift in Sources */,
 				9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
