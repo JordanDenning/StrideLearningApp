@@ -11,7 +11,7 @@ import Firebase
 
 class PlannerController: UITableViewController {
 
-    let image = UIImage(named: "new_message_icon")
+//    let image = UIImage(named: "plus")
 
     var tasks = ["Finish math homework", "Write essay"]
 
@@ -24,14 +24,16 @@ class PlannerController: UITableViewController {
         self.tabBarController?.navigationItem.title = "Planner"
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
 
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewTask))
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
     }
-
-    //MARK: TableView DataSource Methods
+    
+    //number of table rows
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tasks.count
     }
+    
+    //populate table rows with tasks array
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -39,6 +41,31 @@ class PlannerController: UITableViewController {
         cell.textLabel?.text = tasks[indexPath.row]
         return cell
 
+    }
+    
+    //check off task
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
+        {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
+        }
+        else
+        {
+            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.checkmark
+        }
+    }
+    
+    //delete task
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
+    {
+        if editingStyle == UITableViewCell.EditingStyle.delete
+        {
+            tasks.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
     }
 
     @objc func handleNewTask() {
@@ -51,7 +78,7 @@ class PlannerController: UITableViewController {
             textField.placeholder = "Add a New Task"
         }
 
-        let action = UIAlertAction(title: "Add Task", style: .default) { (action) in
+        let addAction = UIAlertAction(title: "Add Task", style: .default) { (action) in
             
             let newTaskField = alert.textFields![0]
             self.tasks.append(newTaskField.text!)
@@ -59,8 +86,13 @@ class PlannerController: UITableViewController {
             self.tableView.reloadData()
 
         }
-
-        alert.addAction(action)
+        
+        let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+            //dismiss alert
+        })
+        
+        alert.addAction(addAction)
+        alert.addAction(cancelAction)
 
         present(alert, animated: true, completion: nil)
     }
