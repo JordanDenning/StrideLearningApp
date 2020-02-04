@@ -25,6 +25,10 @@ class PlannerController: UITableViewController {
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
 
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
+        
+        if let index = self.tableView.indexPathForSelectedRow {
+            self.tableView.deselectRow(at: index, animated: false)
+        }
     }
     
     //number of table rows
@@ -64,6 +68,10 @@ class PlannerController: UITableViewController {
         if editingStyle == UITableViewCell.EditingStyle.delete
         {
             tasks.remove(at: indexPath.row)
+            if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
+            {
+                tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
+            }
             tableView.reloadData()
         }
     }
