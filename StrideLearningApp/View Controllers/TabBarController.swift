@@ -26,7 +26,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         plannerVC.view.backgroundColor = UIColor.cyan
 
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile-1"), tag: 0)
-        messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message"), tag: 0)
+        messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message-1"), tag: 0)
         plannerVC.tabBarItem = UITabBarItem(title: "Planner", image: UIImage(named:"planner-1"), tag: 2)
         tabBar.tintColor = UIColor(r: 16, g: 153, b: 255)
         
