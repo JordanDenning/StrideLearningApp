@@ -12,7 +12,7 @@ import Firebase
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func handleRegister() {
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
+        guard let email = emailTextField.text, let password = passwordTextField.text, let firstName = firstNameTextField.text, let lastName = lastNameTextField.text else {
             print("Form is not valid")
             return
         }
@@ -144,7 +144,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                         }
                         
                         guard let url = url else { return }
-                        let values = ["name": name, "email": email, "profileImageUrl": url.absoluteString]
+                        let values = ["first name": firstName, "last name": lastName, "email": email, "profileImageUrl": url.absoluteString]
                         
                         self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
                     })
