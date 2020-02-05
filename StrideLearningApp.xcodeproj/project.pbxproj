@@ -26,6 +26,7 @@
 		9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFD619B23E8848B0064B92A /* ProfileController.swift */; };
 		E26776D0543BE553B34E47AE /* Pods_StrideLearningApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */; };
 		EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */; };
+		EE62C66223E676F200DE785E /* PlannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE62C66123E676F200DE785E /* PlannerController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.release.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.release.xcconfig"; sourceTree = "<group>"; };
 		EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.debug.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.debug.xcconfig"; sourceTree = "<group>"; };
 		EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		EE62C66123E676F200DE785E /* PlannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerController.swift; sourceTree = "<group>"; };
 		F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StrideLearningApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -111,6 +113,7 @@
 				9D01128C23EAFB0900A44C7B /* EditProfileController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
 				9DC2414723E2562400F81AB9 /* TabBarController.swift */,
+				EE62C66123E676F200DE785E /* PlannerController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,
 				9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */,
 				9DC8EB6E23D6C64200DD3EB7 /* UserCell.swift in Sources */,
+				EE62C66223E676F200DE785E /* PlannerController.swift in Sources */,
 				9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
