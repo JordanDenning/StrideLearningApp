@@ -1,0 +1,172 @@
+//
+//  EditProfileController.swift
+//  StrideLearningApp
+//
+//  Created by Jordan Denning on 2/5/20.
+//  Copyright © 2020 Jordan Denning. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import Firebase
+
+class EditProfileController: UIViewController {
+    
+    var profileController: ProfileController?
+    
+    let firstNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "First Name"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let firstNameTextField: UITextField = {
+        let tv = UITextField()
+        tv.placeholder = "First Name"
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tv
+    }()
+    
+    let firstNameSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    
+    let lastNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Last Name"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let lastNameTextField: UITextField = {
+        let tv = UITextField()
+        tv.placeholder = "Last Name"
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tv
+    }()
+    
+    let lastNameSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let emailLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Email"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let emailTextField: UITextField = {
+        let tv = UITextField()
+        tv.placeholder = "Email"
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tv
+    }()
+    
+    let emailSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let inputsContainerView: UIView = {
+        let view = UIView()
+//        view.backgroundColor = .blue
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .white
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleCancel))
+        
+        navigationItem.title = "Edit Profile"
+        
+        view.addSubview(inputsContainerView)
+        setupEditInfo()
+       
+        
+    }
+    
+    func setupEditInfo() {
+        inputsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputsContainerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40).isActive = true
+        
+        inputsContainerView.addSubview(firstNameLabel)
+        inputsContainerView.addSubview(firstNameTextField)
+        inputsContainerView.addSubview(firstNameSeparatorView)
+        inputsContainerView.addSubview(lastNameLabel)
+        inputsContainerView.addSubview(lastNameTextField)
+        inputsContainerView.addSubview(lastNameSeparatorView)
+        inputsContainerView.addSubview(emailLabel)
+        inputsContainerView.addSubview(emailTextField)
+        inputsContainerView.addSubview(emailSeparatorView)
+
+        firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+
+
+        firstNameTextField.leftAnchor.constraint(equalTo: firstNameLabel.rightAnchor, constant: 20).isActive = true
+        firstNameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+
+        firstNameSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
+        firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 12).isActive = true
+        firstNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        firstNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //Last Name
+        lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        lastNameTextField.leftAnchor.constraint(equalTo:firstNameTextField.leftAnchor).isActive = true
+        lastNameTextField.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        lastNameSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
+        lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 12).isActive = true
+        lastNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //Email
+        emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        emailTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        emailSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
+        emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 12).isActive = true
+        emailSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+    }
+    
+    @objc func handleCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+}

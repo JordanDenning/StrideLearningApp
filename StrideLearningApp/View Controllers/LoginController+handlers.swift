@@ -18,7 +18,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         }
         
         //email validation
-        func isValidEmail(email: String) -> Bool {
+    func isValidEmail(email: String) -> Bool {
             let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
             let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
             let result = emailTest.evaluate(with: email)
@@ -45,7 +45,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         }
         
         //password validation
-        func isValidPassword(password: String) -> Bool {
+    func isValidPassword(password: String) -> Bool {
             let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,}"
             let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
             let result = passwordTest.evaluate(with: password)

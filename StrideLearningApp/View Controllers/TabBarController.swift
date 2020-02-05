@@ -13,9 +13,9 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let profileVC = UIViewController()
+        let profileVC = ProfileController()
+
         profileVC.navigationItem.title = "Profile"
-        profileVC.view.backgroundColor = UIColor.orange
 
         let messagesVC = MessagesController()
         messagesVC.navigationItem.title = "Messages"
