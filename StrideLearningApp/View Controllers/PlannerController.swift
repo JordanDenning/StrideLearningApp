@@ -22,7 +22,7 @@ class PlannerController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.navigationItem.title = "Planner"
-        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(handleLogout))
+        self.tabBarController?.navigationItem.leftBarButtonItem = nil
 
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
         
@@ -103,10 +103,6 @@ class PlannerController: UITableViewController {
         alert.addAction(cancelAction)
 
         present(alert, animated: true, completion: nil)
-    }
-
-    @objc func handleLogout() {
-        //eventually get rid of this
     }
 
 }
