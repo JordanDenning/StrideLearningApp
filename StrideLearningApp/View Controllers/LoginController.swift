@@ -38,11 +38,11 @@ class LoginController: UIViewController {
     
     lazy var forgotPasswordButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(r: 80, g: 101, b: 161)
-        button.setTitle("Forgot password?", for: UIControl.State())
+        //button.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        button.setTitle("Forgot Password", for: UIControl.State())
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(.white, for: UIControl.State())
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.setTitleColor(UIColor(r: 16, g: 153, b: 255), for: UIControl.State())
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12)
         
         button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
         
@@ -267,7 +267,6 @@ class LoginController: UIViewController {
         view.addSubview(forgotPasswordButton)
         view.addSubview(profileImageView)
         view.addSubview(loginRegisterSegmentedControl)
-        
         
         setupInputsContainerView()
         setupLoginRegisterButton()
