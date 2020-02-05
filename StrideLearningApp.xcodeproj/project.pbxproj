@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D01128C23EAFB0900A44C7B /* EditProfileController.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
@@ -22,11 +23,13 @@
 		9DCDF43C23D38CE700C4E9A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF43B23D38CE700C4E9A7 /* Assets.xcassets */; };
 		9DCDF43F23D38CE700C4E9A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF43D23D38CE700C4E9A7 /* LaunchScreen.storyboard */; };
 		9DCDF44723D3995600C4E9A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */; };
+		9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFD619B23E8848B0064B92A /* ProfileController.swift */; };
 		E26776D0543BE553B34E47AE /* Pods_StrideLearningApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */; };
 		EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D01128C23EAFB0900A44C7B /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -44,6 +47,7 @@
 		9DCDF43E23D38CE700C4E9A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9DCDF44023D38CE700C4E9A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9DFD619B23E8848B0064B92A /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.release.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.release.xcconfig"; sourceTree = "<group>"; };
 		EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.debug.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.debug.xcconfig"; sourceTree = "<group>"; };
 		EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				9DC8EB5623D6395100DD3EB7 /* LoginController.swift */,
 				9DC8EB6223D6602100DD3EB7 /* LoginController+handlers.swift */,
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
+				9DFD619B23E8848B0064B92A /* ProfileController.swift */,
+				9D01128C23EAFB0900A44C7B /* EditProfileController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
 				9DC2414723E2562400F81AB9 /* TabBarController.swift */,
 			);
@@ -282,9 +288,11 @@
 				9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */,
 				9DC8EB6B23D6877800DD3EB7 /* Message.swift in Sources */,
 				9DC8EB6723D6705900DD3EB7 /* Extensions.swift in Sources */,
+				9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */,
 				9DC8EB6323D6602100DD3EB7 /* LoginController+handlers.swift in Sources */,
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
+				9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */,
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,
 				9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */,
 				9DC8EB6E23D6C64200DD3EB7 /* UserCell.swift in Sources */,
