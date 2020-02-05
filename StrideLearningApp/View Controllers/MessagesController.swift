@@ -37,14 +37,12 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     
     let cellId = "cellId"
     
-     var searchController = UISearchController()
+    var searchController = UISearchController()
     
     let image = UIImage(named: "new_message_icon")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         checkIfUserIsLoggedIn()
         
