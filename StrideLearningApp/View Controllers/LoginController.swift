@@ -269,13 +269,26 @@ class LoginController: UIViewController {
         view.addSubview(profileImageView)
         view.addSubview(loginRegisterSegmentedControl)
         
-        
         setupInputsContainerView()
         setupLoginRegisterButton()
         setupForgotPasswordButton()
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()
-
+    
+        //both screens still visible, but cannot swipe down
+        if #available(iOS 13.0, *) {
+            self.isModalInPresentation = true
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        //force into fullscreen?? Not working --> Breaking code
+        /*
+        let vc = LoginController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+         */
+        
     }
     
     

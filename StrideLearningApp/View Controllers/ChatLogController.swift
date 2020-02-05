@@ -82,7 +82,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     lazy var inputContainerView: UIView = {
         let containerView = UIView()
         containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 60)
-        containerView.backgroundColor = UIColor.white
+        containerView.backgroundColor = UIColor(r: 245, g: 245, b: 245)
         
         let sendButton = UIButton(type: .system)
         sendButton.setTitle("Send", for: UIControl.State())
@@ -182,7 +182,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         if message.fromId == Auth.auth().currentUser?.uid {
             //outgoing blue
-            cell.bubbleView.backgroundColor = ChatMessageCell.blueColor
+            cell.bubbleView.backgroundColor = UIColor(r: 16, g: 153, b: 255)
             cell.textView.textColor = UIColor.white
             cell.profileImageView.isHidden = true
             
@@ -210,7 +210,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         //get estimated height somehow????
         if let text = messages[indexPath.item].text {
-            height = estimateFrameForText(text).height + 20
+            height = estimateFrameForText(text).height + 18
         }
         
         let width = UIScreen.main.bounds.width
@@ -240,7 +240,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         containerViewBottomAnchor?.isActive = true
         
         containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
         
         let sendButton = UIButton(type: .system)
         sendButton.setTitle("Send", for: UIControl.State())
