@@ -109,15 +109,15 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     // send email verification
                 }
                 if !user.isEmailVerified {
-                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address.", preferredStyle: UIAlertController.Style.alert)
+                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. This email can take up to 5 minutes to arrive.", preferredStyle: UIAlertController.Style.alert)
                     self.present(alertVC, animated: true, completion: nil)
                     
-                    // change to desired number of seconds
-//                    let alertTime = DispatchTime.now() + 8
-//                    DispatchQueue.main.asyncAfter(deadline: alertTime){
-//                      // your code with delay
-//                      alertVC.dismiss(animated: true, completion: nil)
-//                    }
+//                     change to desired number of seconds
+                    let alertTime = DispatchTime.now() + 5
+                    DispatchQueue.main.asyncAfter(deadline: alertTime){
+                      // your code with delay
+                      alertVC.dismiss(animated: true, completion: nil)
+                    }
                 }
             }
             
@@ -169,7 +169,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             //this setter potentially crashes if keys don't match
             self.messagesController?.setupNavBarWithUser(user)
             
-            self.dismiss(animated: true, completion: nil)
+//            self.dismiss(animated: true, completion: nil)
         })
     }
     

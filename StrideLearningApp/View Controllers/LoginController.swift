@@ -136,9 +136,12 @@ class LoginController: UIViewController {
                 if !user.isEmailVerified {
                     let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)
 //                    let okAction = UIAlertAction(title: "Okay", style: .default)
-                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {(_) in user.sendEmailVerification()
+                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {action in user.sendEmailVerification()
+                        print("Resent email")
                     }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+                    let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                        //dismiss alert
+                    })
                     
 //                    alertVC.addAction(okAction)
                     alertVC.addAction(resendAction)
