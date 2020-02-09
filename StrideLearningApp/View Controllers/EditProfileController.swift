@@ -24,7 +24,6 @@ class EditProfileController: UIViewController {
     
     let firstNameTextField: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "First Name"
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -48,7 +47,6 @@ class EditProfileController: UIViewController {
     
     let lastNameTextField: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Last Name"
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -71,7 +69,6 @@ class EditProfileController: UIViewController {
     
     let emailTextField: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Email"
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -101,17 +98,36 @@ class EditProfileController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveData))
         
         navigationItem.title = "Edit Profile"
         
         view.addSubview(inputsContainerView)
-        setupEditInfo()
+        fetchUserAndSetupProfile()
        
         
     }
     
-    func setupEditInfo() {
+    func fetchUserAndSetupProfile() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            //for some reason uid = nil
+            return
+        }
+        
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                //                self.navigationItem.title = dictionary["name"] as? String
+                
+                let user = User(dictionary: dictionary)
+                self.setupEditInfo(user)
+                
+            }
+            
+        }, withCancel: nil)
+    }
+    
+    func setupEditInfo(_ user: User) {
         inputsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -126,6 +142,10 @@ class EditProfileController: UIViewController {
         inputsContainerView.addSubview(emailLabel)
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeparatorView)
+        
+        firstNameTextField.text = user.name
+        lastNameTextField.text = user.name
+        emailTextField.text = user.email
 
         firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
@@ -166,6 +186,31 @@ class EditProfileController: UIViewController {
     }
     
     @objc func handleCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func saveData() {
+        let firstName = firstNameTextField.text
+//        let lastName = firstNameTextField.text
+        let email = emailTextField.text
+        let values = [ "name": firstName, "email": email] as [String : AnyObject]
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference()
+        let usersReference = ref.child("users").child(uid)
+        
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            
+            if let err = err {
+                print(err)
+                return
+            }
+            
+        })
+        
         dismiss(animated: true, completion: nil)
     }
     
