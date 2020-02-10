@@ -192,26 +192,104 @@ class EditProfileController: UIViewController {
     @objc func saveData() {
         let firstName = firstNameTextField.text
 //        let lastName = firstNameTextField.text
-        let email = emailTextField.text
-        let values = [ "name": firstName, "email": email] as [String : AnyObject]
+        var email = emailTextField.text
+        email = email?.lowercased()
         
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
+        let user = Auth.auth().currentUser
         
-        let ref = Database.database().reference()
-        let usersReference = ref.child("users").child(uid)
-        
-        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+        // Prompt the user to re-provide their sign-in credentials
+        if email != user?.email {
+            //alert to change email please enter password
+            let alertController = UIAlertController(title: "Change Email", message: "Please enter your password to change your emal.", preferredStyle: .alert)
+            alertController.addTextField { (passwordTextField) in
+                passwordTextField.placeholder = "Enter Password"
+                passwordTextField.isSecureTextEntry = true
+            }
+            let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+                
+                let passwordTextField = alertController.textFields![0]
+                
+                guard let password = passwordTextField.text else {
+                    print("Form is not valid")
+                    return
+                }
+                
+                let credential = EmailAuthProvider.credential(withEmail: user?.email ?? "", password: password)
+                
+                user?.reauthenticate(with: credential, completion: { (usr, error) in
+                    if let error = error {
+                        print(error)
+                        //error for invalid password here
+                    }
+                    else{
+                        user?.updateEmail(to: email!, completion: { (error) in
+                            if let error = error {
+                                print(error)
+                                //show error message here
+                            }
+                            else {
+                                user?.sendEmailVerification(completion: { (error) in
+                                    if let error = error {
+                                        print(error)
+                                    }
+                                })
+                                let values = [ "name": firstName, "email": email] as [String : AnyObject]
+                                
+                                guard let uid = Auth.auth().currentUser?.uid else {
+                                    return
+                                }
+                                
+                                
+                                let ref = Database.database().reference()
+                                let usersReference = ref.child("users").child(uid)
+                                
+                                usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                                    
+                                    if let err = err {
+                                        print(err)
+                                        return
+                                    }
+                                    
+                                })
+                                
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        })
+
+                    }
+                })
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
             
-            if let err = err {
-                print(err)
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+            
+        }
+        else {
+            let values = ["name": firstName, "email": email] as [String : AnyObject]
+            
+            guard let uid = Auth.auth().currentUser?.uid else {
                 return
             }
             
-        })
-        
-        dismiss(animated: true, completion: nil)
+            
+            let ref = Database.database().reference()
+            let usersReference = ref.child("users").child(uid)
+            
+            usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                
+                if let err = err {
+                    print(err)
+                    return
+                }
+                
+            })
+            
+            dismiss(animated: true, completion: nil)
+        }
     }
-    
 }

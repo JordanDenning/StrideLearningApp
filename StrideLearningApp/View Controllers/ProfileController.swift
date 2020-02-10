@@ -449,6 +449,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         }
         
         let loginController = LoginController()
+//        loginController.messagesController = self
         present(loginController, animated: true, completion: nil)
     }
 
