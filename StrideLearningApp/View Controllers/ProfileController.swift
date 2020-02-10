@@ -177,7 +177,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.layer.cornerRadius = 10
         
-        button.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
+        button.addTarget(self, action: #selector(editPassword), for: .touchUpInside)
         
         return button
     }()
@@ -436,6 +436,14 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         let editProfileContoller = EditProfileController()
         editProfileContoller.profileController = self
         let navController = UINavigationController(rootViewController: editProfileContoller)
+        present(navController, animated: true, completion: nil)
+        
+    }
+    
+    @objc func editPassword(){
+        let editPasswordController = EditPasswordController()
+        editPasswordController.profileController = self
+        let navController = UINavigationController(rootViewController: editPasswordController)
         present(navController, animated: true, completion: nil)
         
     }
