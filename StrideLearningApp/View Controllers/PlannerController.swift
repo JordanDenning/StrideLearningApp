@@ -11,17 +11,17 @@ import Firebase
 
 class PlannerController: UITableViewController {
 
-//    let image = UIImage(named: "plus")
-
     var tasks: [ToDoItem] = []
     var user: User!
     var taskDictionary = [String: Message]()
-    let ref = Database.database().reference(withPath: "to-do-items")
+    let ref = Database.database().reference().child("to-do-items")
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        ref.observe(.value, with: { snapshot in
+        let uid = Auth.auth().currentUser!.uid
+        let query = ref.queryOrdered(byChild: "addedByUser").queryEqual(toValue: uid)
+        query.observe(.value) {(snapshot: DataSnapshot) in
             var newItems: [ToDoItem] = []
             for child in snapshot.children {
                 if let snapshot = child as? DataSnapshot,
@@ -31,7 +31,7 @@ class PlannerController: UITableViewController {
             }
             self.tasks = newItems
             self.tableView.reloadData()
-        })
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -42,6 +42,19 @@ class PlannerController: UITableViewController {
         
         if let index = self.tableView.indexPathForSelectedRow {
             self.tableView.deselectRow(at: index, animated: false)
+        }
+        let uid = Auth.auth().currentUser!.uid
+        let query = ref.queryOrdered(byChild: "addedByUser").queryEqual(toValue: uid)
+        query.observe(.value) {(snapshot: DataSnapshot) in
+            var newItems: [ToDoItem] = []
+            for child in snapshot.children {
+                if let snapshot = child as? DataSnapshot,
+                    let newItem = ToDoItem(snapshot: snapshot) {
+                    newItems.append(newItem)
+                }
+            }
+            self.tasks = newItems
+            self.tableView.reloadData()
         }
     }
     
@@ -79,11 +92,9 @@ class PlannerController: UITableViewController {
         if !isCompleted {
             cell.accessoryType = .none
             cell.textLabel?.textColor = .black
-            cell.detailTextLabel?.textColor = .black
         } else {
             cell.accessoryType = .checkmark
             cell.textLabel?.textColor = .gray
-            cell.detailTextLabel?.textColor = .gray
         }
     }
     
@@ -91,6 +102,7 @@ class PlannerController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
     {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         if editingStyle == UITableViewCell.EditingStyle.delete
         {
             let toDoItem = tasks[indexPath.row]
@@ -98,6 +110,7 @@ class PlannerController: UITableViewController {
             if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
             {
                 tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
+                    cell.textLabel?.textColor = .black
             }
             tableView.reloadData()
         }
