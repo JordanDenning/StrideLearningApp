@@ -23,10 +23,10 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         let plannerVC = PlannerController()
         plannerVC.title = "Planner"
 
-        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile"), tag: 0)
-        messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message"), tag: 0)
-        plannerVC.tabBarItem = UITabBarItem(title: "Planner", image: UIImage(named:"planner"), tag: 2)
-        tabBar.tintColor = .blue
+        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile-1"), tag: 0)
+        messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message-1"), tag: 0)
+        plannerVC.tabBarItem = UITabBarItem(title: "Planner", image: UIImage(named:"planner-1"), tag: 2)
+        tabBar.tintColor = UIColor(r: 16, g: 153, b: 255)
         
     
         let controllers = [profileVC, messagesVC, plannerVC]

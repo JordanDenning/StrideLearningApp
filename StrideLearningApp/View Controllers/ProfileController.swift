@@ -35,9 +35,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
 
     let imageandNameView: UIView = {
         let view = UIView()
-//        view.backgroundColor = UIColor(r: 238, g: 238, b: 239)
+        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         
         return view
@@ -61,7 +60,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         let view = UIView()
 //        view.backgroundColor = UIColor(r: 238, g: 238, b: 239)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         return view
     }()
@@ -69,6 +67,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     let firstNameLabel: UILabel = {
         let label = UILabel()
         label.text = "First Name"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -93,6 +92,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     let lastNameLabel: UILabel = {
         let label = UILabel()
         label.text = "Last Name"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -117,6 +117,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     let emailLabel: UILabel = {
         let label = UILabel()
         label.text = "Email"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -180,14 +181,16 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
 
     func setupProfileImageView(_ user: User) {
         imageandNameView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageandNameView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        imageandNameView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
-        imageandNameView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        imageandNameView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        imageandNameView.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -20).isActive = true
+        imageandNameView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        //imageandNameView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3).isActive = true
+        
         //need x, y, width, height constraints
         imageandNameView.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
-        profileImageView.topAnchor.constraint(equalTo:
-        imageandNameView.topAnchor, constant: 5).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: imageandNameView.centerYAnchor, constant: 20).isActive = true
+        //profileImageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
 
@@ -199,21 +202,26 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         userName.font = userName.font.withSize(20)
         userName.translatesAutoresizingMaskIntoConstraints = false
         userName.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
-        userName.bottomAnchor.constraint(equalTo: imageandNameView.bottomAnchor).isActive = true
+        userName.bottomAnchor.constraint(equalTo: imageandNameView.bottomAnchor, constant: -20).isActive = true
     }
     
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
-    var nameTextFieldHeightAnchor: NSLayoutConstraint?
+    var firstNameLabelHeightAnchor: NSLayoutConstraint?
+    var firstNameTextFieldHeightAnchor: NSLayoutConstraint?
+    var lastNameTextFieldHeightAnchor: NSLayoutConstraint?
+    var lastNameLabelHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
+    var emailLabelHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordConfirmTextFieldHeightAnchor: NSLayoutConstraint?
     
     func setupInputsContainerView(_ user: User) {
         //need x, y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         inputsContainerView.topAnchor.constraint(equalTo: imageandNameView.bottomAnchor, constant: 40).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40).isActive = true
-        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 200)
+        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 180)
         inputsContainerViewHeightAnchor?.isActive = true
 
 
@@ -231,41 +239,70 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         inputsContainerView.addSubview(emailLabel)
         inputsContainerView.addSubview(email)
         inputsContainerView.addSubview(emailSeparatorView)
-
-        //First Name
+        
+        //First Name Label
         firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        firstNameLabel.rightAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 100).isActive = true
         firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
         
+        firstNameLabelHeightAnchor = firstNameLabel.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        firstNameLabelHeightAnchor?.isActive = true
         
+        //First Name
         firstName.leftAnchor.constraint(equalTo: firstNameLabel.rightAnchor, constant: 12).isActive = true
         firstName.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+        firstName.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         
+        firstNameTextFieldHeightAnchor = firstName.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        firstNameTextFieldHeightAnchor?.isActive = true
+        
+        //Firt Name Separator View
         firstNameSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
-        firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 12).isActive = true
+        firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor).isActive = true
         firstNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         firstNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
-        //Last Name
+        //Last Name Label
         lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
-        lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 20).isActive = true
+        lastNameLabel.rightAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 100).isActive = true
+        lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor).isActive = true
         
+        lastNameLabelHeightAnchor = lastNameLabel.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        lastNameLabelHeightAnchor?.isActive = true
+        
+        //Last Name
         lastName.leftAnchor.constraint(equalTo: lastNameLabel.rightAnchor, constant: 12).isActive = true
-        lastName.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 20).isActive = true
+        lastName.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor).isActive = true
+        lastName.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         
+        lastNameTextFieldHeightAnchor = lastName.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        lastNameTextFieldHeightAnchor?.isActive = true
+        
+        //Last Name Separator View
         lastNameSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
-        lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 12).isActive = true
+        lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor).isActive = true
         lastNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
-        //Email
+        //Email Label
         emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 20).isActive = true
+        emailLabel.rightAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 100).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor).isActive = true
         
+        emailLabelHeightAnchor = emailLabel.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        emailLabelHeightAnchor?.isActive = true
+        
+        //Email
         email.leftAnchor.constraint(equalTo: emailLabel.rightAnchor, constant: 12).isActive = true
-        email.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 20).isActive = true
+        email.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor).isActive = true
         
+        email.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        emailTextFieldHeightAnchor = email.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 1/3)
+        emailTextFieldHeightAnchor?.isActive = true
+        
+        //Email Separator View
         emailSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
-        emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 12).isActive = true
+        emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
@@ -277,18 +314,18 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         buttonsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         buttonsContainerView.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 20).isActive = true
         buttonsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
-        buttonsContainerView.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        buttonsContainerView.heightAnchor.constraint(equalToConstant: 125).isActive = true
         
         buttonsContainerView.addSubview(editProfileButton)
         buttonsContainerView.addSubview(changePasswordButton)
         
         editProfileButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
-        editProfileButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        editProfileButton.widthAnchor.constraint(equalToConstant: 175).isActive = true
         
         changePasswordButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
         changePasswordButton.topAnchor.constraint(equalTo:
             editProfileButton.bottomAnchor, constant: 20).isActive = true
-        changePasswordButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        changePasswordButton.widthAnchor.constraint(equalToConstant: 175).isActive = true
         
     }
     
