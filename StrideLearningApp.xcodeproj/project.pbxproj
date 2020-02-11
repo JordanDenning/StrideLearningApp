@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D01128C23EAFB0900A44C7B /* EditProfileController.swift */; };
 		9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */; };
+		9D45A19F23F2EF7E00E32150 /* AlertExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		9D01128C23EAFB0900A44C7B /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordController.swift; sourceTree = "<group>"; };
+		9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtensions.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC8EB6623D6705900DD3EB7 /* Extensions.swift */,
+				9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */,
 				9DC8EB6B23D6877800DD3EB7 /* Message.swift in Sources */,
 				9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */,
+				9D45A19F23F2EF7E00E32150 /* AlertExtensions.swift in Sources */,
 				9DC8EB6723D6705900DD3EB7 /* Extensions.swift in Sources */,
 				9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */,
 				9DC8EB6323D6602100DD3EB7 /* LoginController+handlers.swift in Sources */,

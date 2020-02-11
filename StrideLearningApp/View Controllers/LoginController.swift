@@ -123,6 +123,7 @@ class LoginController: UIViewController {
             
             if let error = error {
                 print(error)
+                self.handleError(error)
                 return
             }
             if let user = Auth.auth().currentUser {

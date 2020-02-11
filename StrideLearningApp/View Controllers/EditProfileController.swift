@@ -219,18 +219,32 @@ class EditProfileController: UIViewController {
                 user?.reauthenticate(with: credential, completion: { (usr, error) in
                     if let error = error {
                         print(error)
-                        //error for invalid password here
+                        self.handleError(error)
+                        return
                     }
                     else{
                         user?.updateEmail(to: email!, completion: { (error) in
                             if let error = error {
                                 print(error)
-                                //show error message here
+                                self.handleError(error)
+                                return
                             }
                             else {
                                 user?.sendEmailVerification(completion: { (error) in
                                     if let error = error {
                                         print(error)
+                                        self.handleError(error)
+                                        return
+                                    }
+                                    else{
+                                        let alert=UIAlertController(title: "Email Updated", message: "A confirmation email has been sent to your address. ", preferredStyle: UIAlertController.Style.alert)
+                                        //create a UIAlertAction object for the button
+                                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                            //dismiss alert
+                                        })
+                                        alert.addAction(okAction)
+                                        self.present(alert, animated: true, completion: nil)
+//                                        return
                                     }
                                 })
                                 let values = [ "name": firstName, "email": email] as [String : AnyObject]
@@ -239,7 +253,6 @@ class EditProfileController: UIViewController {
                                     return
                                 }
                                 
-                                
                                 let ref = Database.database().reference()
                                 let usersReference = ref.child("users").child(uid)
                                 
@@ -247,11 +260,10 @@ class EditProfileController: UIViewController {
                                     
                                     if let err = err {
                                         print(err)
+                                        self.handleError(err)
                                         return
                                     }
-                                    
                                 })
-                                
                                 self.dismiss(animated: true, completion: nil)
                             }
                         })
@@ -284,6 +296,7 @@ class EditProfileController: UIViewController {
                 
                 if let err = err {
                     print(err)
+                    self.handleError(err)
                     return
                 }
                 
