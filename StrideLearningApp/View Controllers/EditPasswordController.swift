@@ -54,7 +54,7 @@ class EditPasswordController: UIViewController {
         return tv
     }()
     
-    let newPasswordSeparator: UIView = {
+    let newPasswordSeparatorView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -133,7 +133,7 @@ class EditPasswordController: UIViewController {
     func setupEditPassword(_ user: User) {
         inputsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        inputsContainerView.heightAnchor.constraint(equalToConstant: 165).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40).isActive = true
         
         inputsContainerView.addSubview(oldPasswordLabel)
@@ -141,50 +141,54 @@ class EditPasswordController: UIViewController {
         inputsContainerView.addSubview(oldPasswordSeparatorView)
         inputsContainerView.addSubview(newPasswordLabel)
         inputsContainerView.addSubview(newPasswordTextField)
-        inputsContainerView.addSubview(newPasswordSeparator)
+        inputsContainerView.addSubview(newPasswordSeparatorView)
         inputsContainerView.addSubview(confirmPasswordLabel)
         inputsContainerView.addSubview(confirmPasswordTextField)
         inputsContainerView.addSubview(confirmPasswordSeparatorView)
         
-//        oldPasswordTextField.text = user.name
-//        newPasswordTextField.text = user.name
-//        confirmPasswordTextField.text = user.email
+        let multiplier = 0.56 as CGFloat
         
+        //Old Password
         oldPasswordLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         oldPasswordLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
         
-        
-        oldPasswordTextField.leftAnchor.constraint(equalTo: oldPasswordLabel.rightAnchor, constant: 20).isActive = true
+        oldPasswordTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         oldPasswordTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+        oldPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        oldPasswordSeparatorView.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
         oldPasswordSeparatorView.topAnchor.constraint(equalTo: oldPasswordLabel.bottomAnchor, constant: 12).isActive = true
         oldPasswordSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         oldPasswordSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        oldPasswordSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        //Last Name
+        //New Password
         newPasswordLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         newPasswordLabel.topAnchor.constraint(equalTo: oldPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         newPasswordTextField.leftAnchor.constraint(equalTo:oldPasswordTextField.leftAnchor).isActive = true
         newPasswordTextField.topAnchor.constraint(equalTo: oldPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
+        newPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        newPasswordSeparator.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
-        newPasswordSeparator.topAnchor.constraint(equalTo: newPasswordLabel.bottomAnchor, constant: 12).isActive = true
-        newPasswordSeparator.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
-        newPasswordSeparator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+//        newPasswordSeparatorView.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
+        newPasswordSeparatorView.topAnchor.constraint(equalTo: newPasswordLabel.bottomAnchor, constant: 12).isActive = true
+        newPasswordSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        newPasswordSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        newPasswordSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        //Email
+        //Confirm Password
         confirmPasswordLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
-        confirmPasswordLabel.topAnchor.constraint(equalTo: newPasswordSeparator.bottomAnchor, constant: 30).isActive = true
+        confirmPasswordLabel.topAnchor.constraint(equalTo: newPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        confirmPasswordTextField.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
-        confirmPasswordTextField.topAnchor.constraint(equalTo: newPasswordSeparator.bottomAnchor, constant: 30).isActive = true
+//        confirmPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        confirmPasswordTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        confirmPasswordTextField.topAnchor.constraint(equalTo: newPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
+        confirmPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        confirmPasswordSeparatorView.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
+//        confirmPasswordSeparatorView.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
         confirmPasswordSeparatorView.topAnchor.constraint(equalTo: confirmPasswordLabel.bottomAnchor, constant: 12).isActive = true
         confirmPasswordSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         confirmPasswordSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        confirmPasswordSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
     }
     
@@ -257,11 +261,10 @@ class EditPasswordController: UIViewController {
                     //dismiss alert
                 })
                 alert.addAction(okAction)
-                present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
                 return
             }
         }
-        
     }
     
     func isValidPassword(password: String) -> Bool {
