@@ -146,42 +146,47 @@ class EditProfileController: UIViewController {
         firstNameTextField.text = user.name
         lastNameTextField.text = user.name
         emailTextField.text = user.email
+        
+        let multiplier = 0.70 as CGFloat
 
+        //First Name
         firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
 
-
-        firstNameTextField.leftAnchor.constraint(equalTo: firstNameLabel.rightAnchor, constant: 20).isActive = true
+        firstNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         firstNameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+        firstNameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
 
-        firstNameSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
         firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 12).isActive = true
         firstNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         firstNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        firstNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Last Name
         lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        lastNameTextField.leftAnchor.constraint(equalTo:firstNameTextField.leftAnchor).isActive = true
+        lastNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         lastNameTextField.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        lastNameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        lastNameSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
         lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 12).isActive = true
         lastNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        lastNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email
         emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        emailTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         emailTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        emailSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
         emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 12).isActive = true
         emailSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
     }
     
