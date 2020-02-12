@@ -76,6 +76,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let myColor : UIColor = UIColor(r: 220, g: 220, b: 220)
         textField.layer.borderColor = myColor.cgColor
         textField.placeholder = "Enter message..."
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: textField.frame.height))
+        textField.leftViewMode = UITextField.ViewMode.always;
+        textField.leftView = view;
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.delegate = self
         return textField
