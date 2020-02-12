@@ -11,13 +11,27 @@ import Firebase
 
 class PlannerController: UITableViewController {
 
-//    let image = UIImage(named: "plus")
-
-    var tasks = ["Finish math homework", "Write essay"]
+    var tasks: [ToDoItem] = []
+    var user: User!
+    var taskDictionary = [String: Message]()
+    let ref = Database.database().reference().child("to-do-items")
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        let uid = Auth.auth().currentUser!.uid
+        let query = ref.queryOrdered(byChild: "addedByUser").queryEqual(toValue: uid)
+        query.observe(.value) {(snapshot: DataSnapshot) in
+            var newItems: [ToDoItem] = []
+            for child in snapshot.children {
+                if let snapshot = child as? DataSnapshot,
+                    let newItem = ToDoItem(snapshot: snapshot) {
+                    newItems.append(newItem)
+                }
+            }
+            self.tasks = newItems
+            self.tableView.reloadData()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -28,6 +42,19 @@ class PlannerController: UITableViewController {
         
         if let index = self.tableView.indexPathForSelectedRow {
             self.tableView.deselectRow(at: index, animated: false)
+        }
+        let uid = Auth.auth().currentUser!.uid
+        let query = ref.queryOrdered(byChild: "addedByUser").queryEqual(toValue: uid)
+        query.observe(.value) {(snapshot: DataSnapshot) in
+            var newItems: [ToDoItem] = []
+            for child in snapshot.children {
+                if let snapshot = child as? DataSnapshot,
+                    let newItem = ToDoItem(snapshot: snapshot) {
+                    newItems.append(newItem)
+                }
+            }
+            self.tasks = newItems
+            self.tableView.reloadData()
         }
     }
     
@@ -42,7 +69,8 @@ class PlannerController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = tasks[indexPath.row]
+        let newItem = tasks[indexPath.row]
+        cell.textLabel?.text = newItem.name
         return cell
 
     }
@@ -51,13 +79,20 @@ class PlannerController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
-        }
-        else
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.checkmark
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        let toDoItem = tasks[indexPath.row]
+        let toggledCompletion = !toDoItem.completed
+        toggleCellCheckbox(cell, isCompleted: toggledCompletion)
+        toDoItem.ref?.updateChildValues([
+            "completed": toggledCompletion
+            ])
+    }
+    
+    func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
+        if !isCompleted {
+            cell.accessoryType = .none
+        } else {
+            cell.accessoryType = .checkmark
         }
     }
     
@@ -67,7 +102,8 @@ class PlannerController: UITableViewController {
     {
         if editingStyle == UITableViewCell.EditingStyle.delete
         {
-            tasks.remove(at: indexPath.row)
+            let toDoItem = tasks[indexPath.row]
+            toDoItem.ref?.removeValue()
             if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
             {
                 tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
@@ -88,10 +124,16 @@ class PlannerController: UITableViewController {
 
         let addAction = UIAlertAction(title: "Add Task", style: .default) { (action) in
             
-            let newTaskField = alert.textFields![0]
-            self.tasks.append(newTaskField.text!)
-            print(self.tasks)
-            self.tableView.reloadData()
+            guard let textField = alert.textFields?.first,
+                let text = textField.text else { return }
+            
+            let newItem = ToDoItem(name: text,
+                                   addedByUser: Auth.auth().currentUser!.uid,
+                                   completed: false)
+            
+            let itemRef = self.ref.child(text.lowercased())
+            
+            itemRef.setValue(newItem.toAnyObject())
 
         }
         

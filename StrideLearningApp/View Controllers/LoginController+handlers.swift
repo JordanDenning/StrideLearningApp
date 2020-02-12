@@ -127,7 +127,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
             //.child("profile_images") creates new child folder where these images will be stored
             
-            if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
+            if let profileImage = UIImage(named: "profile2"), let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
                 
                 storageRef.putData(uploadData, metadata: nil, completion: { (_, err) in
                     

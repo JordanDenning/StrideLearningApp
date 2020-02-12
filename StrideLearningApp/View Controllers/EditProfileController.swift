@@ -24,7 +24,6 @@ class EditProfileController: UIViewController {
     
     let firstNameTextField: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "First Name"
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -48,7 +47,6 @@ class EditProfileController: UIViewController {
     
     let lastNameTextField: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Last Name"
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -71,7 +69,6 @@ class EditProfileController: UIViewController {
     
     let emailTextField: UITextField = {
         let tv = UITextField()
-        tv.placeholder = "Email"
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -101,17 +98,36 @@ class EditProfileController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveData))
         
         navigationItem.title = "Edit Profile"
         
         view.addSubview(inputsContainerView)
-        setupEditInfo()
+        fetchUserAndSetupProfile()
        
         
     }
     
-    func setupEditInfo() {
+    func fetchUserAndSetupProfile() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            //for some reason uid = nil
+            return
+        }
+        
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                //                self.navigationItem.title = dictionary["name"] as? String
+                
+                let user = User(dictionary: dictionary)
+                self.setupEditInfo(user)
+                
+            }
+            
+        }, withCancel: nil)
+    }
+    
+    func setupEditInfo(_ user: User) {
         inputsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -126,42 +142,51 @@ class EditProfileController: UIViewController {
         inputsContainerView.addSubview(emailLabel)
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeparatorView)
+        
+        firstNameTextField.text = user.name
+        lastNameTextField.text = user.name
+        emailTextField.text = user.email
+        
+        let multiplier = 0.70 as CGFloat
 
+        //First Name
         firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
 
-
-        firstNameTextField.leftAnchor.constraint(equalTo: firstNameLabel.rightAnchor, constant: 20).isActive = true
+        firstNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         firstNameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+        firstNameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
 
-        firstNameSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
         firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 12).isActive = true
         firstNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         firstNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        firstNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Last Name
         lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        lastNameTextField.leftAnchor.constraint(equalTo:firstNameTextField.leftAnchor).isActive = true
+        lastNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         lastNameTextField.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        lastNameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        lastNameSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
         lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 12).isActive = true
         lastNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        lastNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email
         emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        emailTextField.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         emailTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        emailSeparatorView.leftAnchor.constraint(equalTo: firstNameTextField.leftAnchor).isActive = true
         emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 12).isActive = true
         emailSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
     }
     
@@ -169,4 +194,120 @@ class EditProfileController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc func saveData() {
+        let firstName = firstNameTextField.text
+//        let lastName = firstNameTextField.text
+        var email = emailTextField.text
+        email = email?.lowercased()
+        
+        let user = Auth.auth().currentUser
+        
+        // Prompt the user to re-provide their sign-in credentials
+        if email != user?.email {
+            //alert to change email please enter password
+            let alertController = UIAlertController(title: "Change Email", message: "Please enter your password to change your emal.", preferredStyle: .alert)
+            alertController.addTextField { (passwordTextField) in
+                passwordTextField.placeholder = "Enter Password"
+                passwordTextField.isSecureTextEntry = true
+            }
+            let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+                
+                let passwordTextField = alertController.textFields![0]
+                
+                guard let password = passwordTextField.text else {
+                    print("Form is not valid")
+                    return
+                }
+                
+                let credential = EmailAuthProvider.credential(withEmail: user?.email ?? "", password: password)
+                
+                user?.reauthenticate(with: credential, completion: { (usr, error) in
+                    if let error = error {
+                        print(error)
+                        self.handleError(error)
+                        return
+                    }
+                    else{
+                        user?.updateEmail(to: email!, completion: { (error) in
+                            if let error = error {
+                                print(error)
+                                self.handleError(error)
+                                return
+                            }
+                            else {
+                                user?.sendEmailVerification(completion: { (error) in
+                                    if let error = error {
+                                        print(error)
+                                        self.handleError(error)
+                                        return
+                                    }
+                                    else{
+                                        let alert=UIAlertController(title: "Email Updated", message: "A confirmation email has been sent to your address. ", preferredStyle: UIAlertController.Style.alert)
+                                        //create a UIAlertAction object for the button
+                                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                            //dismiss alert
+                                        })
+                                        alert.addAction(okAction)
+                                        self.present(alert, animated: true, completion: nil)
+//                                        return
+                                    }
+                                })
+                                let values = [ "name": firstName, "email": email] as [String : AnyObject]
+                                
+                                guard let uid = Auth.auth().currentUser?.uid else {
+                                    return
+                                }
+                                
+                                let ref = Database.database().reference()
+                                let usersReference = ref.child("users").child(uid)
+                                
+                                usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                                    
+                                    if let err = err {
+                                        print(err)
+                                        self.handleError(err)
+                                        return
+                                    }
+                                })
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        })
+
+                    }
+                })
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+            
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+            
+        }
+        else {
+            let values = ["name": firstName, "email": email] as [String : AnyObject]
+            
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            
+            
+            let ref = Database.database().reference()
+            let usersReference = ref.child("users").child(uid)
+            
+            usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                
+                if let err = err {
+                    print(err)
+                    self.handleError(err)
+                    return
+                }
+                
+            })
+            
+            dismiss(animated: true, completion: nil)
+        }
+    }
 }
