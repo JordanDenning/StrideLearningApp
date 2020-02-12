@@ -112,7 +112,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. This email can take up to 5 minutes to arrive.", preferredStyle: UIAlertController.Style.alert)
                     self.present(alertVC, animated: true, completion: nil)
                     
-//                     change to desired number of seconds
+                    //change to desired number of seconds
                     let alertTime = DispatchTime.now() + 5
                     DispatchQueue.main.asyncAfter(deadline: alertTime){
                       // your code with delay
