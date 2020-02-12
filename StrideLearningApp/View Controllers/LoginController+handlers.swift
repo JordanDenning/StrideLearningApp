@@ -12,7 +12,7 @@ import Firebase
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func handleRegister() {
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
+        guard let email = emailTextField.text, let password = passwordTextField.text, let firstName = firstNameTextField.text, let lastName = lastNameTextField.text else {
             print("Form is not valid")
             return
         }
@@ -109,15 +109,16 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     // send email verification
                 }
                 if !user.isEmailVerified {
-                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address.", preferredStyle: UIAlertController.Style.alert)
+                    let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. This email can take up to 5 minutes to arrive.", preferredStyle: UIAlertController.Style.alert)
+
                     self.present(alertVC, animated: true, completion: nil)
                     
                     // change to desired number of seconds
-//                    let alertTime = DispatchTime.now() + 8
-//                    DispatchQueue.main.asyncAfter(deadline: alertTime){
-//                      // your code with delay
-//                      alertVC.dismiss(animated: true, completion: nil)
-//                    }
+                    let alertTime = DispatchTime.now() + 5
+                    DispatchQueue.main.asyncAfter(deadline: alertTime){
+                        // your code with delay
+                        alertVC.dismiss(animated: true, completion: nil)
+                    }
                 }
             }
             
@@ -144,7 +145,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                         }
                         
                         guard let url = url else { return }
-                        let values = ["name": name, "email": email, "profileImageUrl": url.absoluteString]
+                        let values = ["name": firstName + " " + lastName, "firstName": firstName, "lastName": lastName, "email": email, "profileImageUrl": url.absoluteString]
                         
                         self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
                     })
@@ -169,7 +170,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             //this setter potentially crashes if keys don't match
             self.messagesController?.setupNavBarWithUser(user)
             
-            self.dismiss(animated: true, completion: nil)
+            //self.dismiss(animated: true, completion: nil)
         })
     }
     
