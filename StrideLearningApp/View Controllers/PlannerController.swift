@@ -91,10 +91,8 @@ class PlannerController: UITableViewController {
     func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
         if !isCompleted {
             cell.accessoryType = .none
-            cell.textLabel?.textColor = .black
         } else {
             cell.accessoryType = .checkmark
-            cell.textLabel?.textColor = .gray
         }
     }
     
@@ -102,7 +100,6 @@ class PlannerController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         if editingStyle == UITableViewCell.EditingStyle.delete
         {
             let toDoItem = tasks[indexPath.row]
@@ -110,7 +107,6 @@ class PlannerController: UITableViewController {
             if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
             {
                 tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
-                    cell.textLabel?.textColor = .black
             }
             tableView.reloadData()
         }
