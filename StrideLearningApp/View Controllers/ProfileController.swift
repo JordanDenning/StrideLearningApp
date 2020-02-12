@@ -28,8 +28,9 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.navigationItem.title = "Profile"
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
+        
+        updateData()
     }
     
 
@@ -44,7 +45,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "profile2")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
@@ -56,9 +56,17 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         return imageView
     }()
     
+    let userName: UILabel = {
+        let label = UILabel()
+        label.text = "User Name"
+        label.font = label.font.withSize(20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     let inputsContainerView: UIView = {
         let view = UIView()
-//        view.backgroundColor = UIColor(r: 238, g: 238, b: 239)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
         return view
@@ -141,7 +149,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     let buttonsContainerView: UIView = {
         let view = UIView()
-        //        view.backgroundColor = UIColor(r: 238, g: 238, b: 239)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
@@ -172,7 +179,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.layer.cornerRadius = 10
         
-        button.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
+        button.addTarget(self, action: #selector(editPassword), for: .touchUpInside)
         
         return button
     }()
@@ -188,19 +195,20 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         
         //need x, y, width, height constraints
         imageandNameView.addSubview(profileImageView)
+        if let profileImageUrl = user.profileImageUrl {
+            profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+        }
+
         profileImageView.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: imageandNameView.centerYAnchor, constant: 20).isActive = true
         //profileImageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
 
-
-        let userName = UILabel()
     
         imageandNameView.addSubview(userName)
         userName.text = user.name
-        userName.font = userName.font.withSize(20)
-        userName.translatesAutoresizingMaskIntoConstraints = false
+    
         userName.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
         userName.bottomAnchor.constraint(equalTo: imageandNameView.bottomAnchor, constant: -20).isActive = true
     }
@@ -339,7 +347,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                //                self.navigationItem.title = dictionary["name"] as? String
                 
                 let user = User(dictionary: dictionary)
                 self.setupProfileImageView(user)
@@ -348,6 +355,31 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             }
             
         }, withCancel: nil)
+    }
+    
+    func updateData(){
+        guard let uid = Auth.auth().currentUser?.uid else {
+            //for some reason uid = nil
+            return
+        }
+        
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                
+                let user = User(dictionary: dictionary)
+                self.firstName.text = user.name
+                self.lastName.text = user.name
+                self.userName.text = user.name
+                self.email.text = user.email
+                if let profileImageUrl = user.profileImageUrl {
+                    self.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+                }
+                
+            }
+            
+        }, withCancel: nil)
+        
     }
     
     @objc func handleSelectProfileImageView() {
@@ -377,10 +409,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             profileImageView.image = selectedImage
         }
         
-        //change image in firebase here
-//        updateProfilePicture()
-        
         dismiss(animated: true, completion: nil)
+        
+        //change image in firebase here
+        updateProfilePicture()
         
     }
     
@@ -389,56 +421,67 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         dismiss(animated: true, completion: nil)
     }
     
-//    func updateProfilePicture() {
-//        let imageName = NSUUID().uuidString //get unique image name to use for uploading and storing
-//        let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
-//        //.child("profile_images") creates new child folder where these images will be stored
-//        
-//        if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
-//            
-//            storageRef.putData(uploadData, metadata: nil, completion: { (_, err) in
-//                
-//                if let error = error {
-//                    print(error)
-//                    return
-//                }
-//                
-//                //successfully uploaded image to firebase after above code putData
-//                
-//                storageRef.downloadURL(completion: { (url, err) in
-//                    if let err = err {
-//                        print(err)
-//                        return
-//                    }
-//                    
-//                    guard let url = url else { return }
-//                    let values = ["name": self.firstName.text, "email": self.email.text, "profileImageUrl": url.absoluteString]
-//                    
-//                    guard let uid = Auth.auth().currentUser?.uid else {
-//                        return
-//                    }
-//                    
-//                    
-//                    let ref = Database.database().reference()
-//                    let usersReference = ref.child("users").child(uid).child("photoImageUrl")
-//                    
-//                    usersReference.updateChildValues(url.absoluteString, withCompletionBlock: { (err, ref) in
-//                        
-//                        if let err = err {
-//                            print(err)
-//                            return
-//                        }
-//
-//                    }
-//                }
-//            })
-//        }
-//    }
-//    
+    func updateProfilePicture() {
+        let imageName = NSUUID().uuidString //get unique image name to use for uploading and storing
+        let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
+        //.child("profile_images") creates new child folder where these images will be stored
+        
+        if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
+            
+            storageRef.putData(uploadData, metadata: nil, completion: { (_, err) in
+                
+                if let error = err {
+                    print(error)
+                    return
+                }
+                
+                //successfully uploaded image to firebase after above code putData
+                storageRef.downloadURL(completion: { (url, err) in
+                    if let err = err {
+                        print(err)
+                        return
+                    }
+                    
+                    guard let url = url else { return }
+                    
+                    let values = [ "profileImageUrl": url.absoluteString] as [String : AnyObject]
+                    
+                    guard let uid = Auth.auth().currentUser?.uid else {
+                        return
+                    }
+                    
+                    let ref = Database.database().reference()
+                    let usersReference = ref.child("users").child(uid)
+                    
+                    usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                        
+                        if let err = err {
+                            print(err)
+                            return
+                        }
+                        
+                        //else have alert saying changes saved successfully
+                        
+                    })
+                    
+                })
+
+            })
+        }
+    }
+    
     @objc func editProfile(){
         let editProfileContoller = EditProfileController()
         editProfileContoller.profileController = self
         let navController = UINavigationController(rootViewController: editProfileContoller)
+        present(navController, animated: true, completion: nil)
+        
+    }
+    
+    @objc func editPassword(){
+        let editPasswordController = EditPasswordController()
+        editPasswordController.profileController = self
+        let navController = UINavigationController(rootViewController: editPasswordController)
         present(navController, animated: true, completion: nil)
         
     }
@@ -455,7 +498,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
 //        loginController.messagesController = self
         present(loginController, animated: true, completion: nil)
     }
-
 
 }
 
