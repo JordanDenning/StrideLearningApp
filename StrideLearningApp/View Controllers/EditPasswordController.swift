@@ -202,69 +202,55 @@ class EditPasswordController: UIViewController {
         let confirmPassword = confirmPasswordTextField.text!
         let user = Auth.auth().currentUser
         let credential = EmailAuthProvider.credential(withEmail: user?.email ?? "", password: password)
-        
-        if newPassword != confirmPassword {
-            //alert passwords don't match
-            print("Passwords don't match")
-            let alert=UIAlertController(title: "Error", message: "Passwords don't match.", preferredStyle: UIAlertController.Style.alert)
-            //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                self.newPasswordTextField.text=""
-                self.confirmPasswordTextField.text=""
-            })
-            alert.addAction(okAction)
-            present(alert, animated: true, completion: nil)
-            return
-        }
-        else{
-            //check if valid
-            let validPassword = isValidPassword(password: newPassword)
-            
-            if (validPassword) {
-                print("Valid password")
-                user?.reauthenticate(with: credential, completion: { (usr, error) in
-                    if let error = error {
-                        print(error)
-                        let alert=UIAlertController(title: "Error", message: "Old Password Incorrect", preferredStyle: UIAlertController.Style.alert)
+
+            print("Valid password")
+            user?.reauthenticate(with: credential, completion: { (usr, error) in
+                if let error = error {
+                    print(error)
+                    self.handleError(error)
+                    return
+                }
+                else{
+                    if newPassword != confirmPassword {
+                        //alert passwords don't match
+                        print("Passwords don't match")
+                        let alert=UIAlertController(title: "Error", message: "Passwords don't match.", preferredStyle: UIAlertController.Style.alert)
                         //create a UIAlertAction object for the button
                         let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                            self.oldPasswordTextField.text=""
                             self.newPasswordTextField.text=""
                             self.confirmPasswordTextField.text=""
                         })
                         alert.addAction(okAction)
                         self.present(alert, animated: true, completion: nil)
                         return
-                        
-                        //error for invalid password here
                     }
-                    else{
+                    else {
+                        let validPassword = self.isValidPassword(password: newPassword)
+                        if(!validPassword){
+                            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
+                            //create a UIAlertAction object for the button
+                            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                //dismiss alert
+                            })
+                            alert.addAction(okAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
                         user?.updatePassword(to: newPassword, completion: { (error) in
                             if let error = error {
                                 print(error)
-
+                                self.handleError(error)
+                                return
                             }
                             else {
                                 print("updated password")
+                                //alert successfully updated password
                                 self.dismiss(animated: true, completion: nil)
                             }
                         })
                     }
-                })
-            }
-                
-            else {
-                print("Invalid password")
-                let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
-                //create a UIAlertAction object for the button
-                let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                    //dismiss alert
-                })
-                alert.addAction(okAction)
-                self.present(alert, animated: true, completion: nil)
-                return
-            }
-        }
+                }
+            })
     }
     
     func isValidPassword(password: String) -> Bool {
