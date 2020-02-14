@@ -15,13 +15,15 @@ struct ToDoItem {
     let key: String
     let name: String
     let addedByUser: String
+    let day: Int
     var completed: Bool
     
-    init(name: String, addedByUser: String, completed: Bool, key: String = "") {
+    init(name: String, addedByUser: String, day: Int, completed: Bool, key: String = "") {
         self.ref = nil
         self.key = key
         self.name = name
         self.addedByUser = addedByUser
+        self.day = day
         self.completed = completed
     }
     
@@ -30,6 +32,7 @@ struct ToDoItem {
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
             let addedByUser = value["addedByUser"] as? String,
+            let day = value["day"] as? Int,
             let completed = value["completed"] as? Bool else {
                 return nil
         }
@@ -38,6 +41,7 @@ struct ToDoItem {
         self.key = snapshot.key
         self.name = name
         self.addedByUser = addedByUser
+        self.day = day
         self.completed = completed
     }
     
@@ -45,6 +49,7 @@ struct ToDoItem {
         return [
             "name": name,
             "addedByUser": addedByUser,
+            "day": day,
             "completed": completed
         ]
     }
