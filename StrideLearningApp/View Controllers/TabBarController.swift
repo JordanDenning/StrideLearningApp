@@ -20,7 +20,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         let messagesVC = MessagesController()
         messagesVC.navigationItem.title = "Messages"
         
-        let plannerVC = PlannerController()
+        let plannerVC = CollectionView()
         plannerVC.title = "Planner"
 
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile-1"), tag: 0)
