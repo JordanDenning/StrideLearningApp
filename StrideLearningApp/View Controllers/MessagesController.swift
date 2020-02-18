@@ -308,6 +308,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         }
         
+        
         containerView.addSubview(profileImageView)
         
         //ios 9 constraint anchors
