@@ -70,7 +70,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     lazy var inputTextField: UITextField = {
         let textField = UITextField()
-        textField.layer.cornerRadius = 18
+        textField.layer.cornerRadius = 10
         textField.backgroundColor = UIColor(r: 245, g: 245, b: 245)
         textField.layer.borderWidth = 1
         let myColor : UIColor = UIColor(r: 220, g: 220, b: 220)
@@ -88,7 +88,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     lazy var inputContainerView: UIView = {
         let containerView = UIView()
         containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 80)
-        //containerView.backgroundColor = UIColor(r: 245, g: 245, b: 245)
+        containerView.backgroundColor = .white
         
         let sendButton = UIButton(type: .system)
         sendButton.setTitle("Send", for: UIControl.State())
@@ -118,7 +118,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         separatorLineView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
         separatorLineView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         separatorLineView.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
-        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorLineView.heightAnchor.constraint(equalToConstant: 1.5).isActive = true
         
         return containerView
     }()
@@ -152,6 +152,13 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         containerViewBottomAnchor?.constant = -keyboardFrame!.height
         UIView.animate(withDuration: keyboardDuration!, animations: {
             self.view.layoutIfNeeded()
+            
+        }, completion: { (completed) in
+            
+            //scroll to bottom of messages
+            //this isn't working right now
+            let indexPath = NSIndexPath(item: self.messages.count - 1, section: 0)
+            self.collectionView?.scrollToItem(at: indexPath as IndexPath, at: .bottom, animated: true)
         })
     }
     
@@ -182,6 +189,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         return cell
     }
+    
     
     fileprivate func setupCell(_ cell: ChatMessageCell, message: Message) {
         if let profileImageUrl = self.user?.profileImageUrl {

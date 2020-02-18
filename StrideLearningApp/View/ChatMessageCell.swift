@@ -17,16 +17,18 @@ class ChatMessageCell: UICollectionViewCell {
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.backgroundColor = UIColor.clear
         tv.textColor = .white
+        //disable user from editing text bubble
+        tv.isUserInteractionEnabled = false
         return tv
     }()
     
-    static let blueColor = UIColor(r: 0, g: 137, b: 249)
+    static let blueColor = UIColor(r: 16, g: 153, b: 255)
     
     let bubbleView: UIView = {
         let view = UIView()
         view.backgroundColor = blueColor
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         return view
     }()

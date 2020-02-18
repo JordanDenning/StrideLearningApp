@@ -50,6 +50,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         tableView.delegate = self
         tableView.dataSource = self
+        //tableView.separatorColor = UIColor(r:16, g:153, b:255)
+
         
         configureSearchController()
         
@@ -71,6 +73,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
+        //searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
         tableView.tableHeaderView = searchController.searchBar
     }
     
@@ -293,6 +296,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         if let profileImageUrl = user.profileImageUrl {
             profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         }
+        
         
         containerView.addSubview(profileImageView)
         

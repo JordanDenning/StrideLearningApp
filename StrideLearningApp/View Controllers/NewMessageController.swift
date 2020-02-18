@@ -13,6 +13,10 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     let cellId = "cellId"
     
+    var headerTitle: [String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V"]
+    //var users: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+
+    
     var users = [User]()
     var filtered = [User]()
     var searchActive : Bool = false
@@ -68,6 +72,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         searchController.searchBar.sizeToFit()
         tableView.tableHeaderView = searchController.searchBar
     }
+    
+    
 
     
     @objc func handleCancel() {
@@ -76,11 +82,37 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     //MARK: TableView
     
+    //section header
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.text = headerTitle[section].description
+        label.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = NSTextAlignment.left
+        
+        //indent header somehow
+        
+        //drop shadow for section headers
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOpacity = 0.5
+        label.layer.shadowOffset = .zero
+        label.layer.shadowRadius = 3
+        return label
+    }
+    
+    //number of sections
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return headerTitle.count
+    }
+    
+    //number of rows
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(searchActive){
             return filtered.count
         }
-
+        //this is where the alphabetical sorting needs to happen
+        // a = section 0, b = section 1, c = section 2, etc.
         return users.count
     }
     
@@ -135,6 +167,11 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
             }
         }
     
+    }
+    
+    //index
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return headerTitle
     }
     
     //MARK: SearchResultsController

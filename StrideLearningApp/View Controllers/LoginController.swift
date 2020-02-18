@@ -15,7 +15,7 @@ class LoginController: UIViewController {
     
     let inputsContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 238, g: 238, b: 239)
+        view.backgroundColor = UIColor(r: 238, g: 238, b: 238)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
@@ -155,7 +155,7 @@ class LoginController: UIViewController {
 
     let firstNameTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "First name"
+        tf.placeholder = "First Name"
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -169,7 +169,7 @@ class LoginController: UIViewController {
     
     let lastNameTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Last name"
+        tf.placeholder = "Last Name"
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -233,12 +233,14 @@ class LoginController: UIViewController {
     lazy var loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
         sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.tintColor = UIColor(r: 238, g: 238, b: 238)
+        //sc.backgroundColor = UIColor(r: 238, g: 238, b: 238)
+        sc.backgroundColor = .white
+        sc.tintColor = UIColor(r: 16, g: 153, b: 255)
         sc.selectedSegmentIndex = 0
-        sc.layer.cornerRadius = 20
+        sc.layer.cornerRadius = 10
     
         // selected option color
-        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
 
         // color of other options
         sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
@@ -252,7 +254,7 @@ class LoginController: UIViewController {
         loginRegisterButton.setTitle(title, for: UIControl.State())
         
         // change height of inputContainerView, but how???
-        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 150
+        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 200
         
         // change height of firstNameTextField
         firstNameTextFieldHeightAnchor?.isActive = false
@@ -456,10 +458,11 @@ class LoginController: UIViewController {
     }
 }
 
+
 extension UIColor {
     
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
-        self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
+        self.init(red: r/250, green: g/250, blue: b/250, alpha: 1)
     }
     
 }
