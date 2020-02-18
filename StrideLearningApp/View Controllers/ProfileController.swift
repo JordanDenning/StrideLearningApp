@@ -394,9 +394,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 let user = User(dictionary: dictionary)
-                self.grade.text = user.name
-                self.school.text = user.name
-                self.userName.text = user.name
+                self.grade.text = ""
+                self.school.text = ""
                 self.email.text = user.email
                 if let profileImageUrl = user.profileImageUrl {
                     self.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
