@@ -103,7 +103,6 @@ class EditPasswordController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //view.backgroundColor = .white
         view.backgroundColor = UIColor(r: 245, g:245, b:245)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
