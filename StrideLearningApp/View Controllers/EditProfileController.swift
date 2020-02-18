@@ -143,8 +143,8 @@ class EditProfileController: UIViewController {
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeparatorView)
         
-        firstNameTextField.text = user.name
-        lastNameTextField.text = user.name
+        firstNameTextField.text = user.firstName
+        lastNameTextField.text = user.lastName
         emailTextField.text = user.email
         
         let multiplier = 0.70 as CGFloat
@@ -196,7 +196,7 @@ class EditProfileController: UIViewController {
     
     @objc func saveData() {
         let firstName = firstNameTextField.text
-//        let lastName = firstNameTextField.text
+        let lastName = lastNameTextField.text
         var email = emailTextField.text
         email = email?.lowercased()
         
@@ -252,7 +252,7 @@ class EditProfileController: UIViewController {
 //                                        return
                                     }
                                 })
-                                let values = [ "name": firstName, "email": email] as [String : AnyObject]
+                                let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "email": email] as [String : AnyObject]
                                 
                                 guard let uid = Auth.auth().currentUser?.uid else {
                                     return
@@ -287,7 +287,7 @@ class EditProfileController: UIViewController {
             
         }
         else {
-            let values = ["name": firstName, "email": email] as [String : AnyObject]
+            let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "email": email] as [String : AnyObject]
             
             guard let uid = Auth.auth().currentUser?.uid else {
                 return
