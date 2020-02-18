@@ -64,6 +64,11 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.searchController.dismiss(animated: false, completion: nil)
+    }
+    
     func configureSearchController() {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
@@ -184,11 +189,20 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         self.tableView.reloadData()
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
+        Int {
+            
+        noResultsView()
+            
         if(searchActive) {
             return filtered.count
         }
-        return messages.count;
+        else if(searchController.searchBar.text! == "") {
+            return messages.count;
+        }
+        else {
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -334,6 +348,32 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
         else{
             navigationController?.pushViewController(chatLogController, animated: true)
+        }
+    }
+    
+    lazy var noResultsLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "No results available"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        
+        return label
+    }()
+    
+    func noResultsView() {
+        if(searchActive) {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        }
+        else if(searchController.searchBar.text! == "") {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        }
+        else {
+            noResultsLabel.isHidden = false
+            tableView.backgroundView = noResultsLabel
+            tableView.separatorStyle = .none
         }
     }
     

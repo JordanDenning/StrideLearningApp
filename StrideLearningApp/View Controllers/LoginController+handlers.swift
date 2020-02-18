@@ -17,59 +17,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             return
         }
         
-        //email validation
-    func isValidEmail(email: String) -> Bool {
-            let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
-            let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-            let result = emailTest.evaluate(with: email)
-            return result
-        }
-        
-        var validEmail = isValidEmail(email: emailTextField.text!)
-        
-        if (validEmail) {
-            print("Valid email")
-        }
-        
-        else {
-            print("Invalid email")
-            let alert=UIAlertController(title: "Error", message: "Invalid email.", preferredStyle: UIAlertController.Style.alert)
-            //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                //dismiss alert
-            })
-            alert.addAction(okAction)
-            present(alert, animated: true, completion: nil)
-            return
-            
-        }
-        
-        //password validation
-    func isValidPassword(password: String) -> Bool {
-            let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,}"
-            let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
-            let result = passwordTest.evaluate(with: password)
-            return result
-        }
-        
-        let validPassword = isValidPassword(password: passwordTextField.text!)
-        
-        if (validPassword) {
-            print("Valid password")
-        }
-        
-        else {
-            print("Invalid password")
-            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
-            //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                //dismiss alert
-            })
-            alert.addAction(okAction)
-            present(alert, animated: true, completion: nil)
-            return
-        }
-        
         //check if passwords match
         if self.passwordTextField.text != self.passwordConfirmTextField.text {
             print("Passwords don't match")
@@ -89,13 +36,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             //error in creating account
             if let error = error {
                 print(error)
-                let alert=UIAlertController(title: "Error", message: "This email address is already in use by another account.", preferredStyle: UIAlertController.Style.alert)
-                //create a UIAlertAction object for the button
-                let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                    //dismiss alert
-                })
-                alert.addAction(okAction)
-                self.present(alert, animated: true, completion: nil)
+                self.handleError(error)
                 return
             }
             
@@ -141,6 +82,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     storageRef.downloadURL(completion: { (url, err) in
                         if let err = err {
                             print(err)
+                            self.handleError(err)
                             return
                         }
                         
@@ -153,6 +95,22 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 })
             }
         })
+    }
+    
+    //email validation
+    func isValidEmail(email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let result = emailTest.evaluate(with: email)
+        return result
+    }
+    
+    //password validation
+    func isValidPassword(password: String) -> Bool {
+        let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,}"
+        let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
+        let result = passwordTest.evaluate(with: password)
+        return result
     }
     
     fileprivate func registerUserIntoDatabaseWithUID(_ uid: String, values: [String: AnyObject]) {

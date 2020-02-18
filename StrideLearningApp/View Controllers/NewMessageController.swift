@@ -105,12 +105,22 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     //number of rows
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        noResultsView()
+        
         if(searchActive){
             return filtered.count
         }
-        //this is where the alphabetical sorting needs to happen
-        // a = section 0, b = section 1, c = section 2, etc.
-        return users.count
+
+        
+        else if(searchController.searchBar.text! == ""){
+            return users.count
+        }
+        
+        else {
+            return 0
+        }
+        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -214,6 +224,32 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
             searchActive = true;
         }
         self.tableView.reloadData()
+    }
+    
+    lazy var noResultsLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "No results available"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        
+        return label
+    }()
+    
+    func noResultsView() {
+        if(searchActive) {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        }
+        else if(searchController.searchBar.text! == "") {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        }
+        else {
+            noResultsLabel.isHidden = false
+            tableView.backgroundView = noResultsLabel
+            tableView.separatorStyle = .none
+        }
     }
 
 

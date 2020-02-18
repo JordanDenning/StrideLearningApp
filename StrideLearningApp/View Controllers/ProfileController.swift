@@ -256,8 +256,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         inputsContainerViewHeightAnchor?.isActive = true
 
 
-        grade.text = user.name
-        school.text = user.name
+        grade.text = ""
+        school.text = ""
         email.text = user.email
         
         
@@ -396,6 +396,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
                 let user = User(dictionary: dictionary)
                 self.grade.text = ""
                 self.school.text = ""
+                self.userName.text = user.name
                 self.email.text = user.email
                 if let profileImageUrl = user.profileImageUrl {
                     self.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
