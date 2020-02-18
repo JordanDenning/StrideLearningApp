@@ -72,20 +72,7 @@ class LoginController: UIViewController {
                     return
                 }
                 Auth.auth().sendPasswordReset(withEmail: email) { error in
-                    if error != nil
-                   {
-                        // Error - Unidentified Email
-                        print("Email does not exist")
-                        let alert=UIAlertController(title: "Error", message: "Email does not exist.", preferredStyle: UIAlertController.Style.alert)
-                        //create a UIAlertAction object for the button
-                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                            //dismiss alert
-                        })
-                        alert.addAction(okAction)
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                   }
-                    else
+                    if error == nil
                    {
                         // Success - Sent recovery email
                         print("Email sent!")
@@ -98,6 +85,12 @@ class LoginController: UIViewController {
                         self.present(alert, animated: true, completion: nil)
                         return
                    }
+                    
+                    if let error = error {
+                        print(error)
+                        self.handleError(error)
+                        return
+                    }
 
                 }
             })
