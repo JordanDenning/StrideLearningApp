@@ -38,7 +38,6 @@ class UserCell: UITableViewCell {
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     self.textLabel?.text = dictionary["name"] as? String
                     self.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-                    //self.textLabel?.textColor = UIColor(r: 16, g:153, b:255)
                     
                     if let profileImageUrl = dictionary["profileImageUrl"] as? String {
                         self.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
@@ -70,9 +69,7 @@ class UserCell: UITableViewCell {
     
     let timeLabel: UILabel = {
         let label = UILabel()
-        //        label.text = "HH:MM:SS"
         label.font = UIFont.systemFont(ofSize: 12)
-        //label.textColor = UIColor.darkGray
         label.textColor = UIColor(r: 16, g:153, b:255)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

@@ -93,7 +93,6 @@ class EditProfileController: UIViewController {
         label.textColor = UIColor(r: 16, g: 153, b: 255)
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
     
@@ -148,7 +147,6 @@ class EditProfileController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //view.backgroundColor = .white
         view.backgroundColor = UIColor(r: 245, g:245, b:245)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))

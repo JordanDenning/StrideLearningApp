@@ -73,9 +73,6 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         tableView.tableHeaderView = searchController.searchBar
     }
     
-    
-
-    
     @objc func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
