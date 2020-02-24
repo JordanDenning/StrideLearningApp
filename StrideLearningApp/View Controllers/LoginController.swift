@@ -174,6 +174,34 @@ class LoginController: UIViewController {
         return view
     }()
     
+    let gradeTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Grade"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let gradeSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let schoolTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "School"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let schoolSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
@@ -246,33 +274,45 @@ class LoginController: UIViewController {
         loginRegisterButton.setTitle(title, for: UIControl.State())
         
         // change height of inputContainerView, but how???
-        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 200
+        inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 250
         
         // change height of firstNameTextField
         firstNameTextFieldHeightAnchor?.isActive = false
-        firstNameTextFieldHeightAnchor = firstNameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/5)
+        firstNameTextFieldHeightAnchor = firstNameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/7)
         firstNameTextFieldHeightAnchor?.isActive = true
         firstNameTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
         
         // change height of lastNameTextField
         lastNameTextFieldHeightAnchor?.isActive = false
-        lastNameTextFieldHeightAnchor = lastNameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/5)
+        lastNameTextFieldHeightAnchor = lastNameTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/7)
         lastNameTextFieldHeightAnchor?.isActive = true
         lastNameTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
         
+        // change height of gradeTextField
+        gradeTextFieldHeightAnchor?.isActive = false
+        gradeTextFieldHeightAnchor = gradeTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/7)
+        gradeTextFieldHeightAnchor?.isActive = true
+        gradeTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
+        
+        // change height of schoolTextField
+        schoolTextFieldHeightAnchor?.isActive = false
+        schoolTextFieldHeightAnchor = schoolTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/7)
+        schoolTextFieldHeightAnchor?.isActive = true
+        schoolTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
+        
         // change height of emailTextField
         emailTextFieldHeightAnchor?.isActive = false
-        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/5)
+        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/7)
         emailTextFieldHeightAnchor?.isActive = true
         
         // change height of passwordTextField
         passwordTextFieldHeightAnchor?.isActive = false
-        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/5)
+        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/7)
         passwordTextFieldHeightAnchor?.isActive = true
         
         // change height of passwordConfirmTextField
         passwordConfirmTextFieldHeightAnchor?.isActive = false
-        passwordConfirmTextFieldHeightAnchor = passwordConfirmTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/5)
+        passwordConfirmTextFieldHeightAnchor = passwordConfirmTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/7)
         passwordConfirmTextFieldHeightAnchor?.isActive = true
         passwordConfirmTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
         
@@ -301,6 +341,8 @@ class LoginController: UIViewController {
     var inputsContainerViewHeightAnchor: NSLayoutConstraint?
     var firstNameTextFieldHeightAnchor: NSLayoutConstraint?
     var lastNameTextFieldHeightAnchor: NSLayoutConstraint?
+    var gradeTextFieldHeightAnchor: NSLayoutConstraint?
+    var schoolTextFieldHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordConfirmTextFieldHeightAnchor: NSLayoutConstraint?
@@ -335,6 +377,10 @@ class LoginController: UIViewController {
         inputsContainerView.addSubview(firstNameSeparatorView)
         inputsContainerView.addSubview(lastNameTextField)
         inputsContainerView.addSubview(lastNameSeparatorView)
+        inputsContainerView.addSubview(gradeTextField)
+        inputsContainerView.addSubview(gradeSeparatorView)
+        inputsContainerView.addSubview(schoolTextField)
+        inputsContainerView.addSubview(schoolSeparatorView)
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeparatorView)
         inputsContainerView.addSubview(passwordTextField)
@@ -373,11 +419,45 @@ class LoginController: UIViewController {
         lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameTextField.bottomAnchor).isActive = true
         lastNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //gradeTextField
+        //need x, y, width, height constraints
+        gradeTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        gradeTextField.topAnchor.constraint(equalTo: lastNameTextField.bottomAnchor).isActive = true
+        
+        gradeTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        
+        gradeTextFieldHeightAnchor = gradeTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 0)
+        gradeTextFieldHeightAnchor?.isActive = true
+        
+        //gradeSeparatorView
+        //need x, y, width, height constraints
+        gradeSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
+        gradeSeparatorView.topAnchor.constraint(equalTo: gradeTextField.bottomAnchor).isActive = true
+        gradeSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        gradeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        //schoolTextField
+        //need x, y, width, height constraints
+        schoolTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        schoolTextField.topAnchor.constraint(equalTo: gradeTextField.bottomAnchor).isActive = true
+        
+        schoolTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        
+        schoolTextFieldHeightAnchor = schoolTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 0)
+        schoolTextFieldHeightAnchor?.isActive = true
+        
+        //schoolSeparatorView
+        //need x, y, width, height constraints
+        schoolSeparatorView.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor).isActive = true
+        schoolSeparatorView.topAnchor.constraint(equalTo: schoolTextField.bottomAnchor).isActive = true
+        schoolSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
 
         //emailTextField
         //need x, y, width, height constraints
         emailTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
-        emailTextField.topAnchor.constraint(equalTo: lastNameTextField.bottomAnchor).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: schoolTextField.bottomAnchor).isActive = true
         
         emailTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         

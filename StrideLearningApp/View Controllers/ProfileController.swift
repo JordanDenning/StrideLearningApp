@@ -256,8 +256,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         inputsContainerViewHeightAnchor?.isActive = true
 
 
-        grade.text = ""
-        school.text = ""
+        grade.text = user.grade
+        school.text = user.school
         email.text = user.email
         
         
@@ -394,8 +394,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 let user = User(dictionary: dictionary)
-                self.grade.text = ""
-                self.school.text = ""
+                self.grade.text = user.grade
+                self.school.text = user.school
                 self.userName.text = user.name
                 self.email.text = user.email
                 if let profileImageUrl = user.profileImageUrl {

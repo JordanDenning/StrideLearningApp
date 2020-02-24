@@ -13,6 +13,8 @@ class User: NSObject {
     var name: String?
     var firstName: String?
     var lastName: String?
+    var grade: String?
+    var school: String?
     var email: String?
     var profileImageUrl: String?
     
@@ -20,6 +22,8 @@ class User: NSObject {
         self.name = dictionary["name"] as? String ?? ""
         self.firstName = dictionary["firstName"] as? String ?? ""
         self.lastName = dictionary["lastName"] as? String ?? ""
+        self.grade = dictionary["grade"] as? String ?? ""
+        self.school = dictionary["school"] as? String ?? ""
         self.email = dictionary["email"] as? String ?? ""
         self.profileImageUrl = dictionary["profileImageUrl"] as? String
     }
