@@ -12,6 +12,7 @@ import Firebase
 class CollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
+    //    let planner = PlannerController()
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -34,6 +35,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
         setupCollectionConstraints()
+//        planner.fetchTasks()
     }
     
         override func viewWillAppear(_ animated: Bool) {
@@ -109,30 +111,9 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             guard let weekTextField = alert.textFields?[2],
                 let week = weekTextField.text else { return }
 
-            var day = Int()
-
-            switch weekday {
-            case "monday":
-                day = 0
-            case "tuesday":
-                day = 1
-            case "wednesday":
-                day = 2
-            case "thursday":
-                day = 3
-            case "friday":
-                day = 4
-            case "saturday":
-                day = 5
-            case "sunday":
-                day = 6
-            default:
-                day = 0
-            }
-
             let newItem = ToDoItem(name: task,
                                    addedByUser: Auth.auth().currentUser!.uid,
-                                   day: day,
+                                   day: weekday,
                                    completed: false)
 
             let itemRef = self.ref.child(week).child(weekday).child(task)
