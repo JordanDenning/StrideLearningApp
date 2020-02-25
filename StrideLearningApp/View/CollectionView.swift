@@ -12,13 +12,18 @@ import Firebase
 class CollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
-    //    let planner = PlannerController()
+    let today = Date()
+    let calendar = Calendar(identifier: .gregorian)
+    var components = DateComponents()
+    let weekStart = 3
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .white
+        cv.isPagingEnabled = true
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
@@ -29,13 +34,20 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             return
         }
         ref = ref.child(uid)
+        
         view.addSubview(collectionView)
+        view.topAnchor.constraint(equalTo: )
+        setupCollectionConstraints()
         collectionView.delegate = self
         collectionView.dataSource = self
         
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
-        setupCollectionConstraints()
-//        planner.fetchTasks()
+        
+        components = calendar.dateComponents([.weekday], from: today)
+        if (components.weekday != weekStart){
+            ref.child("weekUpToDate").setValue(false)
+        }
+        
     }
     
         override func viewWillAppear(_ animated: Bool) {
@@ -43,7 +55,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             self.tabBarController?.navigationItem.leftBarButtonItem = nil
     
             self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
-    
+            
 //            if let index = self.tableView.indexPathForSelectedRow {
 //                self.tableView.deselectRow(at: index, animated: false)
 //            }
@@ -73,7 +85,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-       return CGSize(width: collectionView.frame.size.width-24, height: collectionView.frame.size.height-180)
+       return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height-171)
     }
     
     
@@ -131,5 +143,4 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
 
         present(alert, animated: true, completion: nil)
     }
-
 }

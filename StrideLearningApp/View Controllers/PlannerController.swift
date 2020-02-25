@@ -12,7 +12,6 @@ import Firebase
 class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
     var days: [String] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     var weeks: [String] = ["last-week", "this-week", "next-week"]
-    let collection = CollectionView()
     var thisWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
     var lastWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
     var nextWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
@@ -22,28 +21,15 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     var cellCount = Int()
     let tableView = UITableView()
     var weekUpToDate = Bool ()
-
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        contentView.addSubview(tableView)
-//        setupTableView()
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-//
-//        guard let uid = Auth.auth().currentUser?.uid else {
-//            return
-//        }
-//        ref = ref.child(uid)
-//
-//
-//        fetchTasks()
-////        updateWeeks()
-//    }
+    var weekStart = 3
+    let today = Date()
+    let calendar = Calendar(identifier: .gregorian)
+    var components = DateComponents()
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
         contentView.addSubview(tableView)
+        
         setupTableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -114,18 +100,15 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                     
                     self.tableView.reloadData()
                     if (week == "next-week" && count == 6 ) {
-                        self.ref.child("weekUpToDate").observeSingleEvent(of: .value, with: { (snapshot) in
-                            if snapshot.value as? Bool ?? false {
-                                self.weekUpToDate = snapshot.value as? Bool ?? false
-                            }
-                            if(!self.weekUpToDate){
+                        self.ref.child("weekUpToDate").observe(.value, with: { (snapshot) in
+                            self.weekUpToDate = snapshot.value as? Bool ?? false
+                            self.components = self.calendar.dateComponents([.weekday], from: self.today)
+                            if(self.components.weekday == self.weekStart && !self.weekUpToDate ){
                                 self.updateWeeks()
                             }
-                            
                         }) { (error) in
                             print(error.localizedDescription)
                         }
-                        
                     }
                 })
             }
@@ -203,7 +186,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             toDoItem = thisWeekTasks[indexPath.section][indexPath.row]
         }
         
-//        let toDoItem = tasks[indexPath.row]
         let toggledCompletion = !toDoItem.completed
         toggleCellCheckbox(cell, isCompleted: toggledCompletion)
         toDoItem.ref?.updateChildValues([
@@ -246,45 +228,33 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     func updateWeeks(){
-        let today = Date()
-        let calendar = Calendar(identifier: .gregorian)
-        let components = calendar.dateComponents([.weekday], from: today)
         var count = 0
-        if (components.weekday == 2 && !weekUpToDate) {
-            lastWeekTasks = thisWeekTasks
-            ref.child("last-week").removeValue()
-            updateFirebaseWeek("last-week", thisWeekTasks)
-            thisWeekTasks = nextWeekTasks
-            ref.child("this-week").removeValue()
-            updateFirebaseWeek("this-week", nextWeekTasks)
-            for _ in nextWeekTasks{
-                nextWeekTasks[count].removeAll()
-                count += 1
-            }
-            ref.child("next-week").removeValue()
-            ref.child("weekUpToDate").setValue(true)
-            weekUpToDate = true
-            tableView.reloadData()
-        }
-        else if components.weekday != 1{
-            weekUpToDate = true
-            ref.child("weekUpToDate").setValue(true)
-        }
-        else {
-            weekUpToDate = false
-            ref.child("weekUpToDate").setValue(false)
-        }
         
+        lastWeekTasks = thisWeekTasks
+        ref.child("last-week").removeValue()
+        updateFirebaseWeek("last-week", thisWeekTasks)
         
+        thisWeekTasks = nextWeekTasks
+        ref.child("this-week").removeValue()
+        updateFirebaseWeek("this-week", nextWeekTasks)
+        
+        for _ in nextWeekTasks{
+            nextWeekTasks[count].removeAll()
+            count += 1
+        }
+        ref.child("next-week").removeValue()
+        ref.child("weekUpToDate").setValue(true)
+        
+        weekUpToDate = true
+        tableView.reloadData()
     }
-    
+
     func updateFirebaseWeek(_ oldWeek: String, _ newWeek: [[ToDoItem]]){
         for day in newWeek{
             for item in day{
                 ref.child(oldWeek).child(item.day).child(item.name).setValue(item.toAnyObject())
             }
         }
-        
     }
 }
 
