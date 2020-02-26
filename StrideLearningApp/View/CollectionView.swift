@@ -12,6 +12,10 @@ import Firebase
 class CollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
+    let today = Date()
+    let calendar = Calendar(identifier: .gregorian)
+    var components = DateComponents()
+    let weekStart = 3
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,12 +34,20 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             return
         }
         ref = ref.child(uid)
+        
         view.addSubview(collectionView)
+        view.topAnchor.constraint(equalTo: )
+        setupCollectionConstraints()
         collectionView.delegate = self
         collectionView.dataSource = self
         
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
-        setupCollectionConstraints()
+        
+        components = calendar.dateComponents([.weekday], from: today)
+        if (components.weekday != weekStart){
+            ref.child("weekUpToDate").setValue(false)
+        }
+        
     }
     
         override func viewWillAppear(_ animated: Bool) {
@@ -43,7 +55,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             self.tabBarController?.navigationItem.leftBarButtonItem = nil
     
             self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
-    
+            
 //            if let index = self.tableView.indexPathForSelectedRow {
 //                self.tableView.deselectRow(at: index, animated: false)
 //            }
@@ -128,30 +140,9 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             guard let weekTextField = alert.textFields?[2],
                 let week = weekTextField.text else { return }
 
-            var day = Int()
-
-            switch weekday {
-            case "monday":
-                day = 0
-            case "tuesday":
-                day = 1
-            case "wednesday":
-                day = 2
-            case "thursday":
-                day = 3
-            case "friday":
-                day = 4
-            case "saturday":
-                day = 5
-            case "sunday":
-                day = 6
-            default:
-                day = 0
-            }
-
             let newItem = ToDoItem(name: task,
                                    addedByUser: Auth.auth().currentUser!.uid,
-                                   day: day,
+                                   day: weekday,
                                    completed: false)
 
             let itemRef = self.ref.child(week).child(weekday).child(task)
@@ -169,5 +160,4 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
 
         present(alert, animated: true, completion: nil)
     }
-
 }

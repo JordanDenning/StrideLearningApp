@@ -20,10 +20,16 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     var ref = Database.database().reference().child("to-do-items")
     var cellCount = Int()
     let tableView = UITableView()
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    var weekUpToDate = Bool ()
+    var weekStart = 3
+    let today = Date()
+    let calendar = Calendar(identifier: .gregorian)
+    var components = DateComponents()
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
         contentView.addSubview(tableView)
+        
         setupTableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -34,7 +40,12 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         }
         ref = ref.child(uid)
         
+        
         fetchTasks()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func setupTableView(){
@@ -88,9 +99,20 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                     }
                     
                     self.tableView.reloadData()
-
+                    if (week == "next-week" && count == 6 ) {
+                        self.ref.child("weekUpToDate").observe(.value, with: { (snapshot) in
+                            self.weekUpToDate = snapshot.value as? Bool ?? false
+                            self.components = self.calendar.dateComponents([.weekday], from: self.today)
+                            if(self.components.weekday == self.weekStart && !self.weekUpToDate ){
+                                self.updateWeeks()
+                            }
+                        }) { (error) in
+                            print(error.localizedDescription)
+                        }
+                    }
                 })
             }
+           
         }
     }
     
@@ -164,7 +186,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             toDoItem = thisWeekTasks[indexPath.section][indexPath.row]
         }
         
-//        let toDoItem = tasks[indexPath.row]
         let toggledCompletion = !toDoItem.completed
         toggleCellCheckbox(cell, isCompleted: toggledCompletion)
         toDoItem.ref?.updateChildValues([
@@ -205,5 +226,36 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             tableView.reloadData()
         }
     }
+    
+    func updateWeeks(){
+        var count = 0
+        
+        lastWeekTasks = thisWeekTasks
+        ref.child("last-week").removeValue()
+        updateFirebaseWeek("last-week", thisWeekTasks)
+        
+        thisWeekTasks = nextWeekTasks
+        ref.child("this-week").removeValue()
+        updateFirebaseWeek("this-week", nextWeekTasks)
+        
+        for _ in nextWeekTasks{
+            nextWeekTasks[count].removeAll()
+            count += 1
+        }
+        ref.child("next-week").removeValue()
+        ref.child("weekUpToDate").setValue(true)
+        
+        weekUpToDate = true
+        tableView.reloadData()
+    }
 
+    func updateFirebaseWeek(_ oldWeek: String, _ newWeek: [[ToDoItem]]){
+        for day in newWeek{
+            for item in day{
+                ref.child(oldWeek).child(item.day).child(item.name).setValue(item.toAnyObject())
+            }
+        }
+    }
 }
+
+
