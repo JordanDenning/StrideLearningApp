@@ -169,6 +169,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         }
 
         cell.textLabel?.text = newItem.name
+        toggleCellCheckbox(cell, isCompleted: newItem.completed)
         return cell
 
     }
