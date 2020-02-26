@@ -16,8 +16,10 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .white
+        cv.isPagingEnabled = true
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
@@ -37,7 +39,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
     }
     
         override func viewWillAppear(_ animated: Bool) {
-            self.tabBarController?.navigationItem.title = "Planner"
+            self.tabBarController?.navigationItem.title = "Last Week"
             self.tabBarController?.navigationItem.leftBarButtonItem = nil
     
             self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
@@ -56,6 +58,23 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let center = CGPoint(x: scrollView.contentOffset.x + (scrollView.frame.width / 2), y: (scrollView.frame.height / 2))
+        if let ip = collectionView.indexPathForItem(at: center) {
+            let cell = ip.row
+            switch cell {
+            case 0:
+                tabBarController?.navigationItem.title = weeks[cell]
+            case 1:
+                tabBarController?.navigationItem.title = weeks[cell]
+            case 2:
+                tabBarController?.navigationItem.title = weeks[cell]
+            default:
+                tabBarController?.navigationItem.title = "Planner"
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
@@ -71,7 +90,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-       return CGSize(width: collectionView.frame.size.width-24, height: collectionView.frame.size.height-180)
+       return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height-171)
     }
     
     
