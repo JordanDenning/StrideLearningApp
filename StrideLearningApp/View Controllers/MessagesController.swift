@@ -35,6 +35,13 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 class MessagesController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
     
+//    var user: User? {
+//        didSet {
+//
+//            observeUserMessages()
+//        }
+//    }
+    
     let cellId = "cellId"
     
     var searchController = UISearchController()
@@ -89,6 +96,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             return
         }
         
+//        let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
+        
         let ref = Database.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with: { (snapshot) in
             
@@ -106,7 +115,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     }
     
     fileprivate func fetchMessageWithMessageId(_ messageId: String) {
-        let messagesReference = Database.database().reference().child("messages").child(messageId)
+        let messagesReference = Database.database().reference().child("messages").child("bdqzHS09T3RI0WeqAHuF7owfLtu1_nhPDSVy6DIU15IXYvGBdp2mis682").child(messageId)
         
         messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
             
