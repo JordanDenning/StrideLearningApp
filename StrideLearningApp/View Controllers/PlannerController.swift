@@ -35,6 +35,10 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.5
+        self.tableView.addGestureRecognizer(longPressGesture)
+        
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -203,27 +207,41 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     
     //delete task
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath)
-    {
-        if editingStyle == UITableViewCell.EditingStyle.delete
-        {
-            var toDoItem: ToDoItem
-            switch cellCount {
-            case 0:
-                toDoItem = lastWeekTasks[indexPath.section][indexPath.row]
-            case 1:
-                toDoItem = thisWeekTasks[indexPath.section][indexPath.row]
-            case 2:
-                toDoItem = nextWeekTasks[indexPath.section][indexPath.row]
-            default:
-                toDoItem = thisWeekTasks[indexPath.section][indexPath.row]
-            }
-            toDoItem.ref?.removeValue()
-            if tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.checkmark
-            {
-                tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCell.AccessoryType.none
-            }
-            tableView.reloadData()
+    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+        let p = longPressGesture.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: p)
+        if indexPath == nil {
+            print("Long press on table view, not row.")
+        } else if longPressGesture.state == UIGestureRecognizer.State.began {
+            let alert=UIAlertController(title: "Delete Task", message: "Are you sure you want to delete this task?", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "Delete", style: UIAlertAction.Style.default, handler: {action in
+                var toDoItem: ToDoItem
+                switch self.cellCount {
+                case 0:
+                    toDoItem = self.lastWeekTasks[(indexPath!.section)][indexPath!.row]
+                case 1:
+                    toDoItem = self.thisWeekTasks[indexPath!.section][indexPath!.row]
+                case 2:
+                    toDoItem = self.nextWeekTasks[indexPath!.section][indexPath!.row]
+                default:
+                    toDoItem = self.thisWeekTasks[indexPath!.section][indexPath!.row]
+                }
+                toDoItem.ref?.removeValue()
+                if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
+                {
+                    self.tableView.cellForRow(at: indexPath!)?.accessoryType = UITableViewCell.AccessoryType.none
+                }
+                self.tableView.reloadData()
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+            alert.addAction(okAction)
+            alert.addAction(cancelAction)
+            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+            return
+            
         }
     }
     
