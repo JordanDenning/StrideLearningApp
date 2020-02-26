@@ -31,6 +31,19 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             return
         }
         
+        //password validation
+        let validPassword = self.isValidPassword(password: password)
+        if(!validPassword){
+            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
             
             //error in creating account
@@ -95,14 +108,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 })
             }
         })
-    }
-    
-    //email validation
-    func isValidEmail(email: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        let result = emailTest.evaluate(with: email)
-        return result
     }
     
     //password validation
