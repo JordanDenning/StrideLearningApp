@@ -62,6 +62,14 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
+        
+        //navigation bar color
+        navigationController?.navigationBar.barTintColor = UIColor(r:16, g:153, b:255)
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+
+        //navigation button items
+        self.navigationController?.navigationBar.tintColor = UIColor(r:0, g:43, b:75);
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {

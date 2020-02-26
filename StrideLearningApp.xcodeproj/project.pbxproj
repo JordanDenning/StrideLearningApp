@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E04AA3C240593E700A75242 /* ProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */; };
 		9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D01128C23EAFB0900A44C7B /* EditProfileController.swift */; };
 		9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */; };
 		9D45A19F23F2EF7E00E32150 /* AlertExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileController+handlers.swift"; sourceTree = "<group>"; };
 		9D01128C23EAFB0900A44C7B /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordController.swift; sourceTree = "<group>"; };
 		9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtensions.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				9DC8EB6223D6602100DD3EB7 /* LoginController+handlers.swift */,
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
 				9DFD619B23E8848B0064B92A /* ProfileController.swift */,
+				1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */,
 				9D01128C23EAFB0900A44C7B /* EditProfileController.swift */,
 				9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
@@ -310,6 +313,7 @@
 				9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */,
 				9DC8EB6323D6602100DD3EB7 /* LoginController+handlers.swift in Sources */,
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
+				1E04AA3C240593E700A75242 /* ProfileController+handlers.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
 				9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */,
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,

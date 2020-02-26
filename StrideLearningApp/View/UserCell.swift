@@ -17,13 +17,13 @@ class UserCell: UITableViewCell {
             
             detailTextLabel?.text = message?.text
             
-            if let seconds = message?.timestamp?.doubleValue {
-                let timestampDate = Date(timeIntervalSince1970: seconds)
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                timeLabel.text = dateFormatter.string(from: timestampDate)
-            }
+//            if let seconds = message?.timestamp?.doubleValue {
+//                let timestampDate = Date(timeIntervalSince1970: seconds)
+//                
+//                let dateFormatter = DateFormatter()
+//                dateFormatter.dateFormat = "hh:mm a"
+//                timeLabel.text = dateFormatter.string(from: timestampDate)
+//            }
             
             
         }
@@ -90,7 +90,7 @@ class UserCell: UITableViewCell {
         
         //need x,y,width,height anchors
         timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 42).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
         timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: textLabel!.heightAnchor).isActive = true
     }
