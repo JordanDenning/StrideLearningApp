@@ -11,6 +11,7 @@ import Firebase
 
 class Message: NSObject {
     
+    var chatroomId: String?
     var fromId: String?
     var text: String?
     var timestamp: NSNumber?
@@ -18,6 +19,7 @@ class Message: NSObject {
     var toName: String?
     
     init(dictionary: [String: Any]) {
+        self.chatroomId = dictionary["chatroomId"] as? String
         self.fromId = dictionary["fromId"] as? String
         self.text = dictionary["text"] as? String
         self.toId = dictionary["toId"] as? String

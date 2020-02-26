@@ -22,15 +22,17 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var messages = [Message]()
     
     func observeMessages() {
-        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
             return
         }
+        
+        let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
         
         let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
         userMessagesRef.observe(.childAdded, with: { (snapshot) in
             
             let messageId = snapshot.key
-            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            let messagesRef = Database.database().reference().child("messages").child(chatroomId).child(messageId)
             messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 guard let dictionary = snapshot.value as? [String: AnyObject] else {
@@ -290,14 +292,18 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     @objc func handleSend() {
-        let ref = Database.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
         //is it there best thing to include the name inside of the message node
         let toId = user!.id!
         let toName = user!.name!
+//        let fromName = user!.name!
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+        let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
+        
+        let ref = Database.database().reference().child("messages").child(chatroomId)
+        let childRef = ref.childByAutoId()
+        
+        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "timestamp": timestamp, "chatroomId": chatroomId] as [String : Any]
         //        childRef.updateChildValues(values)
         
         childRef.updateChildValues(values) { (error, ref) in
