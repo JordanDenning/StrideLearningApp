@@ -40,11 +40,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
                 self.user = User(dictionary: dictionary)
             }
             
-        }, withCancel: nil)
-        
-//        fetchUserAndSetupProfile()
-
-        
+        }, withCancel: nil)        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -398,25 +394,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     }
     
     
-//    func fetchUserAndSetupProfile() {
-//        guard let uid = Auth.auth().currentUser?.uid else {
-//            //for some reason uid = nil
-//            return
-//        }
-//
-//        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-//
-//            if let dictionary = snapshot.value as? [String: AnyObject] {
-//
-//                let user = User(dictionary: dictionary)
-//                self.setupProfileImageView(user)
-//                self.setupInputsContainerView(user)
-//
-//            }
-//
-//        }, withCancel: nil)
-//    }
-//
     func updateData(){
         guard let uid = Auth.auth().currentUser?.uid else {
             //for some reason uid = nil
