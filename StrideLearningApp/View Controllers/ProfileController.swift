@@ -38,7 +38,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         let view = UIView()
         view.backgroundColor = .white
         //view.backgroundColor = UIColor(r:16, g:153, b:255)
-        //view.layer.cornerRadius = 10
+        view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
         
@@ -51,11 +51,16 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         imageView.contentMode = .scaleAspectFill
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
         imageView.isUserInteractionEnabled = true
-        //imageView.layer.borderWidth = 4
+//        imageView.layer.borderWidth = 4
         imageView.layer.borderColor = UIColor(r:16, g:153, b:255).cgColor
         imageView.layer.cornerRadius = 70
-        //half of 150 which is height and width
+        //half of 140 which is height and width
         imageView.clipsToBounds = true
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease size of profile picture
+            imageView.layer.cornerRadius = 50
+        }
         
         return imageView
     }()
@@ -156,16 +161,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     let buttonsContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        //view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 5
         view.layer.masksToBounds = false
-        
-        //drop shadow
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 1
         
         return view
     }()
@@ -179,6 +178,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.setTitleColor(UIColor(r: 16, g: 153, b: 255), for: UIControl.State())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.layer.cornerRadius = 5
+        
+        //border
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor(r: 16, g: 153, b: 255).cgColor
         
         //drop shadow
         button.layer.shadowColor = UIColor.black.cgColor
@@ -199,6 +202,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.setTitleColor(UIColor(r: 16, g: 153, b: 255), for: UIControl.State())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.layer.cornerRadius = 5
+        
+        //border
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor(r: 16, g: 153, b: 255).cgColor
         
         //drop shadow
         button.layer.shadowColor = UIColor.black.cgColor
@@ -228,6 +235,13 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         profileImageView.centerYAnchor.constraint(equalTo: imageandNameView.centerYAnchor, constant: 20).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease size of profile picture
+            profileImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+            profileImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            
+        }
 
     
         imageandNameView.addSubview(userName)
@@ -250,7 +264,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     func setupInputsContainerView(_ user: User) {
         //need x, y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.topAnchor.constraint(equalTo: buttonsContainerView.bottomAnchor, constant: 20).isActive = true
+        inputsContainerView.topAnchor.constraint(equalTo: imageandNameView.bottomAnchor).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 180)
         inputsContainerViewHeightAnchor?.isActive = true
@@ -343,21 +357,20 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     func setupButtonView() {
         buttonsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        //buttonsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30).isActive = true
-        buttonsContainerView.topAnchor.constraint(equalTo: imageandNameView.bottomAnchor, constant: 20).isActive = true
+        buttonsContainerView.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 20).isActive = true
         buttonsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        buttonsContainerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        buttonsContainerView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
         buttonsContainerView.addSubview(editProfileButton)
         buttonsContainerView.addSubview(changePasswordButton)
         
         editProfileButton.centerYAnchor.constraint(equalTo: buttonsContainerView.centerYAnchor).isActive = true
-        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -10).isActive = true
+        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
         editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
         editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         changePasswordButton.centerYAnchor.constraint(equalTo: buttonsContainerView.centerYAnchor).isActive = true
-        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 10).isActive = true
+        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
         changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
         changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
@@ -531,6 +544,4 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
 fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
     return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }
-
-
 

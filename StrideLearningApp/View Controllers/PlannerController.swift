@@ -118,6 +118,16 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         let label = UILabel()
         label.text = days[section].description
         label.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = NSTextAlignment.left
+        
+        //header drop shadow
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOpacity = 0.5
+        label.layer.shadowOffset = .zero
+        label.layer.shadowRadius = 3
+        
         return label
     }
     

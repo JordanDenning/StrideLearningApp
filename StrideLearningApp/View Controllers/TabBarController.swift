@@ -26,9 +26,13 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile-1"), tag: 0)
         messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message-1"), tag: 0)
         plannerVC.tabBarItem = UITabBarItem(title: "Planner", image: UIImage(named:"planner-1"), tag: 2)
+        //tabBar.tintColor = .white
+        
+        //tab bar color
+        UITabBar.appearance().barTintColor = .white
+        tabBar.unselectedItemTintColor = UIColor(r:170, g:170, b:170)
         tabBar.tintColor = UIColor(r: 16, g: 153, b: 255)
         
-    
         let controllers = [profileVC, messagesVC, plannerVC]
 //        viewControllers = controllers.map { UINavigationController(rootViewController: $0)}
         viewControllers = controllers
