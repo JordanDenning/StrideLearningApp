@@ -11,6 +11,8 @@ import UIKit
 import Firebase
 
 class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    var ref =  Database.database().reference().child("users")
+    var user: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,8 +22,28 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         view.addSubview(inputsContainerView)
         view.addSubview(buttonsContainerView)
         
-        fetchUserAndSetupProfile()
+        setupProfileImageView()
+        setupInputsContainerView()
         setupButtonView()
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            //for some reason uid = nil
+            return
+        }
+        
+        ref = ref.child(uid)
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                
+                self.user = User(dictionary: dictionary)
+            }
+            
+        }, withCancel: nil)
+        
+//        fetchUserAndSetupProfile()
+
         
     }
     
@@ -212,7 +234,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     }()
     
     
-    func setupProfileImageView(_ user: User) {
+    func setupProfileImageView() {
         imageandNameView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageandNameView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         imageandNameView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
@@ -220,8 +242,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         
         //need x, y, width, height constraints
         imageandNameView.addSubview(profileImageView)
-        if let profileImageUrl = user.profileImageUrl {
+        if let profileImageUrl = user?.profileImageUrl {
             profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+        }
+        else{
+            profileImageView.image = UIImage(named: "profile2")
         }
 
         profileImageView.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
@@ -231,7 +256,12 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
 
     
         imageandNameView.addSubview(userName)
-        userName.text = user.name
+        if let name = user?.name{
+            userName.text = name
+        }
+        else{
+            userName.text = "First Last"
+        }
     
         userName.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
         userName.bottomAnchor.constraint(equalTo: imageandNameView.bottomAnchor, constant: -10).isActive = true
@@ -247,7 +277,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordConfirmTextFieldHeightAnchor: NSLayoutConstraint?
     
-    func setupInputsContainerView(_ user: User) {
+    func setupInputsContainerView() {
         //need x, y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainerView.topAnchor.constraint(equalTo: buttonsContainerView.bottomAnchor, constant: 20).isActive = true
@@ -258,7 +288,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
 
         grade.text = ""
         school.text = ""
-        email.text = user.email
+        if let userEmail = user?.email {
+            email.text = userEmail
+        } else {
+            email.text = "email"
+        }
         
         
         inputsContainerView.addSubview(gradeLabel)
@@ -364,25 +398,25 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     }
     
     
-    func fetchUserAndSetupProfile() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            //for some reason uid = nil
-            return
-        }
-        
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                
-                let user = User(dictionary: dictionary)
-                self.setupProfileImageView(user)
-                self.setupInputsContainerView(user)
-                
-            }
-            
-        }, withCancel: nil)
-    }
-    
+//    func fetchUserAndSetupProfile() {
+//        guard let uid = Auth.auth().currentUser?.uid else {
+//            //for some reason uid = nil
+//            return
+//        }
+//
+//        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+//
+//            if let dictionary = snapshot.value as? [String: AnyObject] {
+//
+//                let user = User(dictionary: dictionary)
+//                self.setupProfileImageView(user)
+//                self.setupInputsContainerView(user)
+//
+//            }
+//
+//        }, withCancel: nil)
+//    }
+//
     func updateData(){
         guard let uid = Auth.auth().currentUser?.uid else {
             //for some reason uid = nil
