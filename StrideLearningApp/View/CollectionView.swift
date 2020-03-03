@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class CollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource {
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
     let today = Date()
@@ -47,6 +47,18 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         if (components.weekday != weekStart){
             ref.child("weekUpToDate").setValue(false)
         }
+        
+//        weekdayView.delegate = weekdayDelegate
+//        weekdayView.dataSource = weekdayDelegate
+//
+//        weekView.delegate = weekDelegate
+//        weekView.dataSource = weekDelegate
+        
+        weekdayView.delegate = self
+        weekdayView.dataSource = self
+        
+        weekView.delegate = self
+        weekView.dataSource = self
         
     }
     
@@ -105,59 +117,191 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
        return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height-171)
     }
     
+    let weekdayChoices = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+    let weekdayView = UIPickerView(frame: CGRect(x: 0, y: 20, width: 250, height: 100))
+    var weekday = String()
+    
+    let weekChoices = ["Last Week","This Week","Next Week"]
+    let weekView = UIPickerView(frame: CGRect(x: 0, y: 140, width: 250, height: 100))
+    var week = String()
+    
+//    let weekdayDelegate = WeekdayPickerDelegate()
+//    let weekDelegate = WeekPickerDelegate()
+//
+//    class WeekdayPickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
+//        var weekdayChoices = ["","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+////        var weekday = String()
+//
+//        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+//            return 1
+//        }
+//
+//        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//            return weekdayChoices.count
+//        }
+//
+//        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//            return weekdayChoices[row]
+//        }
+//
+//        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//                if row == 0 {
+//                    weekday = ""
+//                } else if row == 1 {
+//                    weekday = "Monday"
+//                } else if row == 2 {
+//                    weekday = "Tuesday"
+//                } else if row == 3 {
+//                    weekday = "Wednesday"
+//                } else if row == 4 {
+//                    weekday = "Thursday"
+//                } else if row == 5 {
+//                    weekday = "Friday"
+//                } else if row == 6 {
+//                    weekday = "Saturday"
+//                } else if row == 7 {
+//                    weekday = "Sunday"
+//                }
+//            }
+//    }
+//
+//    class WeekPickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
+//        var weekChoices = ["","Last Week","This Week","Next Week"]
+//        var week = String()
+//
+//        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+//            return 1
+//        }
+//
+//        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//            return weekChoices.count
+//        }
+//
+//        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//            return weekChoices[row]
+//        }
+//
+//        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//            if row == 0 {
+//                week = ""
+//            } else if row == 1 {
+//                week = "Last Week"
+//            } else if row == 2 {
+//                week = "This Week"
+//            } else if row == 3 {
+//                week = "Next Week"
+//            }
+//        }
+//    }
+    
+    
+    //MARK - PickerView
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if (pickerView == weekdayView) {
+            return weekdayChoices.count
+        }
+        else if (pickerView == weekView) {
+            return weekChoices.count
+        }
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if (pickerView == weekdayView) {
+            return weekdayChoices[row]
+        }
+        else if (pickerView == weekView) {
+            return weekChoices[row]
+        }
+        return nil
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if (pickerView == weekdayView) {
+            if row == 0 {
+                weekday = "Monday"
+            } else if row == 1 {
+                weekday = "Tuesday"
+            } else if row == 2 {
+                weekday = "Wednesday"
+            } else if row == 3 {
+                weekday = "Thursday"
+            } else if row == 4 {
+                weekday = "Friday"
+            } else if row == 5 {
+                weekday = "Saturday"
+            } else if row == 6 {
+                weekday = "Sunday"
+            }
+        }
+        else if (pickerView == weekView) {
+            if row == 0 {
+                week = "last-week"
+            } else if row == 1 {
+                week = "this-week"
+            } else if row == 2 {
+                week = "next-week"
+            }
+        }
+    }
     
     @objc func handleNewTask() {
     
-        let alert = UIAlertController(title: "Add New Task", message: "", preferredStyle: .alert)
-
+        let vc = UIViewController()
+        vc.preferredContentSize = CGSize(width: 250,height: 240)
+//        let weekdayView = UIPickerView(frame: CGRect(x: 0, y: 0, width: 250, height: 100))
+//        weekdayView.delegate = self
+//        weekdayView.dataSource = self
+        
+        let weekdayLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: 20))
+        weekdayLabel.textAlignment = .center
+        weekdayLabel.text = "Select Day"
+        vc.view.addSubview(weekdayLabel)
+        vc.view.addSubview(weekdayView)
+        
+//        let weekView = UIPickerView(frame: CGRect(x: 0, y: 100, width: 250, height: 100))
+//        weekView.delegate = self
+//        weekView.dataSource = self
+        let weekLabel = UILabel(frame: CGRect(x: 0, y: 120, width: 250, height: 20))
+        weekLabel.textAlignment = .center
+        weekLabel.text = "Select Week"
+        vc.view.addSubview(weekLabel)
+        vc.view.addSubview(weekView)
+        
+//        let weekdayValue = weekdayDelegate.weekday.self
+//        let weekValue = weekDelegate.week.self
+        
+        let alert = UIAlertController(title: "Add New Task", message: "", preferredStyle: UIAlertController.Style.alert)
         var taskTextField = UITextField()
         alert.addTextField { (field) in
             taskTextField = field
             taskTextField.placeholder = "Add a New Task"
         }
-
-        var dayTextField = UITextField()
-        alert.addTextField { (field) in
-            dayTextField = field
-            dayTextField.placeholder = "Day to do"
-        }
-        
-        var weekTextField = UITextField()
-        alert.addTextField { (field) in
-            weekTextField = field
-            weekTextField.placeholder = "Week"
-        }
-
-
-        let addAction = UIAlertAction(title: "Add Task", style: .default) { (action) in
-
+        alert.setValue(vc, forKey: "contentViewController")
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+            
             guard let taskTextField = alert.textFields?[0],
                 let task = taskTextField.text else { return }
-
-            guard let dayTextField = alert.textFields?[1],
-            let weekday = dayTextField.text else { return }
             
-            guard let weekTextField = alert.textFields?[2],
-                let week = weekTextField.text else { return }
-
             let newItem = ToDoItem(name: task,
                                    addedByUser: Auth.auth().currentUser!.uid,
-                                   day: weekday,
+                                   day: self.weekday,
                                    completed: false)
-
-            let itemRef = self.ref.child(week).child(weekday).child(task)
-
+            
+            let itemRef = self.ref.child(self.week).child(self.weekday).child(task)
+            
             itemRef.setValue(newItem.toAnyObject())
-
-        }
-
-        let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
-            //dismiss alert
-        })
-
-        alert.addAction(addAction)
-        alert.addAction(cancelAction)
-
-        present(alert, animated: true, completion: nil)
+            
+            print("You selected " + self.weekday )
+            print("You selected " + self.week )
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true)
     }
 }
