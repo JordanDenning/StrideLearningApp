@@ -24,6 +24,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     var messagesController: MessagesController?
     var searchController = UISearchController()
     
+    let tableViewHeight = CGFloat(integerLiteral: 30)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -81,9 +83,11 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     //section header
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel()
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableView.sectionHeaderHeight))
+        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        
+        let label = UILabel(frame: CGRect(x: 12, y: 0, width: Int(tableView.frame.size.width), height: Int(tableViewHeight)))
         label.text = headerTitle[section].description
-        label.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
@@ -91,11 +95,18 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         //indent header somehow
         
         //drop shadow for section headers
-        label.layer.shadowColor = UIColor.black.cgColor
-        label.layer.shadowOpacity = 0.5
-        label.layer.shadowOffset = .zero
-        label.layer.shadowRadius = 3
-        return label
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 3
+        
+        view.addSubview(label)
+        
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return tableViewHeight
     }
     
     //number of sections

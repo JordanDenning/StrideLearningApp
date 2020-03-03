@@ -25,6 +25,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
+    let tableViewHeight = CGFloat(integerLiteral: 40)
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -141,24 +142,28 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     
     //section header
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel()
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableView.sectionHeaderHeight))
+        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        
+        let label = UILabel(frame: CGRect(x: 12, y: 0, width: tableView.frame.size.width, height: tableViewHeight))
         label.text = days[section].description
-        label.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
         
         //header drop shadow
-        label.layer.shadowColor = UIColor.black.cgColor
-        label.layer.shadowOpacity = 0.5
-        label.layer.shadowOffset = .zero
-        label.layer.shadowRadius = 3
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 3
         
-        return label
+        view.addSubview(label)
+        
+        return view
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return tableViewHeight
     }
     
     //populate table rows with tasks array
@@ -179,6 +184,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         }
 
         cell.textLabel?.text = newItem.name
+        cell.textLabel?.numberOfLines = 0
         toggleCellCheckbox(cell, isCompleted: newItem.completed)
         return cell
 
