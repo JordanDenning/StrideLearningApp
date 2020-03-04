@@ -41,6 +41,10 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        //fix to bottom of navigation bar
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.edgesForExtendedLayout = []
+        
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
         
         components = calendar.dateComponents([.weekday], from: today)
@@ -54,7 +58,9 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             self.tabBarController?.navigationItem.title = "Last Week"
             self.tabBarController?.navigationItem.leftBarButtonItem = nil
     
-            self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
+            let image = UIImage(named: "task_v3")
+            
+            self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewTask))
             
 //            if let index = self.tableView.indexPathForSelectedRow {
 //                self.tableView.deselectRow(at: index, animated: false)
@@ -102,7 +108,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-       return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height-171)
+       return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height)
     }
     
     

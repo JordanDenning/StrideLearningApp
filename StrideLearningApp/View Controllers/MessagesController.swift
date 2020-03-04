@@ -39,7 +39,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     
     var searchController = UISearchController()
     
-    let image = UIImage(named: "new_message_icon")
+    let image = UIImage(named: "message_v3")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,15 +60,18 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.navigationItem.title = "Messages"
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
-        
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         
         //navigation bar color
-        navigationController?.navigationBar.barTintColor = UIColor(r:16, g:153, b:255)
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
+        self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
+                                                                    for: .default)
+
+        //navigation title properties
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]
 
         //navigation button items
-        self.navigationController?.navigationBar.tintColor = UIColor(r:0, g:43, b:75);
+        self.navigationController?.navigationBar.tintColor = .white
 
     }
     
