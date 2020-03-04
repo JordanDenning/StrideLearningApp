@@ -116,10 +116,10 @@
 		9DC8EB4323D5439600DD3EB7 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				9DC8EB6823D67E3C00DD3EB7 /* ChatLogController.swift */,
 				9DC8EB5623D6395100DD3EB7 /* LoginController.swift */,
 				9DC8EB6223D6602100DD3EB7 /* LoginController+handlers.swift */,
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
+				9DC8EB6823D67E3C00DD3EB7 /* ChatLogController.swift */,
 				9DFD619B23E8848B0064B92A /* ProfileController.swift */,
 				1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */,
 				9D01128C23EAFB0900A44C7B /* EditProfileController.swift */,

@@ -92,8 +92,6 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
         
-        //indent header somehow
-        
         //drop shadow for section headers
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.5

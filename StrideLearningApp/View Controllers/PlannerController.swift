@@ -55,10 +55,11 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     
     func setupTableView(){
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         tableView.heightAnchor.constraint(equalTo: contentView.heightAnchor).isActive = true
         tableView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     func fetchTasks() {
@@ -167,7 +168,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     //populate table rows with tasks array
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -183,15 +183,18 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             newItem = thisWeekTasks[indexPath.section][indexPath.row]
         }
 
+        //do not indent cells
+        cell.separatorInset = UIEdgeInsets.zero
+
         cell.textLabel?.text = newItem.name
         cell.textLabel?.numberOfLines = 0
         toggleCellCheckbox(cell, isCompleted: newItem.completed)
+        
         return cell
 
     }
     
     //check off task
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
