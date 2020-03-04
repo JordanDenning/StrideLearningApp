@@ -114,22 +114,43 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }, withCancel: nil)
     }
     
+    var chats: [String] = ["bdqzHS09T3RI0WeqAHuF7owfLtu1_nhPDSVy6DIU15IXYvGBdp2mis682","FjuaBgLJyRejM5BBQRjK5gnWDaz1_bdqzHS09T3RI0WeqAHuF7owfLtu1"]
+//
+//    func appendData(){
+//        let ref = FIRDatabase.database().reference().child("users")
+//
+//        ref.observeEventType(.Value, withBlock: { snapshot in
+//            var tempImageArray = []
+//
+//            for user in snapshot.children {
+//                userUrl = user.value?["profile_image_1"] as? String
+//                self.currentChats.insert(userUrl, atIndex: 0)
+//                tempImageArray.append(broadcastItem)
+//            }
+//
+//            self.imageArray = tempImageArray
+//        })
+//    }
+    
     fileprivate func fetchMessageWithMessageId(_ messageId: String) {
-        let messagesReference = Database.database().reference().child("messages").child("bdqzHS09T3RI0WeqAHuF7owfLtu1_nhPDSVy6DIU15IXYvGBdp2mis682").child(messageId)
         
-        messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+        for chat in chats {
+            let messagesReference = Database.database().reference().child("messages").child(chat).child(messageId)
             
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message(dictionary: dictionary)
+            messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
                 
-                if let chatPartnerId = message.chatPartnerId() {
-                    self.messagesDictionary[chatPartnerId] = message
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    let message = Message(dictionary: dictionary)
+                    
+                    if let chatPartnerId = message.chatPartnerId() {
+                        self.messagesDictionary[chatPartnerId] = message
+                    }
+                    
+                    self.attemptReloadOfTable()
                 }
                 
-                self.attemptReloadOfTable()
-            }
-            
-        }, withCancel: nil)
+            }, withCancel: nil)
+        }
     }
     
     fileprivate func attemptReloadOfTable() {
