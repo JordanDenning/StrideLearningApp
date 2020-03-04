@@ -48,12 +48,6 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             ref.child("weekUpToDate").setValue(false)
         }
         
-//        weekdayView.delegate = weekdayDelegate
-//        weekdayView.dataSource = weekdayDelegate
-//
-//        weekView.delegate = weekDelegate
-//        weekView.dataSource = weekDelegate
-        
         weekdayView.delegate = self
         weekdayView.dataSource = self
         
@@ -117,85 +111,17 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
        return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height-171)
     }
     
+    //Set up PickerViews and their arrays
+    
     let weekdayChoices = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
     let weekdayView = UIPickerView(frame: CGRect(x: 0, y: 20, width: 250, height: 100))
     var weekday = String()
     
     let weekChoices = ["Last Week","This Week","Next Week"]
-    let weekView = UIPickerView(frame: CGRect(x: 0, y: 140, width: 250, height: 100))
+    let weekView = UIPickerView(frame: CGRect(x: 0, y: 150, width: 250, height: 100))
     var week = String()
     
-//    let weekdayDelegate = WeekdayPickerDelegate()
-//    let weekDelegate = WeekPickerDelegate()
-//
-//    class WeekdayPickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
-//        var weekdayChoices = ["","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-////        var weekday = String()
-//
-//        func numberOfComponents(in pickerView: UIPickerView) -> Int {
-//            return 1
-//        }
-//
-//        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//            return weekdayChoices.count
-//        }
-//
-//        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//            return weekdayChoices[row]
-//        }
-//
-//        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//                if row == 0 {
-//                    weekday = ""
-//                } else if row == 1 {
-//                    weekday = "Monday"
-//                } else if row == 2 {
-//                    weekday = "Tuesday"
-//                } else if row == 3 {
-//                    weekday = "Wednesday"
-//                } else if row == 4 {
-//                    weekday = "Thursday"
-//                } else if row == 5 {
-//                    weekday = "Friday"
-//                } else if row == 6 {
-//                    weekday = "Saturday"
-//                } else if row == 7 {
-//                    weekday = "Sunday"
-//                }
-//            }
-//    }
-//
-//    class WeekPickerDelegate: NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
-//        var weekChoices = ["","Last Week","This Week","Next Week"]
-//        var week = String()
-//
-//        func numberOfComponents(in pickerView: UIPickerView) -> Int {
-//            return 1
-//        }
-//
-//        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//            return weekChoices.count
-//        }
-//
-//        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//            return weekChoices[row]
-//        }
-//
-//        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//            if row == 0 {
-//                week = ""
-//            } else if row == 1 {
-//                week = "Last Week"
-//            } else if row == 2 {
-//                week = "This Week"
-//            } else if row == 3 {
-//                week = "Next Week"
-//            }
-//        }
-//    }
-    
-    
-    //MARK - PickerView
+    //Populate PickerView
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -253,37 +179,26 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
     @objc func handleNewTask() {
     
         let vc = UIViewController()
-        vc.preferredContentSize = CGSize(width: 250,height: 240)
-//        let weekdayView = UIPickerView(frame: CGRect(x: 0, y: 0, width: 250, height: 100))
-//        weekdayView.delegate = self
-//        weekdayView.dataSource = self
+        vc.preferredContentSize = CGSize(width: 250,height: 270)
         
         let weekdayLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: 20))
         weekdayLabel.textAlignment = .center
+        weekdayLabel.font = UIFont.boldSystemFont(ofSize: weekdayLabel.font.pointSize)
         weekdayLabel.text = "Select Day"
         vc.view.addSubview(weekdayLabel)
         vc.view.addSubview(weekdayView)
-        
-//        let weekView = UIPickerView(frame: CGRect(x: 0, y: 100, width: 250, height: 100))
-//        weekView.delegate = self
-//        weekView.dataSource = self
-        let weekLabel = UILabel(frame: CGRect(x: 0, y: 120, width: 250, height: 20))
+
+        let weekLabel = UILabel(frame: CGRect(x: 0, y: 130, width: 250, height: 20))
         weekLabel.textAlignment = .center
+        weekLabel.font = UIFont.boldSystemFont(ofSize: weekLabel.font.pointSize)
         weekLabel.text = "Select Week"
         vc.view.addSubview(weekLabel)
         vc.view.addSubview(weekView)
         
-//        let weekdayValue = weekdayDelegate.weekday.self
-//        let weekValue = weekDelegate.week.self
-        
         let alert = UIAlertController(title: "Add New Task", message: "", preferredStyle: UIAlertController.Style.alert)
-        var taskTextField = UITextField()
-        alert.addTextField { (field) in
-            taskTextField = field
-            taskTextField.placeholder = "Add a New Task"
-        }
+        
         alert.setValue(vc, forKey: "contentViewController")
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+        let okAction=UIAlertAction(title: "Add", style: .default, handler: { (UIAlertAction) in
             
             guard let taskTextField = alert.textFields?[0],
                 let task = taskTextField.text else { return }
@@ -297,11 +212,37 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             
             itemRef.setValue(newItem.toAnyObject())
             
-            print("You selected " + self.weekday )
-            print("You selected " + self.week )
+            print("You selected " + self.weekday)
+            print("You selected " + self.week)
             
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        })
+        let cancelAction=UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        alert.addAction(okAction)
+        okAction.isEnabled = false
+        alert.addAction(cancelAction)
+        
+        var taskTextField = UITextField()
+        alert.addTextField { (field) in
+            taskTextField = field
+            taskTextField.placeholder = "Add a New Task"
+            
+            // Observe the UITextFieldTextDidChange notification to be notified in the below block when text is changed
+            NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: taskTextField, queue: OperationQueue.main, using:
+                {_ in
+                    // Being in this block means that something fired the UITextFieldTextDidChange notification.
+                    
+                    // Access the taskTextField and get the count of its non whitespace characters
+                    let textCount = taskTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
+                    let textIsNotEmpty = textCount > 0
+                    
+                    // If the text contains non whitespace characters, enable the OK Button
+                    okAction.isEnabled = textIsNotEmpty
+                    
+            })
+            
+        }
+        
         self.present(alert, animated: true)
     }
 }
