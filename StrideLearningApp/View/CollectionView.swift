@@ -198,7 +198,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         let alert = UIAlertController(title: "Add New Task", message: "", preferredStyle: UIAlertController.Style.alert)
         
         alert.setValue(vc, forKey: "contentViewController")
-        let okAction=UIAlertAction(title: "Add", style: .default, handler: { (UIAlertAction) in
+        let okAction=UIAlertAction(title: "Add Task", style: .default, handler: { (UIAlertAction) in
             
             guard let taskTextField = alert.textFields?[0],
                 let task = taskTextField.text else { return }
@@ -216,7 +216,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             print("You selected " + self.week)
             
         })
-        let cancelAction=UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction=UIAlertAction(title: "Cancel", style: .default, handler: nil)
 
         alert.addAction(okAction)
         okAction.isEnabled = false
