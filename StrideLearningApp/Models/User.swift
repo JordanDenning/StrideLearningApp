@@ -17,6 +17,9 @@ class User: NSObject {
     var school: String?
     var email: String?
     var profileImageUrl: String?
+    var type: String?
+    var student: String?
+    var students: [Student?]
     
     init(dictionary: [String: Any]) {
         self.name = dictionary["name"] as? String ?? ""
@@ -26,6 +29,9 @@ class User: NSObject {
         self.school = dictionary["school"] as? String ?? ""
         self.email = dictionary["email"] as? String ?? ""
         self.profileImageUrl = dictionary["profileImageUrl"] as? String
+        self.type = dictionary["type"] as? String
+        self.student = dictionary["student"] as? String
+        self.students = dictionary["students"] as? [Student] ?? []
     }
 
 }
