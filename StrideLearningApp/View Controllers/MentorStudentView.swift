@@ -1,0 +1,315 @@
+//
+//  MentorStudentView.swift
+//  StrideLearningApp
+//
+//  Created by Jordan Denning on 3/4/20.
+//  Copyright © 2020 Jordan Denning. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import Firebase
+
+class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UISearchBarDelegate  {
+    
+    var tableView = UITableView()
+    let cellId = "cellId"
+    var ref = Database.database().reference().child("users")
+    var students = [Student]()
+    var filtered = [Student]()
+    var searchActive : Bool = false
+    var searchController = UISearchController()
+    var plannerOverall: PlannerOverallController?
+    let tableViewHeight = CGFloat(integerLiteral: 30)
+    
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        guard let uid = Auth.auth().currentUser?.uid else {
+//            return
+//        }
+//
+//        ref = ref.child(uid)
+//
+//        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+//
+//        navigationItem.title = "Students"
+//
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//
+//        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+//        longPressGesture.minimumPressDuration = 0.5
+//        self.tableView.addGestureRecognizer(longPressGesture)
+//
+//        configureSearchController()
+//        fetchStudents()
+//    }
+    
+    override init(frame: CGRect){
+        super.init(frame: frame)
+        
+        addSubview(tableView)
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        ref = ref.child(uid)
+        
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.5
+        self.tableView.addGestureRecognizer(longPressGesture)
+        
+        setup()
+        configureSearchController()
+        fetchStudents()
+    }
+    
+    func setup() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        tableView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        self.tabBarController?.navigationItem.title = "Students"
+//        self.tabBarController?.navigationItem.leftBarButtonItem = nil
+//        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addNewStudent))
+//        self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
+//        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+//
+//        if let index = self.tableView.indexPathForSelectedRow {
+//            self.tableView.deselectRow(at: index, animated: false)
+//        }
+//
+//    }
+//
+//    @objc func addNewStudent(){
+//        let studentListController = StudentList()
+//        studentListController.mentorView = self
+//        let navController = UINavigationController(rootViewController: studentListController)
+//        plannerOverall!.present(navController, animated: true, completion: nil)
+//    }
+    
+    func fetchStudents() {
+        ref.child("students").queryOrdered(byChild: "name").observe(.value, with: { (snapshot) in
+            //queryOrdered sorts alphabetically/lexilogically
+            var newStudents: [Student] = []
+            for child in snapshot.children {
+                if let snapshot = child as? DataSnapshot,
+                    let student = Student(snapshot: snapshot) {
+                    newStudents.append(student)
+                }
+            }
+            self.students = newStudents
+            self.tableView.reloadData()
+        }, withCancel: nil)
+    }
+    
+    func configureSearchController() {
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search..."
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+//        searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
+        searchController.searchBar.barTintColor = .white
+        tableView.tableHeaderView = searchController.searchBar
+    }
+    
+    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+        let p = longPressGesture.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: p)
+        if indexPath == nil {
+            print("Long press on table view, not row.")
+        } else if longPressGesture.state == UIGestureRecognizer.State.began {
+            let alert=UIAlertController(title: "Remove Student", message: "Are you sure you want to remove this student?", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "Remove", style: UIAlertAction.Style.default, handler: {action in
+                var student: Student
+                if (self.searchActive){
+                    student = self.filtered[indexPath!.row]
+                    self.searchController.searchBar.text = ""
+                    self.searchController.dismiss(animated: true, completion: nil)
+                } else{
+                   student = self.students[indexPath!.row]
+                }
+                student.ref?.removeValue()
+               
+                if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
+                {
+                    self.tableView.cellForRow(at: indexPath!)?.accessoryType = UITableViewCell.AccessoryType.none
+                }
+                self.tableView.reloadData()
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                //dismiss alert
+            })
+            alert.addAction(okAction)
+            alert.addAction(cancelAction)
+            plannerOverall!.present(alert, animated: true, completion: nil)
+            return
+            
+        }
+    }
+    
+    //MARK: TableView
+    
+    //number of sections
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    //number of rows
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        noResultsView()
+        
+        if(searchActive){
+            return filtered.count
+        }
+            
+            
+        else if(searchController.searchBar.text! == ""){
+            return students.count
+        }
+            
+        else {
+            return 0
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
+        
+        let name: String
+        if(searchActive){
+            name = filtered[indexPath.row].name!.description
+        }
+        else{
+            name = students[indexPath.row].name!.description
+        }
+        cell.textLabel?.text = name
+        
+//        if let profileImageUrl = user.profileImageUrl {
+//            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+//        }
+//
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let uid: String
+        if(searchActive){
+            uid = filtered[indexPath.row].ID!.description
+        } else {
+            uid = students[indexPath.row].ID!.description
+        }
+        showPlannerControllerForUser(uid)
+    }
+    
+    //MARK: SearchResultsController
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true;
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+        filtered.removeAll()
+        tableView.reloadData()
+        //reloads OG data instead of filtered
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if !searchActive {
+            searchActive = true
+            tableView.reloadData()
+        }
+        
+        searchController.searchBar.resignFirstResponder()
+    }
+    
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text!
+        
+        filtered = students.filter({ (text) -> Bool in
+            let name: NSString = text.name! as NSString
+            let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return nameRange.location != NSNotFound
+        })
+        if(filtered.count == 0){
+            searchActive = false;
+            // display text saying no results found
+        } else {
+            searchActive = true;
+        }
+        self.tableView.reloadData()
+    }
+    
+    lazy var noResultsLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "No results available"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        
+        return label
+    }()
+    
+    func noResultsView() {
+        if(searchActive) {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        }
+        else if(searchController.searchBar.text! == "") {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        }
+        else {
+            noResultsLabel.isHidden = false
+            tableView.backgroundView = noResultsLabel
+            tableView.separatorStyle = .none
+        }
+    }
+    
+    func showPlannerControllerForUser(_ uid: String) {
+        ref.child("student").setValue(uid)
+        let collectionController = MentorCollectionView()
+        if(searchActive) {
+            searchController.dismiss(animated: false) {
+                self.plannerOverall!.navigationController?.pushViewController(collectionController, animated: true)
+            }
+        }
+        else{
+            self.plannerOverall!.navigationController?.pushViewController(collectionController, animated: true)
+        }
+    }
+    
+    
+}
+
