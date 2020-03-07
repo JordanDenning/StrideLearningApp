@@ -111,7 +111,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     //number of sections
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return headerTitle.count
+//        return headerTitle.count
+        return 1
     }
     
     //number of rows
@@ -174,12 +175,7 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
             dismiss(animated: true) {
                 print("Dismiss completed")
                 let user: User
-                if(self.searchActive){
-                    user = self.filtered[indexPath.row]
-                }
-                else{
                     user = self.users[indexPath.row]
-                }
                 //get the user you tap on
                 self.messagesController?.showChatControllerForUser(user)
             }
