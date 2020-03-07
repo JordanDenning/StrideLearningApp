@@ -40,6 +40,10 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     var searchController = UISearchController()
     
     let image = UIImage(named: "new_message_icon")
+    var messages = [Message]()
+    var messagesDictionary = [String: Message]()
+    var filtered = [Message]()
+    var searchActive : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +59,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         //        observeMessages()
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.navigationItem.title = "Messages"
@@ -86,11 +89,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         searchController.searchBar.sizeToFit()
         tableView.tableHeaderView = searchController.searchBar
     }
-    
-    var messages = [Message]()
-    var messagesDictionary = [String: Message]()
-    var filtered = [Message]()
-    var searchActive : Bool = false
     
     func observeUserMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {
