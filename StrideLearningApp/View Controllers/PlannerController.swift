@@ -15,7 +15,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     var thisWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
     var lastWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
     var nextWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
-    var user: User!
     var taskDictionary = [String: Message]()
     var ref = Database.database().reference().child("to-do-items")
     var cellCount = Int()
@@ -26,6 +25,9 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
     let tableViewHeight = CGFloat(integerLiteral: 40)
+    var studentUid: String?
+    var uid: String?
+    var user: User?
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -43,10 +45,24 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        ref = ref.child(uid)
-        
-        
-        fetchTasks()
+
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                self.user = User(dictionary: dictionary)
+                if self.user?.type == "mentor" {
+                    self.studentUid = self.user?.student
+                    self.ref = self.ref.child(self.studentUid!)
+                }
+                else {
+                    self.ref = self.ref.child(uid)
+                }
+
+            }
+            self.fetchTasks()
+        }, withCancel: nil)
+
+
     }
     
     required init?(coder aDecoder: NSCoder) {
