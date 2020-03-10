@@ -14,31 +14,36 @@ class Student: NSObject {
     let ref: DatabaseReference?
     var name: String?
     var ID: String?
+    var profileImageUrl: String?
     
-    init(name: String, ID: String) {
+    init(name: String, ID: String, profileImageUrl: String) {
         self.ref = nil
         self.name = name
         self.ID = ID
+        self.profileImageUrl = profileImageUrl
     }
     
     init?(snapshot: DataSnapshot) {
         guard
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
-            let ID = value["ID"] as? String else {
+            let ID = value["ID"] as? String,
+            let profileImageUrl = value["profileImageUrl"] else {
                 return nil
         }
         
         self.ref = snapshot.ref
         self.name = name
         self.ID = ID
+        self.profileImageUrl = profileImageUrl as! String
     
 }
     
     func toAnyObject() -> Any {
         return [
             "name": name,
-            "ID": ID
+            "ID": ID,
+            "profileImageUrl": profileImageUrl
         ]
     }
     
