@@ -28,6 +28,7 @@
 		9DCDF43F23D38CE700C4E9A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF43D23D38CE700C4E9A7 /* LaunchScreen.storyboard */; };
 		9DCDF44723D3995600C4E9A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */; };
 		9DD5066224100F5F00631A31 /* MentorStudentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD5066124100F5F00631A31 /* MentorStudentView.swift */; };
+		9DE8B647241446B90010872F /* RegisterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE8B646241446B90010872F /* RegisterType.swift */; };
 		9DF1C9742411990000CFBC67 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9732411990000CFBC67 /* Student.swift */; };
 		9DF1C9762411B39E00CFBC67 /* StudentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9752411B39E00CFBC67 /* StudentList.swift */; };
 		9DF1C9782411FEE100CFBC67 /* PlannerOverallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */; };
@@ -63,6 +64,7 @@
 		9DCDF44023D38CE700C4E9A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9DD5066124100F5F00631A31 /* MentorStudentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentorStudentView.swift; sourceTree = "<group>"; };
+		9DE8B646241446B90010872F /* RegisterType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterType.swift; sourceTree = "<group>"; };
 		9DF1C9732411990000CFBC67 /* Student.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		9DF1C9752411B39E00CFBC67 /* StudentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentList.swift; sourceTree = "<group>"; };
 		9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlannerOverallController.swift; path = StrideLearningApp/View/PlannerOverallController.swift; sourceTree = SOURCE_ROOT; };
@@ -140,6 +142,7 @@
 				9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
 				9DC2414723E2562400F81AB9 /* TabBarController.swift */,
+				9DE8B646241446B90010872F /* RegisterType.swift */,
 				9DD5066124100F5F00631A31 /* MentorStudentView.swift */,
 				EE62C66123E676F200DE785E /* PlannerController.swift */,
 			);
@@ -316,6 +319,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DE8B647241446B90010872F /* RegisterType.swift in Sources */,
 				9DC8EB6923D67E3C00DD3EB7 /* ChatLogController.swift in Sources */,
 				9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */,
 				EE9BE37123F1045A0011130B /* ToDoItem.swift in Sources */,
