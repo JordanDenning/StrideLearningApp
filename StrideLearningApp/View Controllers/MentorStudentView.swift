@@ -44,7 +44,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         
         setup()
         configureSearchController()
-        fetchStudents()
+        fetchStudents(ref)
     }
     
     func setup() {
@@ -81,8 +81,8 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
-//        searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
-        searchController.searchBar.barTintColor = .white
+        searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
+//        searchController.searchBar.barTintColor = .white
         tableView.tableHeaderView = searchController.searchBar
     }
     
@@ -151,19 +151,19 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
-        let name: String
+        let user: Student
         if(searchActive){
-            name = filtered[indexPath.row].name!.description
+            user = filtered[indexPath.row]
         }
         else{
-            name = students[indexPath.row].name!.description
+            user = students[indexPath.row]
         }
-        cell.textLabel?.text = name
+        cell.textLabel?.text = user.name?.description
         
-//        if let profileImageUrl = user.profileImageUrl {
-//            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
-//        }
-//
+        if let profileImageUrl = user.profileImageUrl {
+            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+        }
+
         return cell
     }
     
@@ -179,6 +179,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         } else {
             uid = students[indexPath.row].ID!.description
         }
+        tableView.deselectRow(at: indexPath, animated: true)
         showPlannerControllerForUser(uid)
     }
     
