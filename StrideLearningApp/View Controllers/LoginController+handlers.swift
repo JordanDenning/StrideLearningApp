@@ -76,6 +76,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                         self.present(registerType, animated: true, completion: nil)
                         registerType.loginController = self
                         registerType.profileController = self.profileController
+                        registerType.plannerController = self.plannerController
                         registerType.email = email
                         registerType.password = password
                     }

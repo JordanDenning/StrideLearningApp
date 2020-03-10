@@ -16,6 +16,7 @@ class RegisterType: UIViewController {
     var messagesController: MessagesController?
     var loginController: LoginController?
     var profileController: ProfileController?
+    var plannerController: PlannerOverallController?
     
     lazy var typeSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Student", "Mentor"])
@@ -349,6 +350,8 @@ class RegisterType: UIViewController {
                 }
                 else {
                     self.profileController?.fetchUserAndSetupProfile()
+                    self.plannerController?.checkStudentOrMentor()
+                    self.messagesController?.fetchUserAndSetupNavBarTitle()
                     self.dismiss(animated: true, completion: {
                         self.loginController?.dismiss(animated: true, completion: {
                         })

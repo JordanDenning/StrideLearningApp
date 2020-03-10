@@ -534,6 +534,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         let loginController = LoginController()
         loginController.messagesController = messagesController
         loginController.plannerController = plannerController
+        plannerController!.clearView()
         loginController.profileController = self
         tabBarController?.selectedIndex = 1
         present(loginController, animated: true, completion: nil)

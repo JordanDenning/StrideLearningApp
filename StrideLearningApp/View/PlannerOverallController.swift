@@ -37,12 +37,16 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     
     
     func addCollectionView() {
-        view.addSubview(collectionView)
+        collectionView = StudentCollectionView()
+        collectionView!.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView!)
         
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        collectionView!.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView!.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        collectionView!.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        collectionView!.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        
+        collectionView!.plannerOverall = self
     }
     
     func addMentorView() {
@@ -57,6 +61,12 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     
     
     override func viewWillAppear(_ animated: Bool) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        userRef = ref.child("users").child(uid)
+        toDoRef = ref.child("to-do-items").child(uid)
         tabBarController?.navigationItem.leftBarButtonItem = nil
         userRef!.observe(.value, with: { (snapshot) in
             
@@ -105,15 +115,26 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                     self.mentorTableView.plannerOverall = self
                     self.mentorTableView.fetchStudents(self.userRef!)
                     self.addMentorView()
+                    self.viewContainsMentorView = true
                 } else {
                     self.addCollectionView()
-                    self.collectionView.plannerOverall = self
-                    
+                    self.viewContainsStudentView = true
                 }
                 
             }
             
         }, withCancel: nil)
+    }
+    
+    func clearView(){
+        if viewContainsStudentView {
+            collectionView!.removeFromSuperview()
+            viewContainsStudentView = false
+        }
+        if viewContainsMentorView {
+            mentorTableView.removeFromSuperview()
+            viewContainsMentorView = false
+        }
     }
     
     @objc func handleNewTask() {

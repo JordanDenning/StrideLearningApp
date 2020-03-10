@@ -138,10 +138,10 @@ class LoginController: UIViewController {
                     return
                 }
                 else {
-                    self.messagesController?.observeUserMessages()
+                    self.messagesController?.fetchUserAndSetupNavBarTitle()
                     self.profileController?.fetchUserAndSetupProfile()
                     self.plannerController?.checkStudentOrMentor()
-
+                    
                     self.dismiss(animated: true, completion: nil)
                 }
             }

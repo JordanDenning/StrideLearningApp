@@ -40,7 +40,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.5
-        self.tableView.addGestureRecognizer(longPressGesture)
+        tableView.addGestureRecognizer(longPressGesture)
         
        currentUser()
     }
