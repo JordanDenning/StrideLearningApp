@@ -179,7 +179,8 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 user = self.filtered[indexPath.row]
                 let studentName = user.name
                 let id = user.id
-                let newStudent = Student(name: studentName!, ID: id!)
+                let image = user.profileImageUrl
+                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
     
                 let itemRef = self.currentRef!.child("students").child(id!)
     
@@ -193,14 +194,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 user = self.users[indexPath.row]
                 let studentName = user.name
                 let id = user.id
-                let newStudent = Student(name: studentName!, ID: id!)
+                let image = user.profileImageUrl
+                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
                 
                 let itemRef = self.currentRef!.child("students").child(id!)
                 
                 itemRef.setValue(newStudent.toAnyObject())
             }
         }
-        
     }
     
     //index
