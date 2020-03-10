@@ -19,7 +19,7 @@ class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionVie
     var studentUid: String?
     var uid: String?
     var user: User?
-    var plannerController: PlannerController?
+//    var plannerController: PlannerController?
     var plannerOverall: PlannerOverallController?
     var onceOnly = false
     

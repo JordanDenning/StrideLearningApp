@@ -29,8 +29,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         self.tabBarController?.navigationItem.title = "Profile"
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
-        
-        updateData()
+    
     }
     
 
@@ -350,9 +349,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-
-
     }
     
     func setupButtonView() {

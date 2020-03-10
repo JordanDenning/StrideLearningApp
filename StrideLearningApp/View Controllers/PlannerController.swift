@@ -57,7 +57,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                 else {
                     self.ref = self.ref.child(uid)
                 }
-
             }
             self.fetchTasks()
         }, withCancel: nil)

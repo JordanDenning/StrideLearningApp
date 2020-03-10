@@ -22,30 +22,6 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     var plannerOverall: PlannerOverallController?
     let tableViewHeight = CGFloat(integerLiteral: 30)
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        guard let uid = Auth.auth().currentUser?.uid else {
-//            return
-//        }
-//
-//        ref = ref.child(uid)
-//
-//        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
-//
-//        navigationItem.title = "Students"
-//
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//
-//        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-//        longPressGesture.minimumPressDuration = 0.5
-//        self.tableView.addGestureRecognizer(longPressGesture)
-//
-//        configureSearchController()
-//        fetchStudents()
-//    }
-    
     override init(frame: CGRect){
         super.init(frame: frame)
         
@@ -83,27 +59,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         super.init(coder: aDecoder)
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        self.tabBarController?.navigationItem.title = "Students"
-//        self.tabBarController?.navigationItem.leftBarButtonItem = nil
-//        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addNewStudent))
-//        self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
-//        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-//
-//        if let index = self.tableView.indexPathForSelectedRow {
-//            self.tableView.deselectRow(at: index, animated: false)
-//        }
-//
-//    }
-//
-//    @objc func addNewStudent(){
-//        let studentListController = StudentList()
-//        studentListController.mentorView = self
-//        let navController = UINavigationController(rootViewController: studentListController)
-//        plannerOverall!.present(navController, animated: true, completion: nil)
-//    }
-    
-    func fetchStudents() {
+    func fetchStudents(_ ref: DatabaseReference) {
         ref.child("students").queryOrdered(byChild: "name").observe(.value, with: { (snapshot) in
             //queryOrdered sorts alphabetically/lexilogically
             var newStudents: [Student] = []
