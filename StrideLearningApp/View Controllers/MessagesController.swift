@@ -44,6 +44,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     var messagesDictionary = [String: Message]()
     var filtered = [Message]()
     var searchActive : Bool = false
+    var profileController: ProfileController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,10 +55,11 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         tableView.delegate = self
         tableView.dataSource = self
+        self.tabBarController?.navigationItem.title = "Messages"
         
         configureSearchController()
         
-        //        observeMessages()
+        observeUserMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -281,7 +283,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                //                self.navigationItem.title = dictionary["name"] as? String
                 
                 let user = User(dictionary: dictionary)
                 self.setupNavBarWithUser(user)
@@ -384,15 +385,18 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     }
     
     @objc func handleLogout() {
-        
+
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
             print(logoutError)
         }
-        
+
         let loginController = LoginController()
+        let registerType = RegisterType()
         loginController.messagesController = self
+        loginController.profileController = profileController
+        registerType.messagesController = self
         present(loginController, animated: true, completion: nil)
     }
     

@@ -12,6 +12,8 @@ import Firebase
 class LoginController: UIViewController {
     
     var messagesController: MessagesController?
+    var profileController: ProfileController?
+    var plannerController: PlannerOverallController?
     
     let inputsContainerView: UIView = {
         let view = UIView()
@@ -136,7 +138,9 @@ class LoginController: UIViewController {
                     return
                 }
                 else {
-                    self.messagesController?.fetchUserAndSetupNavBarTitle()
+                    self.messagesController?.observeUserMessages()
+                    self.profileController?.fetchUserAndSetupProfile()
+                    self.plannerController?.checkStudentOrMentor()
 
                     self.dismiss(animated: true, completion: nil)
                 }
