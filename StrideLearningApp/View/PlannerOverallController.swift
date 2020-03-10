@@ -16,7 +16,6 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     var user: User?
     var weekTitle = "Planner"
 
-    
     lazy var collectionView: StudentCollectionView = {
         let cv = StudentCollectionView()
         cv.translatesAutoresizingMaskIntoConstraints = false
@@ -32,6 +31,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        checkStudentOrMentor()
     }
     
     
@@ -56,6 +56,29 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     
     
     override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.navigationItem.leftBarButtonItem = nil
+        userRef!.observe(.value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                
+                self.user = User(dictionary: dictionary)
+                if self.user?.type == "mentor" {
+                    self.tabBarController?.navigationItem.title = "Students"
+                    self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(self.addNewStudent))
+                    self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
+                    self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+                }  else {
+                    self.tabBarController?.navigationItem.title = self.weekTitle
+                    self.navigationItem.title = self.weekTitle
+                    self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(self.handleNewTask))
+                    
+                }
+            }
+            
+        }, withCancel: nil)
+    }
+    
+    func checkStudentOrMentor(){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -68,37 +91,19 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 self.user = User(dictionary: dictionary)
+                if self.user?.type == "mentor" {
+                    self.mentorTableView.plannerOverall = self
+                    self.mentorTableView.fetchStudents(self.userRef!)
+                    self.addMentorView()
+                } else {
+                    self.addCollectionView()
+                    self.collectionView.plannerOverall = self
+                    
+                }
                 
             }
             
         }, withCancel: nil)
-        
-        if user?.type == "mentor" {
-            tabBarController?.navigationItem.title = "Students"
-            tabBarController?.navigationItem.leftBarButtonItem = nil
-            tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addNewStudent))
-            tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
-            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-    
-//            if let index = self.tableView.indexPathForSelectedRow {
-//                self.tableView.deselectRow(at: index, animated: false)
-//            }
-            
-            mentorTableView.plannerOverall = self
-            addMentorView()
-        }
-        else {
-            tabBarController?.navigationItem.title = weekTitle
-            navigationItem.title = weekTitle
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
-            tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
-            tabBarController?.navigationItem.leftBarButtonItem = nil
-
-            addCollectionView()
-            collectionView.plannerOverall = self
-            
-        }
-        
     }
     
     @objc func handleNewTask() {

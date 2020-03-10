@@ -28,14 +28,14 @@ class Student: NSObject {
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
             let ID = value["ID"] as? String,
-            let profileImageUrl = value["profileImageUrl"] else {
+            let profileImageUrl = value["profileImageUrl"] as? String else {
                 return nil
         }
         
         self.ref = snapshot.ref
         self.name = name
         self.ID = ID
-        self.profileImageUrl = profileImageUrl as! String
+        self.profileImageUrl = profileImageUrl
     
 }
     
