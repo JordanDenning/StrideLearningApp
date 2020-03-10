@@ -15,12 +15,13 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     var toDoRef: DatabaseReference?
     var user: User?
     var weekTitle = "Planner"
-
-    lazy var collectionView: StudentCollectionView = {
-        let cv = StudentCollectionView()
-        cv.translatesAutoresizingMaskIntoConstraints = false
-        return cv
-    }()
+    let today = Date()
+    let calendar = Calendar(identifier: .gregorian)
+    var components = DateComponents()
+    let weekStart = 3
+    var collectionView: StudentCollectionView?
+    var viewContainsMentorView = false
+    var viewContainsStudentView = false
     
     lazy var mentorTableView: MentorStudentView = {
         let mv = MentorStudentView()
@@ -72,10 +73,19 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                     self.navigationItem.title = self.weekTitle
                     self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(self.handleNewTask))
                     
+                    self.components = self.calendar.dateComponents([.weekday], from: self.today)
+                    if (self.components.weekday != self.weekStart){
+                        self.toDoRef!.child("weekUpToDate").setValue(false)
+                    }
                 }
             }
             
         }, withCancel: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        mentorTableView.searchController.dismiss(animated: false, completion: nil)
     }
     
     func checkStudentOrMentor(){

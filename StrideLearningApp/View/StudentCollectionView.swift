@@ -12,10 +12,6 @@ import Firebase
 class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
-    let today = Date()
-    let calendar = Calendar(identifier: .gregorian)
-    var components = DateComponents()
-    let weekStart = 3
     var studentUid: String?
     var uid: String?
     var user: User?
@@ -45,11 +41,7 @@ class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionVie
         
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
         
-        components = calendar.dateComponents([.weekday], from: today)
-        if (components.weekday != weekStart){
-            ref.child("weekUpToDate").setValue(false)
-        }
-    
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -106,7 +98,6 @@ class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionVie
         
         cell?.cellCount = cellCount
         
-
         return cell!
     }
     
