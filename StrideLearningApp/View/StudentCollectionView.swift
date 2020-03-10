@@ -19,7 +19,6 @@ class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionVie
     var studentUid: String?
     var uid: String?
     var user: User?
-//    var plannerController: PlannerController?
     var plannerOverall: PlannerOverallController?
     var onceOnly = false
     
@@ -34,14 +33,6 @@ class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionVie
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        view.addSubview(collectionView)
-//        view.topAnchor.constraint(equalTo:
-//
-//    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,38 +56,6 @@ class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionVie
         super.init(coder: aDecoder)
     }
 
-    
-//    func viewWillAppear(_ animated: Bool) {
-//            plannerOverall!.tabBarController?.navigationItem.title = "Last Week"
-//            plannerOverall!.navigationItem.title = "Last Week"
-//            plannerOverall!.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleNewTask))
-//            plannerOverall!.tabBarController?.navigationItem.leftBarButtonItem = nil
-//
-////            if let index = self.tableView.indexPathForSelectedRow {
-////                self.tableView.deselectRow(at: index, animated: false)
-////            }
-////            do we need this?
-//
-//            guard let uid = Auth.auth().currentUser?.uid else {
-//                return
-//            }
-//
-//            Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-//
-//                if let dictionary = snapshot.value as? [String: AnyObject] {
-//                    self.user = User(dictionary: dictionary)
-//                    if self.user?.type == "mentor" {
-//                        self.studentUid = self.user?.student
-//                        self.ref = self.ref.child(self.studentUid!)
-//                    }
-//                    else {
-//                        self.ref = self.ref.child(uid)
-//                    }
-//
-//                }
-//            }, withCancel: nil)
-//        }
-//
     func setupCollectionConstraints() {
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true

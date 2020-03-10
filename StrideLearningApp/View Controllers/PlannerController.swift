@@ -42,12 +42,16 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         longPressGesture.minimumPressDuration = 0.5
         self.tableView.addGestureRecognizer(longPressGesture)
         
+       currentUser()
+    }
+    
+    func currentUser(){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-
+        
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-
+            
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 self.user = User(dictionary: dictionary)
                 if self.user?.type == "mentor" {
@@ -60,8 +64,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             }
             self.fetchTasks()
         }, withCancel: nil)
-
-
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
