@@ -334,7 +334,6 @@ class RegisterType: UIViewController {
                 
                 return
             }
-            
             if let user = Auth.auth().currentUser {
                 if !user.isEmailVerified {
                     let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)
@@ -349,11 +348,9 @@ class RegisterType: UIViewController {
                     return
                 }
                 else {
-//                    self.messagesController?.fetchUserAndSetupNavBarTitle()
-                    
+                    self.profileController?.fetchUserAndSetupProfile()
                     self.dismiss(animated: true, completion: {
                         self.loginController?.dismiss(animated: true, completion: {
-                        self.profileController?.fetchUserAndSetupProfile()
                         })
                         })
                 }
