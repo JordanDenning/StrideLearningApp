@@ -58,6 +58,9 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         weekView.delegate = self
         weekView.dataSource = self
         
+        weekday = "Monday"
+        week = "last-week"
+        
     }
     
         override func viewWillAppear(_ animated: Bool) {
@@ -222,7 +225,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             print("You selected " + self.week)
             
         })
-        let cancelAction=UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let cancelAction=UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
         alert.addAction(okAction)
         okAction.isEnabled = false
