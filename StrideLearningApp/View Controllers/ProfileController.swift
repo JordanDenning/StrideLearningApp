@@ -11,6 +11,8 @@ import UIKit
 import Firebase
 
 class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    var messagesController: MessagesController?
+    var plannerController: PlannerOverallController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +31,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         self.tabBarController?.navigationItem.title = "Profile"
         self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
-        
-        updateData()
+    
     }
     
 
@@ -348,9 +349,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-
-
     }
     
     func setupButtonView() {
@@ -381,7 +379,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             return
         }
         
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        Database.database().reference().child("users").child(uid).observe(.value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
@@ -532,7 +530,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         }
         
         let loginController = LoginController()
-//        loginController.messagesController = self
+        loginController.messagesController = messagesController
+        loginController.plannerController = plannerController
+        plannerController!.clearView()
+        loginController.profileController = self
+        tabBarController?.selectedIndex = 1
         present(loginController, animated: true, completion: nil)
     }
 

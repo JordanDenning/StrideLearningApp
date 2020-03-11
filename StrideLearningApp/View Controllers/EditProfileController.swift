@@ -407,5 +407,6 @@ class EditProfileController: UIViewController {
             
             dismiss(animated: true, completion: nil)
         }
+        profileController?.updateData()
     }
 }

@@ -9,13 +9,16 @@
 import UIKit
 import Firebase
 
-class CollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource {
+class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource {
+
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
-    let today = Date()
-    let calendar = Calendar(identifier: .gregorian)
-    var components = DateComponents()
-    let weekStart = 3
+    var studentUid: String?
+    var uid: String?
+    var user: User?
+    var plannerOverall: PlannerOverallController?
+    var onceOnly = false
+    
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -28,15 +31,11 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         return cv
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        ref = ref.child(uid)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        view.addSubview(collectionView)
-        view.topAnchor.constraint(equalTo: )
+        addSubview(collectionView)
+        
         setupCollectionConstraints()
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -46,7 +45,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         self.edgesForExtendedLayout = []
         
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
-        
+      
         components = calendar.dateComponents([.weekday], from: today)
         if (components.weekday != weekStart){
             ref.child("weekUpToDate").setValue(false)
@@ -60,29 +59,21 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         
         weekday = "Monday"
         week = "last-week"
-        
+
     }
     
-        override func viewWillAppear(_ animated: Bool) {
-            self.tabBarController?.navigationItem.title = "Last Week"
-            self.tabBarController?.navigationItem.leftBarButtonItem = nil
-    
-            let image = UIImage(named: "task_v3")
-            
-            self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewTask))
-            
-//            if let index = self.tableView.indexPathForSelectedRow {
-//                self.tableView.deselectRow(at: index, animated: false)
-//            }
-//            do we need this?
-        }
-    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+=======
+
+        
     func setupCollectionConstraints() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-        collectionView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        collectionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        collectionView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor).isActive = true
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -91,14 +82,30 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             let cell = ip.row
             switch cell {
             case 0:
-                tabBarController?.navigationItem.title = weeks[cell]
+                plannerOverall!.tabBarController?.navigationItem.title = weeks[cell]
+                plannerOverall!.navigationItem.title = weeks[cell]
+                plannerOverall!.weekTitle = weeks[cell]
             case 1:
-                tabBarController?.navigationItem.title = weeks[cell]
+                plannerOverall!.tabBarController?.navigationItem.title = weeks[cell]
+                plannerOverall!.navigationItem.title = weeks[cell]
+                plannerOverall!.weekTitle = weeks[cell]
             case 2:
-                tabBarController?.navigationItem.title = weeks[cell]
+                plannerOverall!.tabBarController?.navigationItem.title = weeks[cell]
+                plannerOverall!.navigationItem.title = weeks[cell]
+                plannerOverall!.weekTitle = weeks[cell]
             default:
-                tabBarController?.navigationItem.title = "Planner"
+                plannerOverall!.tabBarController?.navigationItem.title = "Planner"
+                plannerOverall!.navigationItem.title = "Planner"
+                plannerOverall!.weekTitle = "Planner"
             }
+        }
+    }
+    
+    internal func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if !onceOnly {
+            let indexToScrollTo = IndexPath(item: 1, section: 0)
+            self.collectionView.scrollToItem(at: indexToScrollTo, at: .left, animated: false)
+            onceOnly = true
         }
     }
     
@@ -112,7 +119,6 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         
         cell?.cellCount = cellCount
         
-
         return cell!
     }
     
@@ -230,7 +236,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
         alert.addAction(okAction)
         okAction.isEnabled = false
         alert.addAction(cancelAction)
-        
+
         var taskTextField = UITextField()
         alert.addTextField { (field) in
             taskTextField = field
@@ -252,6 +258,7 @@ class CollectionView: UIViewController, UICollectionViewDataSource, UICollection
             
         }
         
-        self.present(alert, animated: true)
+        plannerOverall!.present(alert, animated: true)
+
     }
 }

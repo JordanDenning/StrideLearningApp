@@ -1,27 +1,28 @@
 //
-//  NewMessageController.swift
+//  StudentList.swift
 //  StrideLearningApp
 //
-//  Created by Jordan Denning on 1/20/20.
+//  Created by Jordan Denning on 3/5/20.
 //  Copyright © 2020 Jordan Denning. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import Firebase
 
-class NewMessageController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate  {
+class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate  {
     
     let cellId = "cellId"
     
     var headerTitle: [String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V"]
     //var users: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
-
     
+    var ref = Database.database().reference().child("users")
+    var currentRef: DatabaseReference?
     var users = [User]()
     var filtered = [User]()
     var searchActive : Bool = false
     
-    var messagesController: MessagesController?
+    var mentorView: MentorStudentView?
     var searchController = UISearchController()
     
     let tableViewHeight = CGFloat(integerLiteral: 30)
@@ -30,21 +31,19 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationController?.navigationBar.barTintColor = UIColor(r:16, g:153, b:255)
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
-        navigationItem.title = "Contacts"
+        navigationItem.title = "Add Students"
         
-        //navigation bar color
-        let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
-        self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
-                                                                    for: .default)
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
         
-        //navigation title properties
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]
-        
-        //navigation button items
-        self.navigationController?.navigationBar.tintColor = .white
+        currentRef = ref.child(uid)
         
         fetchUser()
         
@@ -55,7 +54,7 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     }
     
     func fetchUser() {
-        Database.database().reference().child("users").queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
+        ref.queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
             //queryOrdered sorts alphabetically/lexilogically
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -69,8 +68,6 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
                 DispatchQueue.main.async(execute: {
                     self.tableView.reloadData()
                 })
-                
-                //                user.name = dictionary["name"]
             }
             
         }, withCancel: nil)
@@ -83,7 +80,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.barTintColor = UIColor.white
+//        searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
+        searchController.searchBar.barTintColor = .white
         tableView.tableHeaderView = searchController.searchBar
     }
     
@@ -104,6 +102,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
         
+        //indent header somehow
+        
         //drop shadow for section headers
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.5
@@ -121,7 +121,7 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     //number of sections
     override func numberOfSections(in tableView: UITableView) -> Int {
-//        return headerTitle.count
+        //        return headerTitle.count
         return 1
     }
     
@@ -133,12 +133,12 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         if(searchActive){
             return filtered.count
         }
-
-        
+            
+            
         else if(searchController.searchBar.text! == ""){
             return users.count
         }
-        
+            
         else {
             return 0
         }
@@ -177,20 +177,31 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
                 print("Dismiss completed")
                 let user: User
                 user = self.filtered[indexPath.row]
-                //get the user you tap on
-                self.messagesController?.showChatControllerForUser(user)
+                let studentName = user.name
+                let id = user.id
+                let image = user.profileImageUrl
+                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
+    
+                let itemRef = self.currentRef!.child("students").child(id!)
+    
+                itemRef.setValue(newStudent.toAnyObject())
             }
         }
         else{
             dismiss(animated: true) {
                 print("Dismiss completed")
                 let user: User
-                    user = self.users[indexPath.row]
-                //get the user you tap on
-                self.messagesController?.showChatControllerForUser(user)
+                user = self.users[indexPath.row]
+                let studentName = user.name
+                let id = user.id
+                let image = user.profileImageUrl
+                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
+                
+                let itemRef = self.currentRef!.child("students").child(id!)
+                
+                itemRef.setValue(newStudent.toAnyObject())
             }
         }
-    
     }
     
     //index
@@ -268,6 +279,6 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
             tableView.separatorStyle = .none
         }
     }
-
-
+    
+    
 }

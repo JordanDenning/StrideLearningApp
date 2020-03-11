@@ -27,6 +27,12 @@
 		9DCDF43C23D38CE700C4E9A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF43B23D38CE700C4E9A7 /* Assets.xcassets */; };
 		9DCDF43F23D38CE700C4E9A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF43D23D38CE700C4E9A7 /* LaunchScreen.storyboard */; };
 		9DCDF44723D3995600C4E9A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */; };
+		9DD5066224100F5F00631A31 /* MentorStudentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD5066124100F5F00631A31 /* MentorStudentView.swift */; };
+		9DE8B647241446B90010872F /* RegisterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE8B646241446B90010872F /* RegisterType.swift */; };
+		9DF1C9742411990000CFBC67 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9732411990000CFBC67 /* Student.swift */; };
+		9DF1C9762411B39E00CFBC67 /* StudentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9752411B39E00CFBC67 /* StudentList.swift */; };
+		9DF1C9782411FEE100CFBC67 /* PlannerOverallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */; };
+		9DF1C97A2412D9BB00CFBC67 /* MentorCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9792412D9BB00CFBC67 /* MentorCollectionView.swift */; };
 		9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFD619B23E8848B0064B92A /* ProfileController.swift */; };
 		E26776D0543BE553B34E47AE /* Pods_StrideLearningApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */; };
 		EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */; };
@@ -57,6 +63,12 @@
 		9DCDF43E23D38CE700C4E9A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9DCDF44023D38CE700C4E9A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DCDF44623D3995600C4E9A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9DD5066124100F5F00631A31 /* MentorStudentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentorStudentView.swift; sourceTree = "<group>"; };
+		9DE8B646241446B90010872F /* RegisterType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterType.swift; sourceTree = "<group>"; };
+		9DF1C9732411990000CFBC67 /* Student.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
+		9DF1C9752411B39E00CFBC67 /* StudentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentList.swift; sourceTree = "<group>"; };
+		9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlannerOverallController.swift; path = StrideLearningApp/View/PlannerOverallController.swift; sourceTree = SOURCE_ROOT; };
+		9DF1C9792412D9BB00CFBC67 /* MentorCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MentorCollectionView.swift; path = StrideLearningApp/View/MentorCollectionView.swift; sourceTree = SOURCE_ROOT; };
 		9DFD619B23E8848B0064B92A /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.release.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.release.xcconfig"; sourceTree = "<group>"; };
 		EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.debug.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +121,7 @@
 				9DC8EB6023D65CE000DD3EB7 /* User.swift */,
 				9DC8EB6A23D6877800DD3EB7 /* Message.swift */,
 				EE9BE37023F1045A0011130B /* ToDoItem.swift */,
+				9DF1C9732411990000CFBC67 /* Student.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -116,16 +129,21 @@
 		9DC8EB4323D5439600DD3EB7 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				9DF1C9792412D9BB00CFBC67 /* MentorCollectionView.swift */,
+				9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */,
+				9DC8EB6823D67E3C00DD3EB7 /* ChatLogController.swift */,
 				9DC8EB5623D6395100DD3EB7 /* LoginController.swift */,
 				9DC8EB6223D6602100DD3EB7 /* LoginController+handlers.swift */,
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
-				9DC8EB6823D67E3C00DD3EB7 /* ChatLogController.swift */,
+				9DF1C9752411B39E00CFBC67 /* StudentList.swift */,
 				9DFD619B23E8848B0064B92A /* ProfileController.swift */,
 				1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */,
 				9D01128C23EAFB0900A44C7B /* EditProfileController.swift */,
 				9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
 				9DC2414723E2562400F81AB9 /* TabBarController.swift */,
+				9DE8B646241446B90010872F /* RegisterType.swift */,
+				9DD5066124100F5F00631A31 /* MentorStudentView.swift */,
 				EE62C66123E676F200DE785E /* PlannerController.swift */,
 			);
 			path = "View Controllers";
@@ -301,20 +319,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DE8B647241446B90010872F /* RegisterType.swift in Sources */,
 				9DC8EB6923D67E3C00DD3EB7 /* ChatLogController.swift in Sources */,
 				9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */,
 				EE9BE37123F1045A0011130B /* ToDoItem.swift in Sources */,
+				9DF1C9742411990000CFBC67 /* Student.swift in Sources */,
 				9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */,
 				9DC8EB6B23D6877800DD3EB7 /* Message.swift in Sources */,
 				9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */,
 				9D4C420E23FAE13700116B9E /* CollectionView.swift in Sources */,
 				9D45A19F23F2EF7E00E32150 /* AlertExtensions.swift in Sources */,
 				9DC8EB6723D6705900DD3EB7 /* Extensions.swift in Sources */,
+				9DF1C9782411FEE100CFBC67 /* PlannerOverallController.swift in Sources */,
+				9DF1C97A2412D9BB00CFBC67 /* MentorCollectionView.swift in Sources */,
 				9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */,
 				9DC8EB6323D6602100DD3EB7 /* LoginController+handlers.swift in Sources */,
+				9DF1C9762411B39E00CFBC67 /* StudentList.swift in Sources */,
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
 				1E04AA3C240593E700A75242 /* ProfileController+handlers.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
+				9DD5066224100F5F00631A31 /* MentorStudentView.swift in Sources */,
 				9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */,
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,
 				9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */,
