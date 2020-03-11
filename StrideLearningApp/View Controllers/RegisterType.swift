@@ -142,7 +142,7 @@ class RegisterType: UIViewController {
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.layer.cornerRadius = 10
         
-        button.addTarget(self, action: #selector(login), for: .touchUpInside)
+        button.addTarget(self, action: #selector(loginStarter), for: .touchUpInside)
         
         return button
     }()
@@ -312,20 +312,40 @@ class RegisterType: UIViewController {
         }
     }
     
-    @objc func login(){
+    @objc func loginStarter(){
         if typeSegmentedControl.selectedSegmentIndex == 1 {
             let code = codeTextField.text
-            if code != "1234567" {
-                let alertVC = UIAlertController(title: "Incorrect Code", message: "The code you entered is incorrect. Please try again.", preferredStyle: UIAlertController.Style.alert)
+            var accessCode = ""
+            Database.database().reference().child("access-code").child("code").observe(.value, with: { (snapshot) in
                 
-                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
-
-                alertVC.addAction(okayAction)
-                codeTextField.text = ""
-                self.present(alertVC, animated: true, completion: nil)
-
-            }
+               if let dictionary = snapshot.value as? String {
+                    accessCode = dictionary
+                if code != accessCode {
+                    let alertVC = UIAlertController(title: "Incorrect Code", message: "The code you entered is incorrect. Please try again.", preferredStyle: UIAlertController.Style.alert)
+                    
+                    let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                    
+                    alertVC.addAction(okayAction)
+                    self.codeTextField.text = ""
+                    self.present(alertVC, animated: true, completion: nil)
+                    
+                } else {
+                    self.login()
+                }
+                }
+                
+            }, withCancel: nil)
+            
+        } else{
+            login()
         }
+        
+
+        
+        
+    }
+    
+    func login(){
         Auth.auth().signIn(withEmail: email!, password: password!, completion: { (user, error) in
             
             if let error = error {
@@ -355,7 +375,7 @@ class RegisterType: UIViewController {
                     self.dismiss(animated: true, completion: {
                         self.loginController?.dismiss(animated: true, completion: {
                         })
-                        })
+                    })
                 }
             }
             
@@ -376,9 +396,6 @@ class RegisterType: UIViewController {
             }
             
         })
-
-        
-        
     }
     
     
