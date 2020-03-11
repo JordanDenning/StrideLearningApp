@@ -26,7 +26,6 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "profile-1"), tag: 0)
         messagesVC.tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "message-1"), tag: 0)
         plannerVC.tabBarItem = UITabBarItem(title: "Planner", image: UIImage(named:"planner-1"), tag: 2)
-        //tabBar.tintColor = .white
         
         //tab bar color
         UITabBar.appearance().barTintColor = .white

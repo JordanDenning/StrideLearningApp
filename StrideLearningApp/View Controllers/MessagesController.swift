@@ -87,6 +87,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
+        searchController.searchBar.barTintColor = UIColor.white
         tableView.tableHeaderView = searchController.searchBar
     }
     

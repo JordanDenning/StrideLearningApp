@@ -35,6 +35,17 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         
         navigationItem.title = "Contacts"
         
+        //navigation bar color
+        let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
+        self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
+                                                                    for: .default)
+        
+        //navigation title properties
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]
+        
+        //navigation button items
+        self.navigationController?.navigationBar.tintColor = .white
+        
         fetchUser()
         
         tableView.delegate = self
@@ -72,6 +83,7 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
+        searchController.searchBar.barTintColor = UIColor.white
         tableView.tableHeaderView = searchController.searchBar
     }
     
