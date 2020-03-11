@@ -1,5 +1,5 @@
 //
-//  StudentCollectionView.swift
+//  CollectionView.swift
 //  StrideLearningApp
 //
 //  Created by Jordan Denning on 2/17/20.
@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class StudentCollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var ref = Database.database().reference().child("to-do-items")
     var weeks = ["Last Week", "This Week", "Next Week"]
     var studentUid: String?

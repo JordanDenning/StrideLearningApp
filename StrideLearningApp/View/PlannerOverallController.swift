@@ -19,7 +19,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
     let weekStart = 3
-    var collectionView: StudentCollectionView?
+    var collectionView: CollectionView?
     var viewContainsMentorView = false
     var viewContainsStudentView = false
     
@@ -37,7 +37,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     
     
     func addCollectionView() {
-        collectionView = StudentCollectionView()
+        collectionView = CollectionView()
         collectionView!.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView!)
         
