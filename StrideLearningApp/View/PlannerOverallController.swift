@@ -84,13 +84,13 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                 self.user = User(dictionary: dictionary)
                 if self.user?.type == "mentor" {
                     self.tabBarController?.navigationItem.title = "Students"
-                    self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(self.addNewStudent))
+                    self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.addNewStudent))
                     self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
                     self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
                 }  else {
                     self.tabBarController?.navigationItem.title = self.weekTitle
                     self.navigationItem.title = self.weekTitle
-                    self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(self.handleNewTask))
+                   self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.handleNewTask))
                     
                     self.components = self.calendar.dateComponents([.weekday], from: self.today)
                     if (self.components.weekday != self.weekStart){
