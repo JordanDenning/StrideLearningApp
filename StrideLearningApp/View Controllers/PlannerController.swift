@@ -24,10 +24,11 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
-    let tableViewHeight = CGFloat(integerLiteral: 40)
+    let tableViewHeight = CGFloat(integerLiteral: 45)
     var studentUid: String?
     var uid: String?
     var user: User?
+
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -73,10 +74,12 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     
     func setupTableView(){
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        tableView.heightAnchor.constraint(equalTo: contentView.heightAnchor).isActive = true
-        tableView.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
+        tableView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -30).isActive = true
+        tableView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 5).isActive = true
+        tableView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -5).isActive = true
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        tableView.tableFooterView = UIView()
     }
     
     func fetchTasks() {
@@ -169,11 +172,10 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
         
-        //header drop shadow
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 3
+        //header borders for spacing
+        view.layer.cornerRadius = 10
+        view.layer.borderWidth = 5
+        view.layer.borderColor = UIColor.white.cgColor
         
         view.addSubview(label)
         
@@ -184,8 +186,8 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         return tableViewHeight
     }
     
+    
     //populate table rows with tasks array
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -204,12 +206,18 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         cell.textLabel?.text = newItem.name
         cell.textLabel?.numberOfLines = 0
         toggleCellCheckbox(cell, isCompleted: newItem.completed)
+        
+        func layoutSubviews() {
+            super.layoutSubviews()
+            
+            contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+        }
+        
         return cell
 
     }
     
     //check off task
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
@@ -241,7 +249,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     //delete task
-    
     @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
         let p = longPressGesture.location(in: self.tableView)
         let indexPath = self.tableView.indexPathForRow(at: p)

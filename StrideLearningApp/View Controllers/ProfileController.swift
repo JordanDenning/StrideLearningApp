@@ -38,7 +38,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     let imageandNameView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        //view.backgroundColor = UIColor(r:16, g:153, b:255)
         view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
@@ -69,7 +68,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     let userName: UILabel = {
         let label = UILabel()
         label.text = "User Name"
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont(name: "MarkerFelt-Thin", size: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -162,7 +161,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     let buttonsContainerView: UIView = {
         let view = UIView()
-        //view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 5
         view.layer.masksToBounds = false
@@ -187,9 +185,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         //drop shadow
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = .zero
-        button.layer.shadowRadius = 3
-        
+        button.layer.shadowOffset = CGSize(width: 2, height: 3)
+        button.layer.masksToBounds = false
         button.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
         
         return button
@@ -211,7 +208,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         //drop shadow
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = .zero
+        button.layer.shadowOffset = CGSize(width: 2, height: 3)
+        button.layer.masksToBounds = false
         button.layer.shadowRadius = 3
         
         button.addTarget(self, action: #selector(editPassword), for: .touchUpInside)
@@ -224,7 +222,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         imageandNameView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageandNameView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         imageandNameView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        imageandNameView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 2/5).isActive = true
+        imageandNameView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3).isActive = true
         
         //need x, y, width, height constraints
         imageandNameView.addSubview(profileImageView)
@@ -233,7 +231,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         }
 
         profileImageView.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
-        profileImageView.centerYAnchor.constraint(equalTo: imageandNameView.centerYAnchor, constant: 20).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: imageandNameView.centerYAnchor, constant: -20).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
         
@@ -295,7 +293,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         gradeLabelHeightAnchor?.isActive = true
         
         //First Name
-        grade.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 8).isActive = true
+        grade.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor).isActive = true
         grade.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
         grade.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         
@@ -317,7 +315,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         schoolLabelHeightAnchor?.isActive = true
         
         //Last Name
-        school.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 8).isActive = true
+        school.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor).isActive = true
         school.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor).isActive = true
         school.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         
@@ -339,7 +337,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         emailLabelHeightAnchor?.isActive = true
         
         //Email
-        email.leftAnchor.constraint(equalTo: emailLabel.rightAnchor, constant: 8).isActive = true
+        email.leftAnchor.constraint(equalTo: emailLabel.rightAnchor).isActive = true
         email.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor).isActive = true
         
         email.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
@@ -355,7 +353,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     func setupButtonView() {
         buttonsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        buttonsContainerView.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 20).isActive = true
+        buttonsContainerView.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 8).isActive = true
         buttonsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
         buttonsContainerView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         

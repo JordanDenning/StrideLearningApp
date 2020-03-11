@@ -18,7 +18,7 @@ class EditProfileController: UIViewController {
         let label = UILabel()
         label.text = "First Name"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -43,7 +43,7 @@ class EditProfileController: UIViewController {
         let label = UILabel()
         label.text = "Last Name"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -67,7 +67,7 @@ class EditProfileController: UIViewController {
         let label = UILabel()
         label.text = "Grade"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -91,7 +91,7 @@ class EditProfileController: UIViewController {
         let label = UILabel()
         label.text = "School"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -114,7 +114,7 @@ class EditProfileController: UIViewController {
         let label = UILabel()
         label.text = "Email"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -136,7 +136,6 @@ class EditProfileController: UIViewController {
     
     let inputsContainerView: UIView = {
         let view = UIView()
-//        view.backgroundColor = .blue
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -181,7 +180,7 @@ class EditProfileController: UIViewController {
     }
     
     func setupEditInfo(_ user: User) {
-        inputsContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        inputsContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
@@ -203,15 +202,20 @@ class EditProfileController: UIViewController {
         inputsContainerView.addSubview(emailSeparatorView)
         
         firstNameTextField.text = user.firstName
+        firstNameTextField.font = UIFont.systemFont(ofSize: 14)
         lastNameTextField.text = user.lastName
+        lastNameTextField.font = UIFont.systemFont(ofSize: 14)
         gradeTextField.text = user.grade
+        gradeTextField.font = UIFont.systemFont(ofSize: 14)
         schoolTextField.text = user.school
+        schoolTextField.font = UIFont.systemFont(ofSize: 14)
         emailTextField.text = user.email
+        emailTextField.font = UIFont.systemFont(ofSize: 14)
         
-        let multiplier = 0.70 as CGFloat
+        let multiplier = 0.65 as CGFloat
 
         //First Name
-        firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
         firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
 
         firstNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
@@ -225,7 +229,7 @@ class EditProfileController: UIViewController {
         firstNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Last Name
-        lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
         lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         lastNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
@@ -239,7 +243,7 @@ class EditProfileController: UIViewController {
         lastNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Grade
-        gradeLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        gradeLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
         gradeLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         gradeTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
@@ -253,7 +257,7 @@ class EditProfileController: UIViewController {
         gradeSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //School
-        schoolLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        schoolLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
         schoolLabel.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         schoolTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
@@ -267,7 +271,7 @@ class EditProfileController: UIViewController {
         schoolSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email
-        emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
+        emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
         emailLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         emailTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
