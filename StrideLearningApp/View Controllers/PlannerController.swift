@@ -84,7 +84,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     
     func fetchTasks() {
         var count = 0
-        for week in weeks{
+        for week in weeks {
             for day in days {
                 ref.child(week).child(day).observe(.value, with: {snapshot in
                     var newItems: [ToDoItem] = []
