@@ -400,7 +400,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         mentorInputsContainerViewHeightAnchor?.isActive = true
         
         
-        role.text = "Mentor"
+        role.text = user.role
         school.text = user.school
         email.text = user.email
         
@@ -573,6 +573,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
                 
                 let user = User(dictionary: dictionary)
                 self.grade.text = user.grade
+                self.role.text = user.role
                 self.school.text = user.school
                 self.userName.text = user.name
                 self.email.text = user.email
