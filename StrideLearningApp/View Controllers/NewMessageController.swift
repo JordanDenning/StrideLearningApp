@@ -15,10 +15,9 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     var headerTitle: [String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V", "W", "X", "Y", "Z"]
     var users: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
-     var filtered: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+    var filtered: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 
     var searchActive : Bool = false
-    var textEmpty: Bool = true
     var noResults: Bool = false
     
     var messagesController: MessagesController?
@@ -156,7 +155,7 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     //section header
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+        if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
                 
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableView.sectionHeaderHeight))
                 view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
