@@ -9,12 +9,26 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController {
+class LoginController: UIViewController, UITextFieldDelegate {
     
     var messagesController: MessagesController?
     var profileController: ProfileController?
     var plannerController: PlannerOverallController?
     
+    let scrollView: UIScrollView = {
+        var sv = UIScrollView()
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.backgroundColor = .cyan
+        let screensize: CGRect = UIScreen.main.bounds
+        let screenWidth = screensize.width
+//        let screenHeight = screensize.height
+//        sv = UIScrollView(frame: CGRect(x: 0, y: 120, width: screenWidth, height: screenHeight))
+        //
+        sv.contentSize = CGSize(width: screenWidth, height: 2000)
+        
+        return sv
+    }()
+
     let inputsContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 238, g: 238, b: 238)
@@ -191,21 +205,32 @@ class LoginController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        view.addSubview(inputsContainerView)
-        view.addSubview(loginRegisterButton)
-        view.addSubview(forgotPasswordButton)
-        view.addSubview(profileImageView)
-        view.addSubview(loginRegisterSegmentedControl)
+        view.addSubview(scrollView)
+        
+        setupScrollView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+
+    }
+    
+    func setupScrollView(){
+        scrollView.leftAnchor.constraint(equalTo:  view.leftAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo:  view.topAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo:  view.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo:  view.bottomAnchor).isActive = true
+
+        scrollView.addSubview(inputsContainerView)
+        scrollView.addSubview(loginRegisterButton)
+        scrollView.addSubview(forgotPasswordButton)
+        scrollView.addSubview(profileImageView)
+        scrollView.addSubview(loginRegisterSegmentedControl)
         
         setupInputsContainerView()
         setupLoginRegisterButton()
         setupForgotPasswordButton()
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
-
     }
     
     
@@ -349,8 +374,8 @@ class LoginController: UIViewController {
 
     func setupLoginRegisterSegmentedControl() {
         //need x, y, width, height constraints
-        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30).isActive = true
+        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -30).isActive = true
         loginRegisterSegmentedControl.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -12).isActive = true
         loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
         loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -358,7 +383,7 @@ class LoginController: UIViewController {
     
     func setupProfileImageView() {
         //need x, y, width, height constraints
-        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        profileImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         //profileImageView.topAnchor.constraint(equalTo:
             //view.topAnchor, constant: 80).isActive = true
         profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -50).isActive = true
@@ -368,8 +393,8 @@ class LoginController: UIViewController {
     
     func setupInputsContainerView() {
         //need x, y, width, height constraints
-        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
+        inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        inputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -24).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 100)
         inputsContainerViewHeightAnchor?.isActive = true
         
@@ -382,6 +407,13 @@ class LoginController: UIViewController {
         inputsContainerView.addSubview(passwordTextField)
         inputsContainerView.addSubview(passwordSeparatorView)
         inputsContainerView.addSubview(passwordConfirmTextField)
+        
+        self.firstNameTextField.delegate = self
+        self.lastNameTextField.delegate = self
+        self.emailTextField.delegate = self
+        self.passwordTextField.delegate = self
+        self.passwordConfirmTextField.delegate = self
+
         
         //firstNameTextField
         //need x, y, width, height constraints
@@ -462,7 +494,7 @@ class LoginController: UIViewController {
     
     func setupLoginRegisterButton() {
         //need x, y, width, height constraints
-        loginRegisterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -471,7 +503,7 @@ class LoginController: UIViewController {
     func setupForgotPasswordButton() {
         //need x, y, width, height constraints
         forgotPasswordButton.isHidden = false
-        forgotPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        forgotPasswordButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         forgotPasswordButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 12).isActive = true
         forgotPasswordButton.widthAnchor.constraint(equalTo: loginRegisterButton.widthAnchor).isActive = true
         forgotPasswordButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -491,6 +523,11 @@ class LoginController: UIViewController {
         return .lightContent
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
     @objc func keyboardWillShow(notification:NSNotification){
         
         let userInfo = notification.userInfo!
@@ -498,8 +535,8 @@ class LoginController: UIViewController {
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
         var contentInset:UIEdgeInsets = self.scrollView.contentInset
-        contentInset.bottom = keyboardFrame.size.height
-        scrollView.contentInset = contentInset + 20
+        contentInset.bottom = keyboardFrame.size.height + 20
+        scrollView.contentInset = contentInset
     }
     
     @objc func keyboardWillHide(notification:NSNotification){
