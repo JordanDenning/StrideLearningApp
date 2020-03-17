@@ -356,9 +356,6 @@ class EditProfileController: UIViewController {
         mentorInputsContainerView.addSubview(roleLabel)
         mentorInputsContainerView.addSubview(roleTextField)
         mentorInputsContainerView.addSubview(roleSeparatorView)
-        mentorInputsContainerView.addSubview(schoolLabel)
-        mentorInputsContainerView.addSubview(schoolTextField)
-        mentorInputsContainerView.addSubview(schoolSeparatorView)
         mentorInputsContainerView.addSubview(emailLabel)
         mentorInputsContainerView.addSubview(emailTextField)
         mentorInputsContainerView.addSubview(emailSeparatorView)
@@ -369,8 +366,6 @@ class EditProfileController: UIViewController {
         lastNameTextField.font = UIFont.systemFont(ofSize: 14)
         roleTextField.text = user.role
         roleTextField.font = UIFont.systemFont(ofSize: 14)
-        schoolTextField.text = user.school
-        schoolTextField.font = UIFont.systemFont(ofSize: 14)
         emailTextField.text = user.email
         emailTextField.font = UIFont.systemFont(ofSize: 14)
         
@@ -418,26 +413,12 @@ class EditProfileController: UIViewController {
         roleSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         roleSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        //School
-        schoolLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
-        schoolLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
-        
-        schoolTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
-        schoolTextField.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
-        schoolTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
-        //School Separator
-        schoolSeparatorView.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 12).isActive = true
-        schoolSeparatorView.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor, constant: -12).isActive = true
-        schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        schoolSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
         //Email
         emailLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         emailTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
-        emailTextField.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
         emailTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email Separator
