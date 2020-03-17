@@ -65,10 +65,8 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.navigationItem.title = weekTitle
         navigationItem.title = weekTitle
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(handleNewTask))
-        tabBarController?.navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(handleNewTask))
         
         guard let uid = Auth.auth().currentUser?.uid else {
             return
