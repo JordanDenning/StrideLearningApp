@@ -347,7 +347,6 @@ class EditProfileController: UIViewController {
                                         })
                                         alert.addAction(okAction)
                                         self.present(alert, animated: true, completion: nil)
-//                                        return
                                     }
                                 })
                                 let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "school": school, "email": email] as [String : AnyObject]

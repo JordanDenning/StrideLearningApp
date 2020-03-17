@@ -81,8 +81,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
-//        searchController.searchBar.barTintColor = .white
+        searchController.searchBar.barTintColor = .white
         tableView.tableHeaderView = searchController.searchBar
     }
     
@@ -94,7 +93,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         } else if longPressGesture.state == UIGestureRecognizer.State.began {
             let alert=UIAlertController(title: "Remove Student", message: "Are you sure you want to remove this student?", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "Remove", style: UIAlertAction.Style.default, handler: {action in
+            let okAction=UIAlertAction(title: "Remove", style: .destructive, handler: {action in
                 var student: Student
                 if (self.searchActive){
                     student = self.filtered[indexPath!.row]
@@ -103,6 +102,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
                 } else{
                    student = self.students[indexPath!.row]
                 }
+                
                 student.ref?.removeValue()
                
                 if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
@@ -112,10 +112,12 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
                 self.tableView.reloadData()
             })
             let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                
                 //dismiss alert
             })
-            alert.addAction(okAction)
+           
             alert.addAction(cancelAction)
+            alert.addAction(okAction)
             plannerOverall!.present(alert, animated: true, completion: nil)
             return
             
