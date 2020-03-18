@@ -18,13 +18,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
     let scrollView: UIScrollView = {
         var sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.backgroundColor = .cyan
+        sv.backgroundColor = .white
+        
         let screensize: CGRect = UIScreen.main.bounds
         let screenWidth = screensize.width
-//        let screenHeight = screensize.height
-//        sv = UIScrollView(frame: CGRect(x: 0, y: 120, width: screenWidth, height: screenHeight))
-        //
-        sv.contentSize = CGSize(width: screenWidth, height: 2000)
+        let screenHeight = screensize.height
+        sv.contentSize = CGSize(width: screenWidth, height: screenHeight)
         
         return sv
     }()
@@ -375,7 +374,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     func setupLoginRegisterSegmentedControl() {
         //need x, y, width, height constraints
         loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -30).isActive = true
+        loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -65).isActive = true
         loginRegisterSegmentedControl.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -12).isActive = true
         loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
         loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -384,18 +383,24 @@ class LoginController: UIViewController, UITextFieldDelegate {
     func setupProfileImageView() {
         //need x, y, width, height constraints
         profileImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        //profileImageView.topAnchor.constraint(equalTo:
-            //view.topAnchor, constant: 80).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -50).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -25).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease size of Stride picture
+            profileImageView.widthAnchor.constraint(equalToConstant: 125).isActive = true
+            profileImageView.heightAnchor.constraint(equalToConstant: 125).isActive = true
+             loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -70).isActive = true
+            
+        }
     }
     
     func setupInputsContainerView() {
         //need x, y, width, height constraints
         inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -24).isActive = true
-        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 100)
+        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 90)
         inputsContainerViewHeightAnchor?.isActive = true
         
         inputsContainerView.addSubview(firstNameTextField)
