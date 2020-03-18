@@ -202,10 +202,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     lazy var editProfileButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         button.setTitle("Edit Profile", for: UIControl.State())
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor(r: 16, g: 153, b: 255), for: UIControl.State())
+        button.setTitleColor(.white, for: UIControl.State())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.layer.cornerRadius = 5
         
@@ -214,10 +214,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.layer.borderColor = UIColor(r: 16, g: 153, b: 255).cgColor
         
         //drop shadow
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = CGSize(width: 2, height: 3)
-        button.layer.masksToBounds = false
+//        button.layer.shadowColor = UIColor.black.cgColor
+//        button.layer.shadowOpacity = 0.5
+//        button.layer.shadowOffset = CGSize(width: 2, height: 3)
+//        button.layer.masksToBounds = false
         button.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
         
         return button
@@ -225,10 +225,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     
     lazy var changePasswordButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .white
+        button.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         button.setTitle("Change Password", for: UIControl.State())
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor(r: 16, g: 153, b: 255), for: UIControl.State())
+        button.setTitleColor(.white, for: UIControl.State())
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         button.layer.cornerRadius = 5
         
@@ -237,11 +237,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.layer.borderColor = UIColor(r: 16, g: 153, b: 255).cgColor
         
         //drop shadow
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowOffset = CGSize(width: 2, height: 3)
-        button.layer.masksToBounds = false
-        button.layer.shadowRadius = 3
+//        button.layer.shadowColor = UIColor.black.cgColor
+//        button.layer.shadowOpacity = 0.5
+//        button.layer.shadowOffset = CGSize(width: 2, height: 3)
+//        button.layer.masksToBounds = false
+//        button.layer.shadowRadius = 3
         
         button.addTarget(self, action: #selector(editPassword), for: .touchUpInside)
         
@@ -460,19 +460,23 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         buttonsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         buttonsContainerView.topAnchor.constraint(equalTo: studentInputsContainerView.bottomAnchor, constant: 8).isActive = true
         buttonsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        buttonsContainerView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        buttonsContainerView.heightAnchor.constraint(equalToConstant: 110).isActive = true
         
         buttonsContainerView.addSubview(editProfileButton)
         buttonsContainerView.addSubview(changePasswordButton)
         
-        editProfileButton.centerYAnchor.constraint(equalTo: buttonsContainerView.centerYAnchor).isActive = true
-        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
-        editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
+        editProfileButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
+//        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
+//        editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
+        editProfileButton.topAnchor.constraint(equalTo: buttonsContainerView.topAnchor, constant: 10).isActive = true
+        editProfileButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        changePasswordButton.centerYAnchor.constraint(equalTo: buttonsContainerView.centerYAnchor).isActive = true
-        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
-        changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
+        changePasswordButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
+//        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
+//        changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
+        changePasswordButton.topAnchor.constraint(equalTo: editProfileButton.bottomAnchor, constant: 10).isActive = true
+        changePasswordButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
     }
