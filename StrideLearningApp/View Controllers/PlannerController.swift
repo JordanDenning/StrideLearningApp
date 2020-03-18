@@ -84,7 +84,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     
     func fetchTasks() {
         var count = 0
-        for week in weeks{
+        for week in weeks {
             for day in days {
                 ref.child(week).child(day).observe(.value, with: {snapshot in
                     var newItems: [ToDoItem] = []
@@ -257,7 +257,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         } else if longPressGesture.state == UIGestureRecognizer.State.began {
             let alert=UIAlertController(title: "Delete Task", message: "Are you sure you want to delete this task?", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "Delete", style: UIAlertAction.Style.default, handler: {action in
+            let okAction=UIAlertAction(title: "Delete", style: .destructive, handler: {action in
                 var toDoItem: ToDoItem
                 switch self.cellCount {
                 case 0:
@@ -279,8 +279,9 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
                 //dismiss alert
             })
-            alert.addAction(okAction)
+            
             alert.addAction(cancelAction)
+            alert.addAction(okAction)
             self.window?.rootViewController?.present(alert, animated: true, completion: nil)
             return
             
