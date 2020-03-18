@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout {
+class ChatLogController: UICollectionViewController, UITextViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var user: User? {
         didSet {
@@ -66,24 +66,46 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         //        setupInputComponents()
         //
         //        setupKeyboardObservers()
+        
     }
     
-    lazy var inputTextField: UITextField = {
-        let textField = UITextField()
+    lazy var inputTextField: UITextView = {
+        let textField = UITextView()
         textField.layer.cornerRadius = 10
         textField.backgroundColor = UIColor(r: 245, g: 245, b: 245)
         textField.layer.borderWidth = 1
         let myColor : UIColor = UIColor(r: 220, g: 220, b: 220)
         textField.layer.borderColor = myColor.cgColor
-        textField.placeholder = "Enter message..."
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: textField.frame.height))
-        textField.leftViewMode = UITextField.ViewMode.always;
-        textField.leftView = view;
+        textField.text = "Enter message..."
+        textField.font = UIFont.systemFont(ofSize: 15.0)
+        textField.textColor = UIColor.lightGray
+//        textField.placeholder = "Enter message..."
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: textField.contentSize.height))
+        textField.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
+//        textField.leftViewMode = UITextField.ViewMode.always;
+//        textField.leftView = view;
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.isScrollEnabled = false
         textField.delegate = self
+        
         return textField
     }()
     
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if inputTextField.textColor == UIColor.lightGray {
+            inputTextField.text = nil
+            inputTextField.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if inputTextField.text.isEmpty {
+            inputTextField.text = "Enter message..."
+            inputTextField.textColor = UIColor.lightGray
+        }
+    }
+    
+    var textHeightConstraint: NSLayoutConstraint!
     
     lazy var inputContainerView: UIView = {
         let containerView = UIView()
@@ -99,14 +121,18 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         //sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20).isActive = true
+        sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 26).isActive = true
         
         containerView.addSubview(self.inputTextField)
         //x,y,w,h
         self.inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 12).isActive = true
         self.inputTextField.centerYAnchor.constraint(equalTo: sendButton.centerYAnchor).isActive = true
         self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-        self.inputTextField.heightAnchor.constraint(equalToConstant: 36).isActive = true
+//        self.inputTextField.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        self.textHeightConstraint = self.inputTextField.heightAnchor.constraint(equalToConstant: 40)
+        self.textHeightConstraint.isActive = true
+        
+        self.adjustTextViewHeight()
         //self.inputTextField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10).isActive = true
 
         
@@ -122,6 +148,28 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         return containerView
     }()
+    
+    func textViewDidChange(_ textView: UITextView) {
+        self.adjustTextViewHeight()
+    }
+
+    func adjustTextViewHeight() {
+        
+        let fixedWidth = inputTextField.frame.size.width
+        let newSize = inputTextField.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        
+        if (newSize.height >= 70.0) {
+            inputTextField.isScrollEnabled = true
+            print("scrolling")
+        }
+        
+        else if (newSize.height < 70.0) {
+            inputTextField.isScrollEnabled = false
+            self.textHeightConstraint.constant = newSize.height
+            print(newSize.height)
+            self.view.layoutIfNeeded()
+        }
+    }
     
     override var inputAccessoryView: UIView? {
         get {
@@ -290,6 +338,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     @objc func handleSend() {
+        self.textHeightConstraint.constant = 35
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
         //is it there best thing to include the name inside of the message node
