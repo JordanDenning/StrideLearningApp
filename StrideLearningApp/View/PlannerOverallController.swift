@@ -86,7 +86,8 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                     self.tabBarController?.navigationItem.title = "Students"
                     self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.addNewStudent))
                     self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
-                    self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+                    //navigation title properties
+                    self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]
                 }  else {
                     self.tabBarController?.navigationItem.title = self.weekTitle
                     self.navigationItem.title = self.weekTitle

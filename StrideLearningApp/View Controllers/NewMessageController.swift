@@ -36,9 +36,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         navigationItem.title = "Contacts"
         
         //navigation bar color
-        let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
-        self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
-                                                                    for: .default)
+        navigationController?.navigationBar.barTintColor = UIColor(r:16, g:153, b:255)
+
         
         //navigation title properties
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]

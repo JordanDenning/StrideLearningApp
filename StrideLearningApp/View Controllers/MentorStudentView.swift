@@ -81,8 +81,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.barTintColor = UIColor(r: 16, g: 153, b: 255)
-//        searchController.searchBar.barTintColor = .white
+        searchController.searchBar.barTintColor = .white
         tableView.tableHeaderView = searchController.searchBar
     }
     
