@@ -73,22 +73,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         setupKeyboardObservers()
     }
     
-    //    var needScroll = true
-    //
-    //    override func viewWillLayoutSubviews() {
-    //        if (needScroll == true) {
-    //            scrollToBottom()
-    //            needScroll = false
-    //            print("view loaded")
-    //        }
-    //    }
-    
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        super.viewWillAppear(true)
-    //        scrollToBottom()
-    //        print("view loaded")
-    //    }
-    
     func scrollToBottom(){
         
         DispatchQueue.main.async {
