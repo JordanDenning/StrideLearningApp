@@ -65,10 +65,8 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.navigationItem.title = weekTitle
         navigationItem.title = weekTitle
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(handleNewTask))
-        tabBarController?.navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(handleNewTask))
         
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -255,9 +253,10 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         })
         let cancelAction=UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
-        alert.addAction(okAction)
+        
         okAction.isEnabled = false
         alert.addAction(cancelAction)
+        alert.addAction(okAction)
         
         var taskTextField = UITextField()
         alert.addTextField { (field) in

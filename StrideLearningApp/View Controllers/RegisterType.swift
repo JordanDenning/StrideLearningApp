@@ -47,9 +47,35 @@ class RegisterType: UIViewController {
     lazy var mentorLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Please enter the correct access code."
+        label.text = "Please enter your role and the correct access code."
+        label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         return label
+    }()
+    
+    let roleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Role"
+        label.textColor = UIColor(r: 16, g: 153, b: 255)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let roleTextField: UITextField = {
+        let tv = UITextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tv
+    }()
+    
+    let roleSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     let codeLabel: UILabel = {
@@ -269,6 +295,9 @@ class RegisterType: UIViewController {
         mentorView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
         mentorView.addSubview(mentorLabel)
+        mentorView.addSubview(roleLabel)
+        mentorView.addSubview(roleTextField)
+        mentorView.addSubview(roleSeparatorView)
         mentorView.addSubview(codeLabel)
         mentorView.addSubview(codeTextField)
         mentorView.addSubview(codeSeparatorView)
@@ -278,16 +307,30 @@ class RegisterType: UIViewController {
         mentorLabel.topAnchor.constraint(equalTo: mentorView.topAnchor, constant: 12).isActive = true
         mentorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
+        //Role
+        roleLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 12).isActive = true
+        roleLabel.topAnchor.constraint(equalTo: mentorLabel.bottomAnchor, constant: 15).isActive = true
+        
+        roleTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
+        roleTextField.topAnchor.constraint(equalTo: roleLabel.topAnchor).isActive = true
+        roleTextField.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //role Separator
+        roleSeparatorView.topAnchor.constraint(equalTo: roleLabel.bottomAnchor, constant: 12).isActive = true
+        roleSeparatorView.rightAnchor.constraint(equalTo: mentorView.rightAnchor, constant: -12).isActive = true
+        roleSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        roleSeparatorView.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
+        
         //Code
         codeLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 12).isActive = true
-        codeLabel.topAnchor.constraint(equalTo: mentorLabel.bottomAnchor, constant: 15).isActive = true
+        codeLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         codeTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
-        codeTextField.topAnchor.constraint(equalTo: codeLabel.topAnchor).isActive = true
+        codeTextField.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
         codeTextField.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Code Separator
-        codeSeparatorView.topAnchor.constraint(equalTo: gradeLabel.bottomAnchor, constant: 12).isActive = true
+        codeSeparatorView.topAnchor.constraint(equalTo: codeLabel.bottomAnchor, constant: 12).isActive = true
         codeSeparatorView.rightAnchor.constraint(equalTo: mentorView.rightAnchor, constant: -12).isActive = true
         codeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         codeSeparatorView.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
@@ -393,6 +436,8 @@ class RegisterType: UIViewController {
                 
             } else {
                 ref.child("type").setValue("mentor")
+                let role = self.roleTextField.text
+                ref.child("role").setValue(role)
             }
             
         })

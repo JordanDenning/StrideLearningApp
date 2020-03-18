@@ -13,14 +13,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     
     let cellId = "cellId"
     
-    var headerTitle: [String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V"]
-    //var users: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+    var headerTitle: [String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V", "W", "X", "Y", "Z"]
+    var users: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+    var filtered: [[User]] = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
     
     var ref = Database.database().reference().child("users")
     var currentRef: DatabaseReference?
-    var users = [User]()
-    var filtered = [User]()
     var searchActive : Bool = false
+    var noResults: Bool = false
     
     var mentorView: MentorStudentView?
     var searchController = UISearchController()
@@ -54,20 +54,83 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     }
     
     func fetchUser() {
-        ref.queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
+        var count = 0
+        Database.database().reference().child("users").queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
             //queryOrdered sorts alphabetically/lexilogically
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let user = User(dictionary: dictionary)
+                let letter = user.name?.prefix(1)
                 user.id = snapshot.key
                 
-                //if you use this setter, your app will crash if your class properties don't exactly match up with the firebase dictionary keys
-                self.users.append(user)
-                
-                //this will crash because of background thread, so lets use dispatch_async to fix
-                DispatchQueue.main.async(execute: {
-                    self.tableView.reloadData()
-                })
+                if user.type != "mentor" {
+                    switch letter {
+                    case "A":
+                        count = 0
+                    case "B":
+                        count = 1
+                    case "C":
+                        count = 2
+                    case "D":
+                        count = 3
+                    case "E":
+                        count = 4
+                    case "F":
+                        count = 5
+                    case "G":
+                        count = 6
+                    case "H":
+                        count = 7
+                    case "I":
+                        count = 8
+                    case "J":
+                        count = 9
+                    case "K":
+                        count = 10
+                    case "L":
+                        count = 11
+                    case "M":
+                        count = 12
+                    case "N":
+                        count = 13
+                    case "O":
+                        count = 14
+                    case "P":
+                        count = 15
+                    case "Q":
+                        count = 16
+                    case "R":
+                        count = 17
+                    case "S":
+                        count = 18
+                    case "T":
+                        count = 19
+                    case "U":
+                        count = 20
+                    case "V":
+                        count = 21
+                    case "W":
+                        count = 22
+                    case "X":
+                        count = 23
+                    case "Y":
+                        count = 24
+                    case "Z":
+                        count = 25
+                    default:
+                        count = 0
+                    }
+                    
+                    
+                    //if you use this setter, your app will crash if your class properties don't exactly match up with the firebase dictionary keys
+                    self.users[count].append(user)
+                    
+                    //this will crash because of background thread, so lets use dispatch_async to fix
+                    DispatchQueue.main.async(execute: {
+                        self.tableView.reloadData()
+                    })
+                }
+                //                user.name = dictionary["name"]
             }
             
         }, withCancel: nil)
@@ -92,54 +155,52 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     
     //section header
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableView.sectionHeaderHeight))
-        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
-        
-        let label = UILabel(frame: CGRect(x: 12, y: 0, width: Int(tableView.frame.size.width), height: Int(tableViewHeight)))
-        label.text = headerTitle[section].description
-        label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textAlignment = NSTextAlignment.left
-        
-        //indent header somehow
-        
-        //drop shadow for section headers
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 3
-        
-        view.addSubview(label)
-        
-        return view
+        if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+            
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableView.sectionHeaderHeight))
+            view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+            
+            let label = UILabel(frame: CGRect(x: 12, y: 0, width: Int(tableView.frame.size.width), height: Int(tableViewHeight)))
+            label.text = headerTitle[section].description
+            label.textColor = .white
+            label.font = UIFont.boldSystemFont(ofSize: 18)
+            label.textAlignment = NSTextAlignment.left
+            
+            //drop shadow for section headers
+            view.layer.shadowColor = UIColor.black.cgColor
+            view.layer.shadowOpacity = 0.5
+            view.layer.shadowOffset = .zero
+            view.layer.shadowRadius = 3
+            
+            view.addSubview(label)
+            
+            return view
+        }
+        return nil
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return tableViewHeight
+        if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+            return tableViewHeight
+        } else {
+            return CGFloat.leastNonzeroMagnitude
+        }
     }
     
     //number of sections
     override func numberOfSections(in tableView: UITableView) -> Int {
-        //        return headerTitle.count
-        return 1
+       return headerTitle.count
     }
     
     //number of rows
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         noResultsView()
-        
-        if(searchActive){
-            return filtered.count
-        }
-            
-            
-        else if(searchController.searchBar.text! == ""){
-            return users.count
-        }
-            
-        else {
-            return 0
+       
+        if(searchActive && searchController.searchBar.text != "") {
+            return filtered[section].count
+        } else {
+            return users[section].count
         }
         
     }
@@ -148,11 +209,11 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
         let user: User
-        if(searchActive){
-            user = filtered[indexPath.row]
+        if(searchActive && searchController.searchBar.text != ""){
+            user = filtered[indexPath.section][indexPath.row]
         }
         else{
-            user = users[indexPath.row]
+            user = users[indexPath.section][indexPath.row]
         }
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
@@ -170,27 +231,44 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if(searchActive){
+        if(searchActive && searchController.searchBar.text != ""){
             searchController.dismiss(animated: true, completion: nil)
             dismiss(animated: true) {
-                print("Dismiss completed")
+                print("This Dismiss completed")
                 let user: User
-                user = self.filtered[indexPath.row]
+                user = self.filtered[indexPath.section][indexPath.row]
+                //get the user you tap on
                 let studentName = user.name
                 let id = user.id
                 let image = user.profileImageUrl
                 let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
-    
+                
                 let itemRef = self.currentRef!.child("students").child(id!)
-    
+                
                 itemRef.setValue(newStudent.toAnyObject())
             }
         }
-        else{
+        else if(searchActive && searchController.searchBar.text == ""){
+            searchController.dismiss(animated: true, completion: nil)
+            dismiss(animated: true) {
+                print("This Dismiss completed")
+                let user: User
+                user = self.users[indexPath.section][indexPath.row]
+                let studentName = user.name
+                let id = user.id
+                let image = user.profileImageUrl
+                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
+                
+                let itemRef = self.currentRef!.child("students").child(id!)
+                
+                itemRef.setValue(newStudent.toAnyObject())
+            }
+        }
+        else {
             dismiss(animated: true) {
                 print("Dismiss completed")
                 let user: User
-                user = self.users[indexPath.row]
+                user = self.users[indexPath.section][indexPath.row]
                 let studentName = user.name
                 let id = user.id
                 let image = user.profileImageUrl
@@ -220,8 +298,10 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
-        filtered.removeAll()
+        searchActive = false
+        for letter in (0...25){
+            filtered[letter].removeAll()
+        }
         tableView.reloadData()
         //reloads OG data instead of filtered
     }
@@ -238,19 +318,21 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text!
-        
-        filtered = users.filter({ (text) -> Bool in
-            let name: NSString = text.name! as NSString
-            let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-            return nameRange.location != NSNotFound
-        })
-        if(filtered.count == 0){
-            searchActive = false;
-            // display text saying no results found
-        } else {
-            searchActive = true;
+        var filterResults = true
+        for letter in (0...25){
+            filtered[letter] = users[letter].filter({ (text) -> Bool in
+                let name: NSString = text.name! as NSString
+                let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+                return nameRange.location != NSNotFound
+            })
+            if(filtered[letter].count != 0){
+                filterResults = false
+            }
+            
+            self.tableView.reloadData()
         }
-        self.tableView.reloadData()
+        
+        noResults = filterResults
     }
     
     lazy var noResultsLabel: UILabel = {
@@ -264,18 +346,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     }()
     
     func noResultsView() {
-        if(searchActive) {
-            noResultsLabel.isHidden = true
-            tableView.separatorStyle = .singleLine
-        }
-        else if(searchController.searchBar.text! == "") {
-            noResultsLabel.isHidden = true
-            tableView.separatorStyle = .singleLine
-        }
-        else {
+        if(noResults){
             noResultsLabel.isHidden = false
             tableView.backgroundView = noResultsLabel
             tableView.separatorStyle = .none
+        }
+        else {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
         }
     }
     

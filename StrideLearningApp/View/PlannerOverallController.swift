@@ -255,9 +255,10 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
         })
         let cancelAction=UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
-        alert.addAction(okAction)
+        
         okAction.isEnabled = false
         alert.addAction(cancelAction)
+        alert.addAction(okAction)
         
         var taskTextField = UITextField()
         alert.addTextField { (field) in

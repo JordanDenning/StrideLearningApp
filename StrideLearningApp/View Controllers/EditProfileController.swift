@@ -13,6 +13,9 @@ import Firebase
 class EditProfileController: UIViewController {
     
     var profileController: ProfileController?
+    var user: User?
+    var viewContainsMentorView = false
+    var viewContainsStudentView = false
     
     let firstNameLabel: UILabel = {
         let label = UILabel()
@@ -87,6 +90,30 @@ class EditProfileController: UIViewController {
         return view
     }()
     
+    let roleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Role"
+        label.textColor = UIColor(r: 16, g: 153, b: 255)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let roleTextField: UITextField = {
+        let tv = UITextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tv
+    }()
+    
+    let roleSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let schoolLabel: UILabel = {
         let label = UILabel()
         label.text = "School"
@@ -134,7 +161,14 @@ class EditProfileController: UIViewController {
         return view
     }()
     
-    let inputsContainerView: UIView = {
+    let studentInputsContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    let mentorInputsContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -154,7 +188,8 @@ class EditProfileController: UIViewController {
         
         navigationItem.title = "Edit Profile"
         
-        view.addSubview(inputsContainerView)
+//        view.addSubview(studentInputsContainerView)
+//        view.addSubview(mentorInputsContainerView)
         fetchUserAndSetupProfile()
        
         
@@ -169,37 +204,54 @@ class EditProfileController: UIViewController {
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                //                self.navigationItem.title = dictionary["name"] as? String
                 
-                let user = User(dictionary: dictionary)
-                self.setupEditInfo(user)
+                self.user = User(dictionary: dictionary)
+                if self.user?.type == "mentor" {
+                    self.setupMentorEditInfo(self.user!)
+                    self.viewContainsMentorView = true
+                    if self.viewContainsStudentView == true {
+                        self.studentInputsContainerView.removeFromSuperview()
+                        self.viewContainsStudentView = false
+                    }
+                }
+                else {
+                    self.setupStudentEditInfo(self.user!)
+                    self.viewContainsStudentView = true
+                    if self.viewContainsMentorView == true {
+                        self.mentorInputsContainerView.removeFromSuperview()
+                        self.viewContainsMentorView = false
+                    }
+                }
                 
             }
             
         }, withCancel: nil)
     }
     
-    func setupEditInfo(_ user: User) {
-        inputsContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+    func setupStudentEditInfo(_ user: User) {
         
-        inputsContainerView.addSubview(firstNameLabel)
-        inputsContainerView.addSubview(firstNameTextField)
-        inputsContainerView.addSubview(firstNameSeparatorView)
-        inputsContainerView.addSubview(lastNameLabel)
-        inputsContainerView.addSubview(lastNameTextField)
-        inputsContainerView.addSubview(lastNameSeparatorView)
-        inputsContainerView.addSubview(gradeLabel)
-        inputsContainerView.addSubview(gradeTextField)
-        inputsContainerView.addSubview(gradeSeparatorView)
-        inputsContainerView.addSubview(schoolLabel)
-        inputsContainerView.addSubview(schoolTextField)
-        inputsContainerView.addSubview(schoolSeparatorView)
-        inputsContainerView.addSubview(emailLabel)
-        inputsContainerView.addSubview(emailTextField)
-        inputsContainerView.addSubview(emailSeparatorView)
+        view.addSubview(studentInputsContainerView)
+        
+        studentInputsContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        studentInputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        studentInputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        studentInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+        
+        studentInputsContainerView.addSubview(firstNameLabel)
+        studentInputsContainerView.addSubview(firstNameTextField)
+        studentInputsContainerView.addSubview(firstNameSeparatorView)
+        studentInputsContainerView.addSubview(lastNameLabel)
+        studentInputsContainerView.addSubview(lastNameTextField)
+        studentInputsContainerView.addSubview(lastNameSeparatorView)
+        studentInputsContainerView.addSubview(gradeLabel)
+        studentInputsContainerView.addSubview(gradeTextField)
+        studentInputsContainerView.addSubview(gradeSeparatorView)
+        studentInputsContainerView.addSubview(schoolLabel)
+        studentInputsContainerView.addSubview(schoolTextField)
+        studentInputsContainerView.addSubview(schoolSeparatorView)
+        studentInputsContainerView.addSubview(emailLabel)
+        studentInputsContainerView.addSubview(emailTextField)
+        studentInputsContainerView.addSubview(emailSeparatorView)
         
         firstNameTextField.text = user.firstName
         firstNameTextField.font = UIFont.systemFont(ofSize: 14)
@@ -215,74 +267,165 @@ class EditProfileController: UIViewController {
         let multiplier = 0.65 as CGFloat
 
         //First Name
-        firstNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
-        firstNameLabel.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
+        firstNameLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
+        firstNameLabel.topAnchor.constraint(equalTo: studentInputsContainerView.topAnchor).isActive = true
 
-        firstNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
-        firstNameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
-        firstNameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        firstNameTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
+        firstNameTextField.topAnchor.constraint(equalTo: studentInputsContainerView.topAnchor).isActive = true
+        firstNameTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
 
         //First Name Separator
         firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 12).isActive = true
-        firstNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
+        firstNameSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
         firstNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        firstNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        firstNameSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Last Name
-        lastNameLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
+        lastNameLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
         lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        lastNameTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        lastNameTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
         lastNameTextField.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
-        lastNameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        lastNameTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Last Name Separator
         lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 12).isActive = true
-        lastNameSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
+        lastNameSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        lastNameSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        lastNameSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Grade
-        gradeLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
+        gradeLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
         gradeLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        gradeTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        gradeTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
         gradeTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
-        gradeTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        gradeTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Grade Separator
         gradeSeparatorView.topAnchor.constraint(equalTo: gradeLabel.bottomAnchor, constant: 12).isActive = true
-        gradeSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
+        gradeSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
         gradeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        gradeSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        gradeSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //School
-        schoolLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
+        schoolLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
         schoolLabel.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        schoolTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        schoolTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
         schoolTextField.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
-        schoolTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        schoolTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //School Separator
         schoolSeparatorView.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 12).isActive = true
-        schoolSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
+        schoolSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
         schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        schoolSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        schoolSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email
-        emailLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
+        emailLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
         emailLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        emailTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
         emailTextField.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
-        emailTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email Separator
         emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 12).isActive = true
-        emailSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
+        emailSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        emailSeparatorView.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        emailSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+    }
+    
+    func setupMentorEditInfo(_ user: User) {
+        
+        view.addSubview(mentorInputsContainerView)
+        
+        mentorInputsContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        mentorInputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        mentorInputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        mentorInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+        
+        mentorInputsContainerView.addSubview(firstNameLabel)
+        mentorInputsContainerView.addSubview(firstNameTextField)
+        mentorInputsContainerView.addSubview(firstNameSeparatorView)
+        mentorInputsContainerView.addSubview(lastNameLabel)
+        mentorInputsContainerView.addSubview(lastNameTextField)
+        mentorInputsContainerView.addSubview(lastNameSeparatorView)
+        mentorInputsContainerView.addSubview(roleLabel)
+        mentorInputsContainerView.addSubview(roleTextField)
+        mentorInputsContainerView.addSubview(roleSeparatorView)
+        mentorInputsContainerView.addSubview(emailLabel)
+        mentorInputsContainerView.addSubview(emailTextField)
+        mentorInputsContainerView.addSubview(emailSeparatorView)
+        
+        firstNameTextField.text = user.firstName
+        firstNameTextField.font = UIFont.systemFont(ofSize: 14)
+        lastNameTextField.text = user.lastName
+        lastNameTextField.font = UIFont.systemFont(ofSize: 14)
+        roleTextField.text = user.role
+        roleTextField.font = UIFont.systemFont(ofSize: 14)
+        emailTextField.text = user.email
+        emailTextField.font = UIFont.systemFont(ofSize: 14)
+        
+        let multiplier = 0.65 as CGFloat
+        
+        //First Name
+        firstNameLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
+        firstNameLabel.topAnchor.constraint(equalTo: mentorInputsContainerView.topAnchor).isActive = true
+        
+        firstNameTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
+        firstNameTextField.topAnchor.constraint(equalTo: mentorInputsContainerView.topAnchor).isActive = true
+        firstNameTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //First Name Separator
+        firstNameSeparatorView.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor, constant: 12).isActive = true
+        firstNameSeparatorView.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor, constant: -12).isActive = true
+        firstNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        firstNameSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Last Name
+        lastNameLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
+        lastNameLabel.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        lastNameTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
+        lastNameTextField.topAnchor.constraint(equalTo: firstNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        lastNameTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Last Name Separator
+        lastNameSeparatorView.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 12).isActive = true
+        lastNameSeparatorView.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor, constant: -12).isActive = true
+        lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        lastNameSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Role
+        roleLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
+        roleLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        roleTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
+        roleTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
+        roleTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Role Separator
+        roleSeparatorView.topAnchor.constraint(equalTo: roleLabel.bottomAnchor, constant: 12).isActive = true
+        roleSeparatorView.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor, constant: -12).isActive = true
+        roleSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        roleSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Email
+        emailLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        emailTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Email Separator
+        emailSeparatorView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 12).isActive = true
+        emailSeparatorView.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor, constant: -12).isActive = true
+        emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        emailSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
     }
     
@@ -294,6 +437,7 @@ class EditProfileController: UIViewController {
         let firstName = firstNameTextField.text
         let lastName = lastNameTextField.text
         let grade = gradeTextField.text
+        let role = roleTextField.text
         let school = schoolTextField.text
         var email = emailTextField.text
         email = email?.lowercased()
@@ -347,10 +491,9 @@ class EditProfileController: UIViewController {
                                         })
                                         alert.addAction(okAction)
                                         self.present(alert, animated: true, completion: nil)
-//                                        return
                                     }
                                 })
-                                let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "school": school, "email": email] as [String : AnyObject]
+                                let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "role": role, "school": school, "email": email] as [String : AnyObject]
                                 
                                 guard let uid = Auth.auth().currentUser?.uid else {
                                     return
@@ -385,7 +528,7 @@ class EditProfileController: UIViewController {
             
         }
         else {
-            let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "school": school, "email": email] as [String : AnyObject]
+            let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "role": role, "school": school, "email": email] as [String : AnyObject]
             
             guard let uid = Auth.auth().currentUser?.uid else {
                 return

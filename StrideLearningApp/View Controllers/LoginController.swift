@@ -9,12 +9,25 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController {
+class LoginController: UIViewController, UITextFieldDelegate {
     
     var messagesController: MessagesController?
     var profileController: ProfileController?
     var plannerController: PlannerOverallController?
     
+    let scrollView: UIScrollView = {
+        var sv = UIScrollView()
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.backgroundColor = .white
+        
+        let screensize: CGRect = UIScreen.main.bounds
+        let screenWidth = screensize.width
+        let screenHeight = screensize.height
+        sv.contentSize = CGSize(width: screenWidth, height: screenHeight)
+        
+        return sv
+    }()
+
     let inputsContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(r: 238, g: 238, b: 238)
@@ -51,105 +64,6 @@ class LoginController: UIViewController {
         return button
     }()
     
-    @objc func handleLoginRegister() {
-        if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
-            handleLogin()
-        } else {
-            handleRegister()
-        }
-    }
-    
-    @objc func handleForgotPassword() {
-        
-        let alertController = UIAlertController(title: "Reset Password", message: "", preferredStyle: .alert)
-            alertController.addTextField { (forgotPasswordTextField) in
-                forgotPasswordTextField.placeholder = "Enter Email"
-            }
-            let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
-                
-                let forgotPasswordTextField = alertController.textFields![0]
-                
-                guard let email = forgotPasswordTextField.text else {
-                    print("Form is not valid")
-                    return
-                }
-                Auth.auth().sendPasswordReset(withEmail: email) { error in
-                    if error == nil
-                   {
-                        // Success - Sent recovery email
-                        print("Email sent!")
-                        let alert=UIAlertController(title: "Email sent.", message: "Please check your email for a password reset link.", preferredStyle: UIAlertController.Style.alert)
-                        //create a UIAlertAction object for the button
-                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                            //dismiss alert
-                        })
-                        alert.addAction(okAction)
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                   }
-                    
-                    if let error = error {
-                        print(error)
-                        self.handleError(error)
-                        return
-                    }
-
-                }
-            })
-            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
-                //dismiss alert
-            })
-
-            alertController.addAction(okAction)
-            alertController.addAction(cancelAction)
-
-            self.present(alertController, animated: true, completion: nil)
-        
-
-    }
-    
-    func handleLogin() {
-        guard let email = emailTextField.text, let password = passwordTextField.text else {
-            print("Form is not valid")
-            return
-        }
-        
-        Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
-            
-            if let error = error {
-                print(error)
-
-                self.handleError(error)
-
-                return
-            }
-            
-            if let user = Auth.auth().currentUser {
-                if !user.isEmailVerified {
-                    let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)
-                    
-                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {(_) in user.sendEmailVerification()
-                    }
-                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
-                    
-                    alertVC.addAction(resendAction)
-                    alertVC.addAction(cancelAction)
-                    self.present(alertVC, animated: true, completion: nil)
-                    return
-                }
-                else {
-                    self.messagesController?.fetchUserAndSetupNavBarTitle()
-                    self.profileController?.fetchUserAndSetupProfile()
-                    self.plannerController?.checkStudentOrMentor()
-                    
-                    self.dismiss(animated: true, completion: nil)
-                }
-            }
-            
-        })
-        
-    }
-
     let firstNameTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "First Name"
@@ -274,6 +188,150 @@ class LoginController: UIViewController {
         return sc
     }()
     
+    var inputsContainerViewHeightAnchor: NSLayoutConstraint?
+    var firstNameTextFieldHeightAnchor: NSLayoutConstraint?
+    var lastNameTextFieldHeightAnchor: NSLayoutConstraint?
+    var gradeTextFieldHeightAnchor: NSLayoutConstraint?
+    var schoolTextFieldHeightAnchor: NSLayoutConstraint?
+    var emailTextFieldHeightAnchor: NSLayoutConstraint?
+    var passwordTextFieldHeightAnchor: NSLayoutConstraint?
+    var passwordConfirmTextFieldHeightAnchor: NSLayoutConstraint?
+    
+    
+   
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .white
+        view.addSubview(scrollView)
+        
+        setupScrollView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+
+    }
+    
+    func setupScrollView(){
+        scrollView.leftAnchor.constraint(equalTo:  view.leftAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo:  view.topAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo:  view.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo:  view.bottomAnchor).isActive = true
+
+        scrollView.addSubview(inputsContainerView)
+        scrollView.addSubview(loginRegisterButton)
+        scrollView.addSubview(forgotPasswordButton)
+        scrollView.addSubview(profileImageView)
+        scrollView.addSubview(loginRegisterSegmentedControl)
+        
+        setupInputsContainerView()
+        setupLoginRegisterButton()
+        setupForgotPasswordButton()
+        setupProfileImageView()
+        setupLoginRegisterSegmentedControl()
+    }
+    
+    
+    @objc func handleLoginRegister() {
+        if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
+            handleLogin()
+        } else {
+            handleRegister()
+        }
+    }
+    
+    @objc func handleForgotPassword() {
+        
+        let alertController = UIAlertController(title: "Reset Password", message: "", preferredStyle: .alert)
+        alertController.addTextField { (forgotPasswordTextField) in
+            forgotPasswordTextField.placeholder = "Enter Email"
+        }
+        let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+            
+            let forgotPasswordTextField = alertController.textFields![0]
+            
+            guard let email = forgotPasswordTextField.text else {
+                print("Form is not valid")
+                return
+            }
+            Auth.auth().sendPasswordReset(withEmail: email) { error in
+                if error == nil
+                {
+                    // Success - Sent recovery email
+                    print("Email sent!")
+                    let alert=UIAlertController(title: "Email sent.", message: "Please check your email for a password reset link.", preferredStyle: UIAlertController.Style.alert)
+                    //create a UIAlertAction object for the button
+                    let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                        //dismiss alert
+                    })
+                    alert.addAction(okAction)
+                    self.present(alert, animated: true, completion: nil)
+                    return
+                }
+                
+                if let error = error {
+                    print(error)
+                    self.handleError(error)
+                    return
+                }
+                
+            }
+        })
+        let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+            //dismiss alert
+        })
+        
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+        
+        
+    }
+    
+    func handleLogin() {
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            print("Form is not valid")
+            return
+        }
+        
+        Auth.auth().signIn(withEmail: email, password: password, completion: { (user, error) in
+            
+            if let error = error {
+                print(error)
+                
+                self.handleError(error)
+                
+                return
+            }
+            
+            if let user = Auth.auth().currentUser {
+                if !user.isEmailVerified {
+                    let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)
+                    
+                    let resendAction = UIAlertAction(title: "Resend", style: UIAlertAction.Style.default) {(_) in user.sendEmailVerification()
+                    }
+                    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+                    
+                    alertVC.addAction(resendAction)
+                    alertVC.addAction(cancelAction)
+                    self.present(alertVC, animated: true, completion: nil)
+                    return
+                }
+                else {
+                    self.messagesController?.fetchUserAndSetupNavBarTitle()
+                    self.profileController?.fetchUserAndSetupProfile()
+                    self.plannerController?.checkStudentOrMentor()
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+            
+        })
+        
+    }
+    
     @objc func handleLoginRegisterChange() {
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: UIControl.State())
@@ -312,38 +370,11 @@ class LoginController: UIViewController {
         hideForgotPasswordButton()
         
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .white
-        view.addSubview(inputsContainerView)
-        view.addSubview(loginRegisterButton)
-        view.addSubview(forgotPasswordButton)
-        view.addSubview(profileImageView)
-        view.addSubview(loginRegisterSegmentedControl)
-        
-        setupInputsContainerView()
-        setupLoginRegisterButton()
-        setupForgotPasswordButton()
-        setupProfileImageView()
-        setupLoginRegisterSegmentedControl()
 
-    }
-    
-    var inputsContainerViewHeightAnchor: NSLayoutConstraint?
-    var firstNameTextFieldHeightAnchor: NSLayoutConstraint?
-    var lastNameTextFieldHeightAnchor: NSLayoutConstraint?
-    var gradeTextFieldHeightAnchor: NSLayoutConstraint?
-    var schoolTextFieldHeightAnchor: NSLayoutConstraint?
-    var emailTextFieldHeightAnchor: NSLayoutConstraint?
-    var passwordTextFieldHeightAnchor: NSLayoutConstraint?
-    var passwordConfirmTextFieldHeightAnchor: NSLayoutConstraint?
-    
     func setupLoginRegisterSegmentedControl() {
         //need x, y, width, height constraints
-        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -30).isActive = true
+        loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -65).isActive = true
         loginRegisterSegmentedControl.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -12).isActive = true
         loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
         loginRegisterSegmentedControl.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -351,19 +382,25 @@ class LoginController: UIViewController {
     
     func setupProfileImageView() {
         //need x, y, width, height constraints
-        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        //profileImageView.topAnchor.constraint(equalTo:
-            //view.topAnchor, constant: 80).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -50).isActive = true
+        profileImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -25).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease size of Stride picture
+            profileImageView.widthAnchor.constraint(equalToConstant: 125).isActive = true
+            profileImageView.heightAnchor.constraint(equalToConstant: 125).isActive = true
+             loginRegisterSegmentedControl.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -70).isActive = true
+            
+        }
     }
     
     func setupInputsContainerView() {
         //need x, y, width, height constraints
-        inputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
-        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 100)
+        inputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        inputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -24).isActive = true
+        inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 90)
         inputsContainerViewHeightAnchor?.isActive = true
         
         inputsContainerView.addSubview(firstNameTextField)
@@ -375,6 +412,13 @@ class LoginController: UIViewController {
         inputsContainerView.addSubview(passwordTextField)
         inputsContainerView.addSubview(passwordSeparatorView)
         inputsContainerView.addSubview(passwordConfirmTextField)
+        
+        self.firstNameTextField.delegate = self
+        self.lastNameTextField.delegate = self
+        self.emailTextField.delegate = self
+        self.passwordTextField.delegate = self
+        self.passwordConfirmTextField.delegate = self
+
         
         //firstNameTextField
         //need x, y, width, height constraints
@@ -455,7 +499,7 @@ class LoginController: UIViewController {
     
     func setupLoginRegisterButton() {
         //need x, y, width, height constraints
-        loginRegisterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginRegisterButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -464,7 +508,7 @@ class LoginController: UIViewController {
     func setupForgotPasswordButton() {
         //need x, y, width, height constraints
         forgotPasswordButton.isHidden = false
-        forgotPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        forgotPasswordButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         forgotPasswordButton.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 12).isActive = true
         forgotPasswordButton.widthAnchor.constraint(equalTo: loginRegisterButton.widthAnchor).isActive = true
         forgotPasswordButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -483,7 +527,31 @@ class LoginController: UIViewController {
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @objc func keyboardWillShow(notification:NSNotification){
+        
+        let userInfo = notification.userInfo!
+        var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+        
+        var contentInset:UIEdgeInsets = self.scrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height + 20
+        scrollView.contentInset = contentInset
+    }
+    
+    @objc func keyboardWillHide(notification:NSNotification){
+        
+        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInset
+    }
 }
+
+
 
 
 extension UIColor {
