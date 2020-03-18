@@ -355,7 +355,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         buttonsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         buttonsContainerView.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 8).isActive = true
         buttonsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        buttonsContainerView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        buttonsContainerView.heightAnchor.constraint(equalToConstant: 110).isActive = true
         
         buttonsContainerView.addSubview(editProfileButton)
         buttonsContainerView.addSubview(changePasswordButton)
