@@ -396,7 +396,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         mentorInputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         mentorInputsContainerView.topAnchor.constraint(equalTo: imageandNameView.bottomAnchor).isActive = true
         mentorInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        mentorInputsContainerViewHeightAnchor = mentorInputsContainerView.heightAnchor.constraint(equalToConstant: 180)
+        mentorInputsContainerViewHeightAnchor = mentorInputsContainerView.heightAnchor.constraint(equalToConstant: 120)
         mentorInputsContainerViewHeightAnchor?.isActive = true
         
         
@@ -416,7 +416,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         roleLabel.rightAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 100).isActive = true
         roleLabel.topAnchor.constraint(equalTo: mentorInputsContainerView.topAnchor).isActive = true
         
-        roleLabelHeightAnchor = roleLabel.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/3)
+        roleLabelHeightAnchor = roleLabel.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/2)
         roleLabelHeightAnchor?.isActive = true
         
         //Role Constraints
@@ -424,7 +424,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         role.topAnchor.constraint(equalTo: mentorInputsContainerView.topAnchor).isActive = true
         role.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor).isActive = true
         
-        roleTextFieldHeightAnchor = role.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/3)
+        roleTextFieldHeightAnchor = role.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/2)
         roleTextFieldHeightAnchor?.isActive = true
         
         //Role Separator View
@@ -438,7 +438,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         emailLabel.rightAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 100).isActive = true
         emailLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor).isActive = true
         
-        emailLabelHeightAnchor = emailLabel.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/3)
+        emailLabelHeightAnchor = emailLabel.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/2)
         emailLabelHeightAnchor?.isActive = true
         
         //Email
@@ -446,7 +446,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         email.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor).isActive = true
         
         email.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor).isActive = true
-        emailTextFieldHeightAnchor = email.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/3)
+        emailTextFieldHeightAnchor = email.heightAnchor.constraint(equalTo: mentorInputsContainerView.heightAnchor, multiplier: 1/2)
         emailTextFieldHeightAnchor?.isActive = true
         
         //Email Separator View
@@ -485,19 +485,23 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         buttonsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         buttonsContainerView.topAnchor.constraint(equalTo: mentorInputsContainerView.bottomAnchor, constant: 8).isActive = true
         buttonsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
-        buttonsContainerView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        buttonsContainerView.heightAnchor.constraint(equalToConstant: 110).isActive = true
         
         buttonsContainerView.addSubview(editProfileButton)
         buttonsContainerView.addSubview(changePasswordButton)
         
-        editProfileButton.centerYAnchor.constraint(equalTo: buttonsContainerView.centerYAnchor).isActive = true
-        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
-        editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
+        editProfileButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
+//        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
+//        editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
+        editProfileButton.topAnchor.constraint(equalTo: buttonsContainerView.topAnchor, constant: 10).isActive = true
+        editProfileButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        changePasswordButton.centerYAnchor.constraint(equalTo: buttonsContainerView.centerYAnchor).isActive = true
-        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
-        changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
+        changePasswordButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
+//        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
+//        changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
+        changePasswordButton.topAnchor.constraint(equalTo: editProfileButton.bottomAnchor, constant: 10).isActive = true
+        changePasswordButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
     }
