@@ -135,18 +135,26 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         noResultsView()
         
-        if(searchActive){
-            return filtered.count
+        if (students.count > 0)
+        {
+            noStudentsLabel.isHidden = true
+            if(searchActive){
+                return filtered.count
+            }
+                
+            else if(searchController.searchBar.text! == ""){
+                return students.count
+            }
         }
-            
-            
-        else if(searchController.searchBar.text! == ""){
-            return students.count
-        }
-            
+        
         else {
-            return 0
+            noStudentsLabel.isHidden = false
+            tableView.backgroundView = noStudentsLabel
+            tableView.separatorStyle = .none
+            print("empty list")
         }
+            
+        return 0
         
     }
     
@@ -229,6 +237,16 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         }
         self.tableView.reloadData()
     }
+    
+    lazy var noStudentsLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "You have not added any students yet"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        
+        return label
+    }()
     
     lazy var noResultsLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
