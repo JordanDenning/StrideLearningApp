@@ -19,10 +19,22 @@ class UserCell: UITableViewCell {
             
             if let seconds = message?.timestamp?.doubleValue {
                 let timestampDate = Date(timeIntervalSince1970: seconds)
+                let date = Date()
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                timeLabel.text = dateFormatter.string(from: timestampDate)
+                if Calendar.current.isDateInYesterday(timestampDate) {
+                    timeLabel.text = "Yesterday"
+                } else {
+                    if Calendar.current.isDateInToday(timestampDate){
+                        dateFormatter.dateFormat = "hh:mm a"
+                    } else if Calendar.current.isDate(timestampDate, equalTo: date, toGranularity: .weekOfYear) {
+                        dateFormatter.dateFormat = "EEEE"
+                    } else {
+                        dateFormatter.dateFormat = "M/d/yy"
+                    }
+                    
+                    timeLabel.text = dateFormatter.string(from: timestampDate)
+                }
             }
             
             
