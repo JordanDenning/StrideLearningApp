@@ -77,6 +77,9 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
 
         //navigation button items
         self.navigationController?.navigationBar.tintColor = .white
+        
+        //removes empty table cells
+        tableView.tableFooterView = UIView(frame: .zero)
 
     }
     
@@ -201,6 +204,24 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         self.tableView.reloadData()
     }
     
+    func createSpinnerView() {
+        let child = SpinnerViewController()
+        
+        // add the spinner view controller
+        addChild(child)
+        child.view.frame = view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+        
+        // wait 0.8 seconds to simulate some work happening
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            // then remove the spinner view controller
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
         Int {
             
@@ -218,6 +239,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
             
         else {
+            createSpinnerView()
             noMessagesLabel.isHidden = false
             tableView.backgroundView = noMessagesLabel
             tableView.separatorStyle = .none
@@ -425,5 +447,23 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         present(loginController, animated: true, completion: nil)
     }
     
+}
+
+class SpinnerViewController: UIViewController {
+    var spinner = UIActivityIndicatorView(style: .whiteLarge)
+    
+    override func loadView() {
+        view = UIView()
+        view.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        view.backgroundColor = UIColor.white
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = .black
+        spinner.startAnimating()
+        view.addSubview(spinner)
+        
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
 }
 

@@ -11,6 +11,7 @@ import UIKit
 import Firebase
 
 class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UISearchBarDelegate  {
+
     
     var tableView = UITableView()
     let cellId = "cellId"
@@ -45,6 +46,11 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         setup()
         configureSearchController()
         fetchStudents(ref)
+    }
+    
+    override func willMove(toSuperview newSuperview: UIView?) {
+        //removes empty table cells
+        tableView.tableFooterView = UIView(frame: .zero)
     }
     
     func setup() {
