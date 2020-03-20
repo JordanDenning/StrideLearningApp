@@ -15,12 +15,14 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     var tableView = UITableView()
     let cellId = "cellId"
     var ref = Database.database().reference().child("users")
+    var userRef = Database.database().reference().child("users")
     var students = [Student]()
     var filtered = [Student]()
     var searchActive : Bool = false
     var searchController = UISearchController()
     var plannerOverall: PlannerOverallController?
     let tableViewHeight = CGFloat(integerLiteral: 30)
+    var user: User?
     
     override init(frame: CGRect){
         super.init(frame: frame)
@@ -103,6 +105,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
                    student = self.students[indexPath!.row]
                 }
                 
+                self.userRef.child(student.ID!).child("mentor").setValue("No Current Mentor")
                 student.ref?.removeValue()
                
                 if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
@@ -161,6 +164,8 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
             user = students[indexPath.row]
         }
         cell.textLabel?.text = user.name?.description
+        cell.detailTextLabel?.text = user.grade! + ", " + user.school!
+        
         
         if let profileImageUrl = user.profileImageUrl {
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)

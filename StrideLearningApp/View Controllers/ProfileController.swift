@@ -162,6 +162,31 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         return view
     }()
     
+    let mentorLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Mentor"
+        label.textColor = UIColor(r: 16, g: 153, b: 255)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let mentor: UILabel = {
+        let label = UILabel()
+        label.text = "Mentor"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let mentorSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     
     let emailLabel: UILabel = {
         let label = UILabel()
@@ -276,6 +301,8 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     var roleTextFieldHeightAnchor: NSLayoutConstraint?
     var schoolTextFieldHeightAnchor: NSLayoutConstraint?
     var schoolLabelHeightAnchor: NSLayoutConstraint?
+    var mentorTextFieldHeightAnchor: NSLayoutConstraint?
+    var mentorLabelHeightAnchor: NSLayoutConstraint?
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var emailLabelHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
@@ -296,6 +323,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         grade.text = user.grade
         school.text = user.school
         email.text = user.email
+        mentor.text = user.mentor
         
         
         studentInputsContainerView.addSubview(gradeLabel)
@@ -304,6 +332,9 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         studentInputsContainerView.addSubview(schoolLabel)
         studentInputsContainerView.addSubview(school)
         studentInputsContainerView.addSubview(schoolSeparatorView)
+        studentInputsContainerView.addSubview(mentorLabel)
+        studentInputsContainerView.addSubview(mentor)
+        studentInputsContainerView.addSubview(mentorSeparatorView)
         studentInputsContainerView.addSubview(emailLabel)
         studentInputsContainerView.addSubview(email)
         studentInputsContainerView.addSubview(emailSeparatorView)
@@ -313,7 +344,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         gradeLabel.rightAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 100).isActive = true
         gradeLabel.topAnchor.constraint(equalTo: studentInputsContainerView.topAnchor).isActive = true
         
-        gradeLabelHeightAnchor = gradeLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/3)
+        gradeLabelHeightAnchor = gradeLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
         gradeLabelHeightAnchor?.isActive = true
         
         //Grade Constraints
@@ -321,7 +352,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         grade.topAnchor.constraint(equalTo: studentInputsContainerView.topAnchor).isActive = true
         grade.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor).isActive = true
         
-        gradeTextFieldHeightAnchor = grade.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/3)
+        gradeTextFieldHeightAnchor = grade.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
         gradeTextFieldHeightAnchor?.isActive = true
         
         //Grade Separator View
@@ -335,7 +366,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         schoolLabel.rightAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 100).isActive = true
         schoolLabel.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor).isActive = true
         
-        schoolLabelHeightAnchor = schoolLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/3)
+        schoolLabelHeightAnchor = schoolLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
         schoolLabelHeightAnchor?.isActive = true
         
         //School Constraints
@@ -343,7 +374,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         school.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor).isActive = true
         school.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor).isActive = true
         
-        schoolTextFieldHeightAnchor = school.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/3)
+        schoolTextFieldHeightAnchor = school.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
         schoolTextFieldHeightAnchor?.isActive = true
         
         //School Separator View
@@ -352,19 +383,42 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         schoolSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor).isActive = true
         schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        //Mentor Label
+        mentorLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 18).isActive = true
+        mentorLabel.rightAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 100).isActive = true
+        mentorLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor).isActive = true
+        
+        mentorLabelHeightAnchor = mentorLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
+        mentorLabelHeightAnchor?.isActive = true
+        
+        //Mentor
+        mentor.leftAnchor.constraint(equalTo: mentorLabel.rightAnchor).isActive = true
+        mentor.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor).isActive = true
+        mentor.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor).isActive = true
+        
+        mentorTextFieldHeightAnchor = mentor.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
+         mentorTextFieldHeightAnchor?.isActive = true
+        
+        //Email Separator View
+        mentorSeparatorView.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor).isActive = true
+        mentorSeparatorView.topAnchor.constraint(equalTo: mentorLabel.bottomAnchor).isActive = true
+        mentorSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor).isActive = true
+        mentorSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        
         //Email Label
         emailLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 18).isActive = true
         emailLabel.rightAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 100).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: mentorSeparatorView.bottomAnchor).isActive = true
         
-        emailLabelHeightAnchor = emailLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/3)
+        emailLabelHeightAnchor = emailLabel.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/4)
         emailLabelHeightAnchor?.isActive = true
         
         //Email
         email.leftAnchor.constraint(equalTo: emailLabel.rightAnchor).isActive = true
-        email.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor).isActive = true
-        
+        email.topAnchor.constraint(equalTo: mentorSeparatorView.bottomAnchor).isActive = true
         email.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor).isActive = true
+        
         emailTextFieldHeightAnchor = email.heightAnchor.constraint(equalTo: studentInputsContainerView.heightAnchor, multiplier: 1/3)
         emailTextFieldHeightAnchor?.isActive = true
         

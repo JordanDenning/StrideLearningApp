@@ -431,8 +431,10 @@ class RegisterType: UIViewController {
                 ref.child("type").setValue("student")
                 let grade = self.gradeTextField.text
                 let school = self.schoolTextField.text
+                let mentor = "No Current Mentor"
                 ref.child("grade").setValue(grade)
                 ref.child("school").setValue(school)
+                ref.child("mentor").setValue(mentor)
                 
             } else {
                 ref.child("type").setValue("mentor")
