@@ -51,7 +51,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         imageView.contentMode = .scaleAspectFill
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
         imageView.isUserInteractionEnabled = true
-//        imageView.layer.borderWidth = 4
         imageView.layer.borderColor = UIColor(r:16, g:153, b:255).cgColor
         imageView.layer.cornerRadius = 70
         //half of 140 which is height and width
@@ -213,11 +212,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor(r: 16, g: 153, b: 255).cgColor
         
-        //drop shadow
-//        button.layer.shadowColor = UIColor.black.cgColor
-//        button.layer.shadowOpacity = 0.5
-//        button.layer.shadowOffset = CGSize(width: 2, height: 3)
-//        button.layer.masksToBounds = false
         button.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
         
         return button
@@ -235,13 +229,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         //border
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor(r: 16, g: 153, b: 255).cgColor
-        
-        //drop shadow
-//        button.layer.shadowColor = UIColor.black.cgColor
-//        button.layer.shadowOpacity = 0.5
-//        button.layer.shadowOffset = CGSize(width: 2, height: 3)
-//        button.layer.masksToBounds = false
-//        button.layer.shadowRadius = 3
         
         button.addTarget(self, action: #selector(editPassword), for: .touchUpInside)
         
@@ -466,15 +453,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         buttonsContainerView.addSubview(changePasswordButton)
         
         editProfileButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
-//        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
-//        editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
         editProfileButton.topAnchor.constraint(equalTo: buttonsContainerView.topAnchor, constant: 10).isActive = true
         editProfileButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         changePasswordButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
-//        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
-//        changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
         changePasswordButton.topAnchor.constraint(equalTo: editProfileButton.bottomAnchor, constant: 10).isActive = true
         changePasswordButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -491,15 +474,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         buttonsContainerView.addSubview(changePasswordButton)
         
         editProfileButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
-//        editProfileButton.rightAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: -12).isActive = true
-//        editProfileButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2/5).isActive = true
         editProfileButton.topAnchor.constraint(equalTo: buttonsContainerView.topAnchor, constant: 10).isActive = true
         editProfileButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         changePasswordButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
-//        changePasswordButton.leftAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor, constant: 12).isActive = true
-//        changePasswordButton.widthAnchor.constraint(equalTo: view.widthAnchor  , multiplier: 2/5).isActive = true
         changePasswordButton.topAnchor.constraint(equalTo: editProfileButton.bottomAnchor, constant: 10).isActive = true
         changePasswordButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
         changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -611,7 +590,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     func updateProfilePicture() {
         let imageName = NSUUID().uuidString //get unique image name to use for uploading and storing
         let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
-        //.child("profile_images") creates new child folder where these images will be stored
         
         if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
             

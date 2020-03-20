@@ -414,7 +414,7 @@ class RegisterType: UIViewController {
                 else {
                     self.profileController?.fetchUserAndSetupProfile()
                     self.plannerController?.checkStudentOrMentor()
-                    self.messagesController?.fetchUserAndSetupNavBarTitle()
+                    self.messagesController?.observeUserMessages()
                     self.dismiss(animated: true, completion: {
                         self.loginController?.dismiss(animated: true, completion: {
                         })

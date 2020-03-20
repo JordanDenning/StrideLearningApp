@@ -126,7 +126,6 @@ class EditPasswordController: UIViewController {
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                //                self.navigationItem.title = dictionary["name"] as? String
                 
                 let user = User(dictionary: dictionary)
                 self.setupEditPassword(user)
@@ -179,7 +178,6 @@ class EditPasswordController: UIViewController {
         newPasswordTextField.topAnchor.constraint(equalTo: oldPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
         newPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-//        newPasswordSeparatorView.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
         newPasswordSeparatorView.topAnchor.constraint(equalTo: newPasswordLabel.bottomAnchor, constant: 12).isActive = true
         newPasswordSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
         newPasswordSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
@@ -189,12 +187,10 @@ class EditPasswordController: UIViewController {
         confirmPasswordLabel.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 8).isActive = true
         confirmPasswordLabel.topAnchor.constraint(equalTo: newPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-//        confirmPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         confirmPasswordTextField.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor).isActive = true
         confirmPasswordTextField.topAnchor.constraint(equalTo: newPasswordSeparatorView.bottomAnchor, constant: 30).isActive = true
         confirmPasswordTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-//        confirmPasswordSeparatorView.leftAnchor.constraint(equalTo: oldPasswordTextField.leftAnchor).isActive = true
         confirmPasswordSeparatorView.topAnchor.constraint(equalTo: confirmPasswordLabel.bottomAnchor, constant: 12).isActive = true
         confirmPasswordSeparatorView.rightAnchor.constraint(equalTo: inputsContainerView.rightAnchor, constant: -12).isActive = true
         confirmPasswordSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true

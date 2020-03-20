@@ -138,9 +138,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             let user = User(dictionary: values)
             //this setter potentially crashes if keys don't match
-            self.messagesController?.setupNavBarWithUser(user)
+            self.messagesController?.observeUserMessages()
             
-            //self.dismiss(animated: true, completion: nil)
         })
     }
     
