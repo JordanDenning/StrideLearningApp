@@ -223,8 +223,12 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         
         filtered = students.filter({ (text) -> Bool in
             let name: NSString = text.name! as NSString
+            let school: NSString = text.school! as NSString
+            let grade: NSString = text.grade! as NSString
             let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-            return nameRange.location != NSNotFound
+            let schoolRange = school.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            let gradeRange = grade.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return nameRange.location != NSNotFound || schoolRange.location != NSNotFound || gradeRange.location != NSNotFound
         })
         if(filtered.count == 0){
             searchActive = false;

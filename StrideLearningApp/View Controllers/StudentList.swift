@@ -333,8 +333,12 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         for letter in (0...25){
             filtered[letter] = users[letter].filter({ (text) -> Bool in
                 let name: NSString = text.name! as NSString
+                let school: NSString = text.school! as NSString
+                let grade: NSString = text.grade! as NSString
                 let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-                return nameRange.location != NSNotFound
+                let schoolRange = school.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+                let gradeRange = grade.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+                return nameRange.location != NSNotFound || schoolRange.location != NSNotFound || gradeRange.location != NSNotFound
             })
             if(filtered[letter].count != 0){
                 filterResults = false
