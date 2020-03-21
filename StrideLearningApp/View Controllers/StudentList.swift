@@ -21,6 +21,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     var currentRef: DatabaseReference?
     var searchActive : Bool = false
     var noResults: Bool = false
+    var mentorName: String?
     
     var mentorView: MentorStudentView?
     var searchController = UISearchController()
@@ -130,7 +131,6 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                         self.tableView.reloadData()
                     })
                 }
-                //                user.name = dictionary["name"]
             }
             
         }, withCancel: nil)
@@ -216,7 +216,8 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
             user = users[indexPath.section][indexPath.row]
         }
         cell.textLabel?.text = user.name
-        cell.detailTextLabel?.text = user.email
+        
+        cell.detailTextLabel?.text = user.grade! + ", " + user.school!
         
         if let profileImageUrl = user.profileImageUrl {
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
@@ -241,11 +242,15 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let studentName = user.name
                 let id = user.id
                 let image = user.profileImageUrl
-                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
+                let grade = user.grade
+                let school = user.school
+                let newStudent = Student(name: studentName!, ID: id!, grade: grade!, school: school!, profileImageUrl: image!)
                 
                 let itemRef = self.currentRef!.child("students").child(id!)
-                
                 itemRef.setValue(newStudent.toAnyObject())
+                
+                self.ref.child(id!).child("mentor").setValue(self.mentorName)
+                
             }
         }
         else if(searchActive && searchController.searchBar.text == ""){
@@ -257,11 +262,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let studentName = user.name
                 let id = user.id
                 let image = user.profileImageUrl
-                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
+                let grade = user.grade
+                let school = user.school
+                let newStudent = Student(name: studentName!, ID: id!, grade: grade!, school: school!, profileImageUrl: image!)
                 
                 let itemRef = self.currentRef!.child("students").child(id!)
-                
                 itemRef.setValue(newStudent.toAnyObject())
+                
+                self.ref.child(id!).child("mentor").setValue(self.mentorName)
             }
         }
         else {
@@ -272,11 +280,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let studentName = user.name
                 let id = user.id
                 let image = user.profileImageUrl
-                let newStudent = Student(name: studentName!, ID: id!, profileImageUrl: image!)
+                let grade = user.grade
+                let school = user.school
+                let newStudent = Student(name: studentName!, ID: id!,grade: grade!, school: school!, profileImageUrl: image!)
                 
                 let itemRef = self.currentRef!.child("students").child(id!)
-                
                 itemRef.setValue(newStudent.toAnyObject())
+                
+                self.ref.child(id!).child("mentor").setValue(self.mentorName)
             }
         }
     }
@@ -322,8 +333,12 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         for letter in (0...25){
             filtered[letter] = users[letter].filter({ (text) -> Bool in
                 let name: NSString = text.name! as NSString
+                let school: NSString = text.school! as NSString
+                let grade: NSString = text.grade! as NSString
                 let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-                return nameRange.location != NSNotFound
+                let schoolRange = school.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+                let gradeRange = grade.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+                return nameRange.location != NSNotFound || schoolRange.location != NSNotFound || gradeRange.location != NSNotFound
             })
             if(filtered[letter].count != 0){
                 filterResults = false

@@ -16,12 +16,14 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     var tableView = UITableView()
     let cellId = "cellId"
     var ref = Database.database().reference().child("users")
+    var userRef = Database.database().reference().child("users")
     var students = [Student]()
     var filtered = [Student]()
     var searchActive : Bool = false
     var searchController = UISearchController()
     var plannerOverall: PlannerOverallController?
     let tableViewHeight = CGFloat(integerLiteral: 30)
+    var user: User?
     
     override init(frame: CGRect){
         super.init(frame: frame)
@@ -109,6 +111,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
                    student = self.students[indexPath!.row]
                 }
                 
+                self.userRef.child(student.ID!).child("mentor").setValue("No Current Mentor")
                 student.ref?.removeValue()
                
                 if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
@@ -175,6 +178,8 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
             user = students[indexPath.row]
         }
         cell.textLabel?.text = user.name?.description
+        cell.detailTextLabel?.text = user.grade! + ", " + user.school!
+        
         
         if let profileImageUrl = user.profileImageUrl {
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
@@ -232,8 +237,12 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         
         filtered = students.filter({ (text) -> Bool in
             let name: NSString = text.name! as NSString
+            let school: NSString = text.school! as NSString
+            let grade: NSString = text.grade! as NSString
             let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-            return nameRange.location != NSNotFound
+            let schoolRange = school.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            let gradeRange = grade.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return nameRange.location != NSNotFound || schoolRange.location != NSNotFound || gradeRange.location != NSNotFound
         })
         if(filtered.count == 0){
             searchActive = false;

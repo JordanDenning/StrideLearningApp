@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1E04AA3C240593E700A75242 /* ProfileController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */; };
 		9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D01128C23EAFB0900A44C7B /* EditProfileController.swift */; };
 		9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */; };
 		9D45A19F23F2EF7E00E32150 /* AlertExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */; };
 		9D4C420E23FAE13700116B9E /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4C420D23FAE13700116B9E /* CollectionView.swift */; };
+		9D5F205F242551500097B279 /* ScreenSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F205E242551500097B279 /* ScreenSizeExtension.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
@@ -41,11 +41,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileController+handlers.swift"; sourceTree = "<group>"; };
 		9D01128C23EAFB0900A44C7B /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordController.swift; sourceTree = "<group>"; };
 		9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtensions.swift; sourceTree = "<group>"; };
 		9D4C420D23FAE13700116B9E /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		9D5F205E242551500097B279 /* ScreenSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeExtension.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -137,7 +137,6 @@
 				9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */,
 				9DF1C9752411B39E00CFBC67 /* StudentList.swift */,
 				9DFD619B23E8848B0064B92A /* ProfileController.swift */,
-				1E04AA3B240593E700A75242 /* ProfileController+handlers.swift */,
 				9D01128C23EAFB0900A44C7B /* EditProfileController.swift */,
 				9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */,
 				9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */,
@@ -154,6 +153,7 @@
 			children = (
 				9DC8EB6623D6705900DD3EB7 /* Extensions.swift */,
 				9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */,
+				9D5F205E242551500097B279 /* ScreenSizeExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -336,7 +336,7 @@
 				9DC8EB6323D6602100DD3EB7 /* LoginController+handlers.swift in Sources */,
 				9DF1C9762411B39E00CFBC67 /* StudentList.swift in Sources */,
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
-				1E04AA3C240593E700A75242 /* ProfileController+handlers.swift in Sources */,
+				9D5F205F242551500097B279 /* ScreenSizeExtension.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
 				9DD5066224100F5F00631A31 /* MentorStudentView.swift in Sources */,
 				9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */,

@@ -41,7 +41,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
         weekView.dataSource = self
         
         weekday = "Monday"
-        week = "last-week"
+        week = "this-week"
     }
     
     
@@ -153,7 +153,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     let weekdayView = UIPickerView(frame: CGRect(x: 0, y: 20, width: 250, height: 100))
     var weekday = String()
     
-    let weekChoices = ["Last Week","This Week","Next Week"]
+    let weekChoices = ["This Week","Next Week"]
     let weekView = UIPickerView(frame: CGRect(x: 0, y: 150, width: 250, height: 100))
     var week = String()
     
@@ -204,10 +204,8 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
         }
         else if (pickerView == weekView) {
             if row == 0 {
-                week = "last-week"
-            } else if row == 1 {
                 week = "this-week"
-            } else if row == 2 {
+            } else if row == 1 {
                 week = "next-week"
             }
         }
@@ -287,6 +285,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     
     @objc func addNewStudent(){
         let studentListController = StudentList()
+        studentListController.mentorName = user?.name
         studentListController.mentorView = mentorTableView
         let navController = UINavigationController(rootViewController: studentListController)
         present(navController, animated: true, completion: nil)

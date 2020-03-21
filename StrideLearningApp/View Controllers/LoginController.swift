@@ -53,7 +53,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     lazy var forgotPasswordButton: UIButton = {
         let button = UIButton(type: .system)
-        //button.backgroundColor = UIColor(r: 16, g: 153, b: 255)
         button.setTitle("Forgot Password", for: UIControl.State())
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor(r: 16, g: 153, b: 255), for: UIControl.State())
@@ -320,7 +319,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 else {
-                    self.messagesController?.fetchUserAndSetupNavBarTitle()
+                    self.messagesController?.observeUserMessages()
                     self.profileController?.fetchUserAndSetupProfile()
                     self.plannerController?.checkStudentOrMentor()
                     
@@ -336,7 +335,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: UIControl.State())
         
-        // change height of inputContainerView, but how???
+        // change height of inputContainerView
         inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 250
         
         // change height of firstNameTextField

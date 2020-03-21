@@ -301,8 +301,10 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         for letter in (0...25){
             filtered[letter] = users[letter].filter({ (text) -> Bool in
                 let name: NSString = text.name! as NSString
+                let email: NSString = text.email! as NSString
                 let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-                return nameRange.location != NSNotFound
+                let emailRange = email.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+                return nameRange.location != NSNotFound  || emailRange.location != NSNotFound
             })
             if(filtered[letter].count != 0){
                 filterResults = false

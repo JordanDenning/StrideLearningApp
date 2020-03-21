@@ -1,5 +1,5 @@
 //
-//  ProfileController+handlers.swift
+//  ScreenSizeExtension.swift
 //  StrideLearningApp
 //
 //  Created by Kirsten Garthwaite on 2/25/20.
