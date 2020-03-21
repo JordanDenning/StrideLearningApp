@@ -318,6 +318,11 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         studentInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 180)
         studentInputsContainerViewHeightAnchor?.isActive = true
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 170)
+            studentInputsContainerViewHeightAnchor?.isActive = true
+        }
 
 
         grade.text = user.grade
