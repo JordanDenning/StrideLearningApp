@@ -169,7 +169,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "Code"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -327,7 +327,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         schoolSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Code
-        studentCodeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 12).isActive = true
+        studentCodeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
         studentCodeLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         studentCodeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
