@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class RegisterType: UIViewController {
+class RegisterType: UIViewController, UITextFieldDelegate {
     
     var email: String?
     var password: String?
@@ -158,6 +158,31 @@ class RegisterType: UIViewController {
         return view
     }()
     
+    let studentCodeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Code"
+        label.textColor = UIColor(r: 16, g: 153, b: 255)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let studentCodeTextField: UITextField = {
+        let tv = UITextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.isSecureTextEntry = true
+        
+        return tv
+    }()
+    
+    let studentCodeSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     
     lazy var registerButton: UIButton = {
         let button = UIButton(type: .system)
@@ -229,7 +254,7 @@ class RegisterType: UIViewController {
         containerView.topAnchor.constraint(equalTo: typeSegmentedControl.bottomAnchor, constant: 15).isActive = true
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo: typeSegmentedControl.widthAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 220).isActive = true
         
         containerView.addSubview(studentView)
         containerView.addSubview(mentorView)
@@ -252,6 +277,13 @@ class RegisterType: UIViewController {
         studentView.addSubview(schoolLabel)
         studentView.addSubview(schoolTextField)
         studentView.addSubview(schoolSeparatorView)
+        studentView.addSubview(studentCodeLabel)
+        studentView.addSubview(studentCodeTextField)
+        studentView.addSubview(studentCodeSeparatorView)
+        
+        gradeTextField.delegate = self
+        schoolTextField.delegate = self
+        studentCodeTextField.delegate = self
         
         //studentLabel
         studentLabel.topAnchor.constraint(equalTo: studentView.topAnchor, constant: 12).isActive = true
@@ -285,6 +317,20 @@ class RegisterType: UIViewController {
         schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         schoolSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
+        //Code
+        studentCodeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 12).isActive = true
+        studentCodeLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        studentCodeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        studentCodeTextField.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
+        studentCodeTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //Code Separator
+        studentCodeSeparatorView.topAnchor.constraint(equalTo: studentCodeLabel.bottomAnchor, constant: 12).isActive = true
+        studentCodeSeparatorView.rightAnchor.constraint(equalTo: studentView.rightAnchor, constant: -12).isActive = true
+        studentCodeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        studentCodeSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        
     }
     
     func setupMentorView(){
@@ -301,6 +347,9 @@ class RegisterType: UIViewController {
         mentorView.addSubview(codeLabel)
         mentorView.addSubview(codeTextField)
         mentorView.addSubview(codeSeparatorView)
+        
+        roleTextField.delegate = self
+        codeTextField.delegate = self
 
         
         //mentorLabel
@@ -358,8 +407,19 @@ class RegisterType: UIViewController {
     @objc func loginStarter(){
         if typeSegmentedControl.selectedSegmentIndex == 1 {
             let code = codeTextField.text
+            let role = roleTextField.text
             var accessCode = ""
-            Database.database().reference().child("access-code").child("code").observe(.value, with: { (snapshot) in
+            
+            if (code == "" || role == "") {
+                let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                
+                alertVC.addAction(okayAction)
+                self.present(alertVC, animated: true, completion: nil)
+            }
+            
+            Database.database().reference().child("mentor-access-code").child("code").observe(.value, with: { (snapshot) in
                 
                if let dictionary = snapshot.value as? String {
                     accessCode = dictionary
@@ -380,7 +440,40 @@ class RegisterType: UIViewController {
             }, withCancel: nil)
             
         } else{
-            login()
+            let code = studentCodeTextField.text
+            let grade = gradeTextField.text
+            let school = schoolTextField.text
+            var accessCode = ""
+            
+            if (code == "" || grade == "" || school == "") {
+                let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                
+                alertVC.addAction(okayAction)
+                self.present(alertVC, animated: true, completion: nil)
+            }
+            
+            
+            Database.database().reference().child("student-access-code").child("code").observe(.value, with: { (snapshot) in
+                
+                if let dictionary = snapshot.value as? String {
+                    accessCode = dictionary
+                    if code != accessCode {
+                        let alertVC = UIAlertController(title: "Incorrect Code", message: "The code you entered is incorrect. Please try again.", preferredStyle: UIAlertController.Style.alert)
+                        
+                        let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                        
+                        alertVC.addAction(okayAction)
+                        self.studentCodeTextField.text = ""
+                        self.present(alertVC, animated: true, completion: nil)
+                        
+                    } else {
+                        self.login()
+                    }
+                }
+                
+            }, withCancel: nil)
         }
         
 
@@ -445,5 +538,9 @@ class RegisterType: UIViewController {
         })
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
 }
