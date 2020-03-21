@@ -19,13 +19,24 @@ class UserCell: UITableViewCell {
             
             if let seconds = message?.timestamp?.doubleValue {
                 let timestampDate = Date(timeIntervalSince1970: seconds)
+                let date = Date()
                 
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                timeLabel.text = dateFormatter.string(from: timestampDate)
+                if Calendar.current.isDateInYesterday(timestampDate) {
+                    timeLabel.text = "Yesterday"
+                } else {
+                    if Calendar.current.isDateInToday(timestampDate){
+                        dateFormatter.dateFormat = "hh:mm a"
+                    } else if Calendar.current.isDate(timestampDate, equalTo: date, toGranularity: .weekOfYear) {
+                        dateFormatter.dateFormat = "EEEE"
+                    } else {
+                        dateFormatter.dateFormat = "M/d/yy"
+                    }
+                    
+                    timeLabel.text = dateFormatter.string(from: timestampDate)
+                }
             }
-            
-            
+ 
         }
     }
     
@@ -51,9 +62,20 @@ class UserCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 64, y: textLabel!.frame.origin.y - 2, width: textLabel!.frame.width, height: textLabel!.frame.height)
+        let screenSize = UIScreen.main.bounds.width
+        let textScreen = screenSize - 140
+        let detailScreen = screenSize - 110
         
-        detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y + 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
+        
+        let textWidth = textLabel!.frame.width < textScreen ?  textLabel!.frame.width : textScreen
+        let detailWidth = detailTextLabel!.frame.width < detailScreen ?  detailTextLabel!.frame.width : detailScreen
+        
+        textLabel?.frame = CGRect(x: 64, y: textLabel!.frame.origin.y - 2, width: textWidth, height: textLabel!.frame.height)
+        
+        detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y + 2, width: detailWidth, height: detailTextLabel!.frame.height)
+        
+        detailTextLabel?.numberOfLines = 1
+        textLabel?.numberOfLines = 1
     }
     
     let profileImageView: UIImageView = {
@@ -89,9 +111,8 @@ class UserCell: UITableViewCell {
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         //need x,y,width,height anchors
-        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 30).isActive = true
-        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 40).isActive = true
-        timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -12).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 14).isActive = true
         timeLabel.heightAnchor.constraint(equalTo: textLabel!.heightAnchor).isActive = true
     }
     
