@@ -19,12 +19,26 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         }
     }
     
+    var currentUser: User?
+    
     var messages = [Message]()
     
     func observeMessages() {
         guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
             return
         }
+        
+        let ref = Database.database().reference().child("users").child(uid)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                return
+            }
+            
+            self.currentUser = User(dictionary: dictionary)
+            self.currentUser!.id = uid
+            
+        }, withCancel: nil)
+        
         
         let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
         userMessagesRef.observe(.childAdded, with: { (snapshot) in
@@ -303,9 +317,10 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         let childRef = ref.childByAutoId()
         let toId = user!.id!
         let toName = user!.name!
+        let fromName = currentUser!.name!
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {

@@ -19,7 +19,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     var plannerController: PlannerOverallController?
     
     lazy var typeSegmentedControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: ["Student", "Mentor"])
+        let sc = UISegmentedControl(items: ["Student", "Staff"])
         sc.translatesAutoresizingMaskIntoConstraints = false
         sc.backgroundColor = .white
         sc.tintColor = UIColor(r: 16, g: 153, b: 255)
@@ -39,7 +39,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     lazy var segmentLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Are you a student or a mentor?"
+        label.font = UIFont.boldSystemFont(ofSize: 13)
+        label.text = "Are you a student or a staff member?"
         label.numberOfLines = 0
         return label
     }()
@@ -47,7 +48,9 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     lazy var mentorLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Please enter your role and the correct access code."
+        label.text = "Please retrieve the access code from your supervisor"
+        label.textAlignment = NSTextAlignment.center
+        label.font = UIFont.boldSystemFont(ofSize: 13)
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
@@ -58,7 +61,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "Role"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -82,7 +85,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "Code"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -106,8 +109,12 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     lazy var studentLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Please enter your grade and school"
+        label.text = "Please retrieve the access code from your mentor"
+        label.textAlignment = NSTextAlignment.center
+        label.font = UIFont.boldSystemFont(ofSize: 13)
+        label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -115,7 +122,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "Grade"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -139,7 +146,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.text = "School"
         label.textColor = UIColor(r: 16, g: 153, b: 255)
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -242,7 +249,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     
     func setupTypeSegmentedControlAndLabel() {
         segmentLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        segmentLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
+        segmentLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+
         //need x, y, width, height constraints
         typeSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         typeSegmentedControl.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor, constant: 20).isActive = true
@@ -288,10 +296,11 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         //studentLabel
         studentLabel.topAnchor.constraint(equalTo: studentView.topAnchor, constant: 12).isActive = true
         studentLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        studentLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
         
         //Grade
-        gradeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 12).isActive = true
-        gradeLabel.topAnchor.constraint(equalTo: studentLabel.bottomAnchor, constant: 15).isActive = true
+        gradeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
+        gradeLabel.topAnchor.constraint(equalTo: studentLabel.bottomAnchor, constant: 40).isActive = true
         
         gradeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
         gradeTextField.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
@@ -304,7 +313,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         gradeSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
         //School
-        schoolLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 12).isActive = true
+        schoolLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
         schoolLabel.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         schoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
@@ -355,10 +364,11 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         //mentorLabel
         mentorLabel.topAnchor.constraint(equalTo: mentorView.topAnchor, constant: 12).isActive = true
         mentorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        mentorLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
         
         //Role
-        roleLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 12).isActive = true
-        roleLabel.topAnchor.constraint(equalTo: mentorLabel.bottomAnchor, constant: 15).isActive = true
+        roleLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 8).isActive = true
+        roleLabel.topAnchor.constraint(equalTo: mentorLabel.bottomAnchor, constant: 40).isActive = true
         
         roleTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
         roleTextField.topAnchor.constraint(equalTo: roleLabel.topAnchor).isActive = true
@@ -371,7 +381,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         roleSeparatorView.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Code
-        codeLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 12).isActive = true
+        codeLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 8).isActive = true
         codeLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         codeTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
@@ -391,7 +401,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         registerButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 12).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        registerButton.widthAnchor.constraint(equalTo: containerView.widthAnchor, constant: -12).isActive = true
+        registerButton.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
     }
     
     @objc func studentMentorChange(){

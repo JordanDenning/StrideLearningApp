@@ -60,6 +60,10 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             // decrease size of profile picture
             imageView.layer.cornerRadius = 50
         }
+        else if UIScreen.main.sizeType == .iPhone6 {
+            // decrease size of profile picture
+            imageView.layer.cornerRadius = 60
+        }
         
         return imageView
     }()
@@ -282,7 +286,12 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             // decrease size of profile picture
             profileImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
             profileImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-            
+        }
+        
+        if UIScreen.main.sizeType == .iPhone6 {
+            // decrease size of profile picture
+            profileImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
+            profileImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         }
 
     
@@ -316,9 +325,20 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         studentInputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         studentInputsContainerView.topAnchor.constraint(equalTo: imageandNameView.bottomAnchor).isActive = true
         studentInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 180)
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease size of input container
+            studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 150)
+        }
+        else if UIScreen.main.sizeType == .iPhone6 {
+            // decrease size of input container
+            studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 150)
+        }
+        else{
+            studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 180)
+        }
         studentInputsContainerViewHeightAnchor?.isActive = true
         
+
         if UIScreen.main.sizeType == .iPhone5 {
             studentInputsContainerViewHeightAnchor = studentInputsContainerView.heightAnchor.constraint(equalToConstant: 170)
             studentInputsContainerViewHeightAnchor?.isActive = true
@@ -514,12 +534,24 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         editProfileButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
         editProfileButton.topAnchor.constraint(equalTo: buttonsContainerView.topAnchor, constant: 10).isActive = true
         editProfileButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
-        editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease height of button
+            editProfileButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        }
+        else{
+            editProfileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        }
         
         changePasswordButton.centerXAnchor.constraint(equalTo: buttonsContainerView.centerXAnchor).isActive = true
         changePasswordButton.topAnchor.constraint(equalTo: editProfileButton.bottomAnchor, constant: 10).isActive = true
         changePasswordButton.widthAnchor.constraint(equalTo: buttonsContainerView.widthAnchor).isActive = true
-        changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        if UIScreen.main.sizeType == .iPhone5 {
+            // decrease height of button
+            changePasswordButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        }
+        else{
+            changePasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        }
 
     }
     
