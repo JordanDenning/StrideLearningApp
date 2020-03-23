@@ -262,7 +262,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         containerView.topAnchor.constraint(equalTo: typeSegmentedControl.bottomAnchor, constant: 15).isActive = true
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo: typeSegmentedControl.widthAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 240).isActive = true
         
         containerView.addSubview(studentView)
         containerView.addSubview(mentorView)
@@ -398,7 +398,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     }
     
     func setupButton(){
-        registerButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 30).isActive = true
+        registerButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 12).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         registerButton.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
