@@ -398,7 +398,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     }
     
     func setupButton(){
-        registerButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 12).isActive = true
+        registerButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 30).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         registerButton.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true

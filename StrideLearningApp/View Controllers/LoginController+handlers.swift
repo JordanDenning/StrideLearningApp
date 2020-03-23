@@ -16,7 +16,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     print("Form is not valid")
                     return
                 }
-        
+
                 //check if passwords match
                 if self.passwordTextField.text != self.passwordConfirmTextField.text {
                     print("Passwords don't match")
@@ -30,7 +30,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     present(alert, animated: true, completion: nil)
                     return
                 }
-        
+
                 //password validation
                 let validPassword = self.isValidPassword(password: password)
                 if(!validPassword){
@@ -43,20 +43,20 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     present(alert, animated: true, completion: nil)
                     return
                 }
-        
+
                 Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
-        
+
                     //error in creating account
                     if let error = error {
                         print(error)
                         self.handleError(error)
                         return
                     }
-        
+
                     guard let uid = user?.user.uid else {
                         return
                     }
-        
+
                     //email address verification
                     if let user = Auth.auth().currentUser {
                         Auth.auth().currentUser?.sendEmailVerification { (error) in
@@ -64,9 +64,9 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                         }
                         if !user.isEmailVerified {
                             let alertVC = UIAlertController(title: "Verify Email", message: "A confirmation email has been sent to your address. This email can take up to 5 minutes to arrive.", preferredStyle: UIAlertController.Style.alert)
-        
+
                             self.present(alertVC, animated: true, completion: nil)
-        
+
                             // change to desired number of seconds
                             let alertTime = DispatchTime.now() + 5
                             DispatchQueue.main.asyncAfter(deadline: alertTime){
@@ -82,36 +82,36 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                             }
                         }
                     }
-        
+
                     //successfully authenticated user
                     let imageName = NSUUID().uuidString //get unique image name to use for uploading and storing
                     let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
                     //.child("profile_images") creates new child folder where these images will be stored
-        
+
                     if let profileImage = UIImage(named: "profile2"), let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
-        
+
                         storageRef.putData(uploadData, metadata: nil, completion: { (_, err) in
-        
+
                             if let error = error {
                                 print(error)
                                 return
                             }
-        
+
                             //successfully uploaded image to firebase after above code putData
-        
+
                             storageRef.downloadURL(completion: { (url, err) in
                                 if let err = err {
                                     print(err)
                                     self.handleError(err)
                                     return
                                 }
-        
+
                                 guard let url = url else { return }
                                 let values = ["name": firstName + " " + lastName, "firstName": firstName, "lastName": lastName, "email": email, "profileImageUrl": url.absoluteString]
-        
+
                                 self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
                             })
-        
+
                         })
                     }
                 })
