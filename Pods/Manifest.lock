@@ -1,4 +1,12 @@
 PODS:
+  - AppCenter (3.1.0):
+    - AppCenter/Analytics (= 3.1.0)
+    - AppCenter/Crashes (= 3.1.0)
+  - AppCenter/Analytics (3.1.0):
+    - AppCenter/Core
+  - AppCenter/Core (3.1.0)
+  - AppCenter/Crashes (3.1.0):
+    - AppCenter/Core
   - Firebase (6.15.0):
     - Firebase/Core (= 6.15.0)
   - Firebase/Auth (6.15.0):
@@ -98,6 +106,7 @@ PODS:
   - PromisesObjC (1.2.8)
 
 DEPENDENCIES:
+  - AppCenter
   - Firebase
   - Firebase/Auth
   - Firebase/Core
@@ -106,6 +115,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppCenter
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuth
@@ -127,6 +137,7 @@ SPEC REPOS:
     - PromisesObjC
 
 SPEC CHECKSUMS:
+  AppCenter: a1c30c47b7882a04a615ffa5ab26c007326436d8
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
   FirebaseAuth: ce45d7c5d46bed90159f3a73b6efbe8976ed3573
@@ -147,6 +158,6 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
 
-PODFILE CHECKSUM: 32a08b506ed430c8480b6ebdd0d6f44a9075df56
+PODFILE CHECKSUM: 3e0480b05b49c23888040e397f8c8d9e0c542366
 
 COCOAPODS: 1.8.4
