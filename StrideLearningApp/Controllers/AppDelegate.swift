@@ -8,6 +8,9 @@
 
 import UIKit
 import Firebase
+import AppCenter
+import AppCenterAnalytics
+import AppCenterCrashes
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.makeKeyAndVisible()
         //previous line replace using storyboards to just use viewcontroller code for layouts, better for when working in teams. Sets first view controller to tabBarController
+        
+        MSAppCenter.start("06f62161-4995-4b72-9fdd-1cd595a5aec5", withServices:[
+            MSAnalytics.self,
+            MSCrashes.self
+            ])
         
         return true
     }
