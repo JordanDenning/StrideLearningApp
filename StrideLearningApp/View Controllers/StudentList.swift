@@ -235,7 +235,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         if(searchActive && searchController.searchBar.text != ""){
             searchController.dismiss(animated: true, completion: nil)
             dismiss(animated: true) {
-                print("This Dismiss completed")
+                print("Dismiss completed")
                 let user: User
                 user = self.filtered[indexPath.section][indexPath.row]
                 //get the user you tap on
@@ -246,17 +246,16 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let school = user.school
                 let newStudent = Student(name: studentName!, ID: id!, grade: grade!, school: school!, profileImageUrl: image!)
                 
-                let itemRef = self.currentRef!.child("students").child(id!)
-                itemRef.setValue(newStudent.toAnyObject())
-                
                 self.ref.child(id!).child("mentor").setValue(self.mentorName)
                 
+                let itemRef = self.currentRef!.child("students").child(id!)
+                itemRef.setValue(newStudent.toAnyObject())
             }
         }
         else if(searchActive && searchController.searchBar.text == ""){
             searchController.dismiss(animated: true, completion: nil)
             dismiss(animated: true) {
-                print("This Dismiss completed")
+                print("Dismiss completed")
                 let user: User
                 user = self.users[indexPath.section][indexPath.row]
                 let studentName = user.name
@@ -266,10 +265,10 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let school = user.school
                 let newStudent = Student(name: studentName!, ID: id!, grade: grade!, school: school!, profileImageUrl: image!)
                 
+                self.ref.child(id!).child("mentor").setValue(self.mentorName)
+                
                 let itemRef = self.currentRef!.child("students").child(id!)
                 itemRef.setValue(newStudent.toAnyObject())
-                
-                self.ref.child(id!).child("mentor").setValue(self.mentorName)
             }
         }
         else {
@@ -284,10 +283,10 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let school = user.school
                 let newStudent = Student(name: studentName!, ID: id!,grade: grade!, school: school!, profileImageUrl: image!)
                 
+                self.ref.child(id!).child("mentor").setValue(self.mentorName)
+                
                 let itemRef = self.currentRef!.child("students").child(id!)
                 itemRef.setValue(newStudent.toAnyObject())
-                
-                self.ref.child(id!).child("mentor").setValue(self.mentorName)
             }
         }
     }

@@ -55,7 +55,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 self.user = User(dictionary: dictionary)
-                if self.user?.type == "mentor" {
+                if self.user?.type == "staff" {
                     self.studentUid = self.user?.student
                     self.ref = self.ref.child(self.studentUid!)
                 }
