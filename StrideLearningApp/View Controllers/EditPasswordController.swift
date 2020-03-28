@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Firebase
 
-class EditPasswordController: UIViewController {
+class EditPasswordController: UIViewController, UITextFieldDelegate {
     
     var profileController: ProfileController?
     
@@ -152,8 +152,11 @@ class EditPasswordController: UIViewController {
         inputsContainerView.addSubview(confirmPasswordSeparatorView)
         
         oldPasswordTextField.font = UIFont.systemFont(ofSize: 14)
+        self.oldPasswordTextField.delegate = self
         newPasswordTextField.font = UIFont.systemFont(ofSize: 14)
+        self.newPasswordTextField.delegate = self
         confirmPasswordTextField.font = UIFont.systemFont(ofSize: 14)
+        self.confirmPasswordTextField.delegate = self
         
         let multiplier = 0.50 as CGFloat
         
@@ -264,5 +267,10 @@ class EditPasswordController: UIViewController {
         let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
         let result = passwordTest.evaluate(with: password)
         return result
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

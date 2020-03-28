@@ -18,19 +18,44 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     var profileController: ProfileController?
     var plannerController: PlannerOverallController?
     
+    let scrollView: UIScrollView = {
+        var sv = UIScrollView()
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.backgroundColor = .white
+        
+        let screensize: CGRect = UIScreen.main.bounds
+        let screenWidth = screensize.width
+        let screenHeight = screensize.height
+        sv.contentSize = CGSize(width: screenWidth, height: screenHeight)
+        
+        return sv
+    }()
+
+    
     lazy var typeSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Student", "Staff"])
         sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.backgroundColor = .white
-        sc.tintColor = UIColor(r: 16, g: 153, b: 255)
-        sc.selectedSegmentIndex = 0
-        sc.layer.cornerRadius = 10
+            sc.tintColor = UIColor(r: 16, g: 153, b: 255)
+            sc.selectedSegmentIndex = 0
+            sc.layer.cornerRadius = 10
         
-        // selected option color
-        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
-        
-        // color of other options
-        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+            
+            if #available(iOS 13, *) {
+                // selected option color
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+                
+                sc.selectedSegmentTintColor = UIColor(r: 16, g: 153, b: 255)
+            } else {
+                // selected option color
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+                
+                // color of other options
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+            }
+            
+
+            // color of other options
+            sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
         
         sc.addTarget(self, action: #selector(studentMentorChange), for: .valueChanged)
         return sc
@@ -39,7 +64,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     lazy var segmentLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 13)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.text = "Are you a student or a staff member?"
         label.numberOfLines = 0
         return label
@@ -235,34 +260,50 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        view.addSubview(typeSegmentedControl)
-        view.addSubview(segmentLabel)
-        view.addSubview(containerView)
-        view.addSubview(registerButton)
+        
+        view.addSubview(scrollView)
+        
+        setupScrollView()
+        
+        mentorView.isHidden = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+
+    }
+    
+    func setupScrollView(){
+        scrollView.leftAnchor.constraint(equalTo:  view.leftAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo:  view.topAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo:  view.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo:  view.bottomAnchor).isActive = true
+
+        scrollView.addSubview(typeSegmentedControl)
+        scrollView.addSubview(segmentLabel)
+        scrollView.addSubview(containerView)
+        scrollView.addSubview(registerButton)
         
         setupContainerView()
         setupTypeSegmentedControlAndLabel()
         setupButton()
-        
-        mentorView.isHidden = true
     }
     
     func setupTypeSegmentedControlAndLabel() {
-        segmentLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        segmentLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        segmentLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        segmentLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 75).isActive = true
 
         //need x, y, width, height constraints
-        typeSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        typeSegmentedControl.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         typeSegmentedControl.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor, constant: 20).isActive = true
-        typeSegmentedControl.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -36).isActive = true
+        typeSegmentedControl.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -36).isActive = true
         typeSegmentedControl.heightAnchor.constraint(equalToConstant: 36).isActive = true
     }
     
     func setupContainerView(){
         containerView.topAnchor.constraint(equalTo: typeSegmentedControl.bottomAnchor, constant: 15).isActive = true
-        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        containerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo: typeSegmentedControl.widthAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 240).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 250).isActive = true
         
         containerView.addSubview(studentView)
         containerView.addSubview(mentorView)
@@ -274,7 +315,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     func setupStudentView(){
         //studentView
         studentView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-        studentView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        studentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         studentView.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
         studentView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
@@ -295,8 +336,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         //studentLabel
         studentLabel.topAnchor.constraint(equalTo: studentView.topAnchor, constant: 12).isActive = true
-        studentLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        studentLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+        studentLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        studentLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
         //Grade
         gradeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
@@ -345,7 +386,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     func setupMentorView(){
         //mentorView
         mentorView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
-        mentorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        mentorView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         mentorView.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
         mentorView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
@@ -363,8 +404,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         //mentorLabel
         mentorLabel.topAnchor.constraint(equalTo: mentorView.topAnchor, constant: 12).isActive = true
-        mentorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        mentorLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+        mentorLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        mentorLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
         //Role
         roleLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 8).isActive = true
@@ -400,7 +441,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     func setupButton(){
         registerButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 12).isActive = true
         registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        registerButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         registerButton.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
     }
     
@@ -540,13 +581,30 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 ref.child("mentor").setValue(mentor)
                 
             } else {
-                ref.child("type").setValue("mentor")
+                ref.child("type").setValue("staff")
                 let role = self.roleTextField.text
                 ref.child("role").setValue(role)
             }
             
         })
     }
+    
+    @objc func keyboardWillShow(notification:NSNotification){
+         
+         let userInfo = notification.userInfo!
+         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+         
+         var contentInset:UIEdgeInsets = self.scrollView.contentInset
+         contentInset.bottom = keyboardFrame.size.height + 20
+         scrollView.contentInset = contentInset
+     }
+     
+     @objc func keyboardWillHide(notification:NSNotification){
+         
+         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+         scrollView.contentInset = contentInset
+     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

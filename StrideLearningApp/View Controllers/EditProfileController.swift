@@ -10,12 +10,25 @@ import Foundation
 import UIKit
 import Firebase
 
-class EditProfileController: UIViewController {
+class EditProfileController: UIViewController, UITextFieldDelegate {
     
     var profileController: ProfileController?
     var user: User?
     var viewContainsMentorView = false
     var viewContainsStudentView = false
+    
+    let scrollView: UIScrollView = {
+        var sv = UIScrollView()
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.backgroundColor = .white
+        
+        let screensize: CGRect = UIScreen.main.bounds
+        let screenWidth = screensize.width
+        let screenHeight = screensize.height - 200
+        sv.contentSize = CGSize(width: screenWidth, height: screenHeight)
+        
+        return sv
+    }()
     
     let firstNameLabel: UILabel = {
         let label = UILabel()
@@ -188,11 +201,24 @@ class EditProfileController: UIViewController {
         
         navigationItem.title = "Edit Profile"
         
-//        view.addSubview(studentInputsContainerView)
-//        view.addSubview(mentorInputsContainerView)
-        fetchUserAndSetupProfile()
-       
+        view.addSubview(scrollView)
         
+        setupScrollView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func setupScrollView(){
+        scrollView.leftAnchor.constraint(equalTo:  view.leftAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo:  view.topAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo:  view.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo:  view.bottomAnchor).isActive = true
+        
+        scrollView.addSubview(studentInputsContainerView)
+        scrollView.addSubview(mentorInputsContainerView)
+        
+        fetchUserAndSetupProfile()
     }
     
     func fetchUserAndSetupProfile() {
@@ -229,13 +255,10 @@ class EditProfileController: UIViewController {
     }
     
     func setupStudentEditInfo(_ user: User) {
-        
-        view.addSubview(studentInputsContainerView)
-        
-        studentInputsContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        studentInputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        studentInputsContainerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
+        studentInputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         studentInputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        studentInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+        studentInputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
         studentInputsContainerView.addSubview(firstNameLabel)
         studentInputsContainerView.addSubview(firstNameTextField)
@@ -255,14 +278,20 @@ class EditProfileController: UIViewController {
         
         firstNameTextField.text = user.firstName
         firstNameTextField.font = UIFont.systemFont(ofSize: 14)
+        self.firstNameTextField.delegate = self
         lastNameTextField.text = user.lastName
         lastNameTextField.font = UIFont.systemFont(ofSize: 14)
+        self.lastNameTextField.delegate = self
         gradeTextField.text = user.grade
         gradeTextField.font = UIFont.systemFont(ofSize: 14)
+        self.gradeTextField.delegate = self
         schoolTextField.text = user.school
         schoolTextField.font = UIFont.systemFont(ofSize: 14)
+        self.schoolTextField.delegate = self
         emailTextField.text = user.email
         emailTextField.font = UIFont.systemFont(ofSize: 14)
+        self.emailTextField.delegate = self
+        
         
         let multiplier = 0.65 as CGFloat
 
@@ -339,13 +368,10 @@ class EditProfileController: UIViewController {
     }
     
     func setupMentorEditInfo(_ user: User) {
-        
-        view.addSubview(mentorInputsContainerView)
-        
-        mentorInputsContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        mentorInputsContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        mentorInputsContainerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
+        mentorInputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         mentorInputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        mentorInputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -10).isActive = true
+        mentorInputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
         mentorInputsContainerView.addSubview(firstNameLabel)
         mentorInputsContainerView.addSubview(firstNameTextField)
@@ -362,12 +388,16 @@ class EditProfileController: UIViewController {
         
         firstNameTextField.text = user.firstName
         firstNameTextField.font = UIFont.systemFont(ofSize: 14)
+        self.firstNameTextField.delegate = self
         lastNameTextField.text = user.lastName
         lastNameTextField.font = UIFont.systemFont(ofSize: 14)
+        self.lastNameTextField.delegate = self
         roleTextField.text = user.role
         roleTextField.font = UIFont.systemFont(ofSize: 14)
+        self.roleTextField.delegate = self
         emailTextField.text = user.email
         emailTextField.font = UIFont.systemFont(ofSize: 14)
+        self.emailTextField.delegate = self
         
         let multiplier = 0.65 as CGFloat
         
@@ -551,5 +581,28 @@ class EditProfileController: UIViewController {
             dismiss(animated: true, completion: nil)
         }
         profileController?.updateData()
+    }
+    
+    
+     @objc func keyboardWillShow(notification:NSNotification){
+         
+         let userInfo = notification.userInfo!
+         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+         
+         var contentInset:UIEdgeInsets = self.scrollView.contentInset
+         contentInset.bottom = keyboardFrame.size.height + 10
+         scrollView.contentInset = contentInset
+     }
+     
+     @objc func keyboardWillHide(notification:NSNotification){
+         
+         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+         scrollView.contentInset = contentInset
+     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

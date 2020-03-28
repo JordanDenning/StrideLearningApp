@@ -172,13 +172,24 @@ class LoginController: UIViewController, UITextFieldDelegate {
     lazy var loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
         sc.translatesAutoresizingMaskIntoConstraints = false
-        sc.backgroundColor = .white
         sc.tintColor = UIColor(r: 16, g: 153, b: 255)
         sc.selectedSegmentIndex = 0
         sc.layer.cornerRadius = 10
     
-        // selected option color
-        sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+        
+        if #available(iOS 13, *) {
+            // selected option color
+            sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+            
+            sc.selectedSegmentTintColor = UIColor(r: 16, g: 153, b: 255)
+        } else {
+            // selected option color
+            sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+            
+            // color of other options
+            sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+        }
+        
 
         // color of other options
         sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
