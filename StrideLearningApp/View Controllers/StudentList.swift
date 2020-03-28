@@ -64,7 +64,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                 let letter = user.name?.prefix(1)
                 user.id = snapshot.key
                 
-                if user.type != "mentor" {
+                if user.type == "student" {
                     switch letter {
                     case "A":
                         count = 0

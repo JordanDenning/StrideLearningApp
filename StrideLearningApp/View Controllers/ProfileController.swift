@@ -587,7 +587,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 self.user = User(dictionary: dictionary)
-                if self.user?.type == "mentor" {
+                if self.user?.type == "staff" {
                     self.setupProfileImageView(self.user!)
                     self.setupMentorInputsContainerView(self.user!)
                     self.setupMentorButtonView()
@@ -751,6 +751,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         }
         
         let loginController = LoginController()
+        loginController.modalPresentationStyle = .fullScreen
         loginController.messagesController = messagesController
         loginController.plannerController = plannerController
         plannerController!.clearView()

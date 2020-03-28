@@ -374,6 +374,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
 
         let loginController = LoginController()
+        loginController.modalPresentationStyle = .fullScreen
         let registerType = RegisterType()
         loginController.messagesController = self
         loginController.profileController = profileController
