@@ -82,7 +82,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 self.user = User(dictionary: dictionary)
-                if self.user?.type == "mentor" {
+                if self.user?.type == "staff" {
                     self.tabBarController?.navigationItem.title = "Students"
                     self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.addNewStudent))
                     self.tabBarController?.navigationItem.rightBarButtonItem?.tintColor = .white
@@ -121,7 +121,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 self.user = User(dictionary: dictionary)
-                if self.user?.type == "mentor" {
+                if self.user?.type == "staff" {
                     self.mentorTableView.plannerOverall = self
                     self.mentorTableView.fetchStudents(self.userRef!)
                     self.addMentorView()

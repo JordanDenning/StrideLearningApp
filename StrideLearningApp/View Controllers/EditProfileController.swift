@@ -206,7 +206,7 @@ class EditProfileController: UIViewController {
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 self.user = User(dictionary: dictionary)
-                if self.user?.type == "mentor" {
+                if self.user?.type == "staff" {
                     self.setupMentorEditInfo(self.user!)
                     self.viewContainsMentorView = true
                     if self.viewContainsStudentView == true {
