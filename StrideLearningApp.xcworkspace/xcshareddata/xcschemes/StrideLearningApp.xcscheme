@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9DCDF43023D38CE300C4E9A7"
-               BuildableName = "StrideLearningApp.app"
+               BuildableName = "Stride.app"
                BlueprintName = "StrideLearningApp"
                ReferencedContainer = "container:StrideLearningApp.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9DCDF43023D38CE300C4E9A7"
-            BuildableName = "StrideLearningApp.app"
+            BuildableName = "Stride.app"
             BlueprintName = "StrideLearningApp"
             ReferencedContainer = "container:StrideLearningApp.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9DCDF43023D38CE300C4E9A7"
-            BuildableName = "StrideLearningApp.app"
+            BuildableName = "Stride.app"
             BlueprintName = "StrideLearningApp"
             ReferencedContainer = "container:StrideLearningApp.xcodeproj">
          </BuildableReference>
