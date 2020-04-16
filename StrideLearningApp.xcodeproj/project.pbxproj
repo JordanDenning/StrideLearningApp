@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D01128C23EAFB0900A44C7B /* EditProfileController.swift */; };
-		9D13E2E2242EC47A0015D348 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D13E2E1242EC47A0015D348 /* GoogleService-Info.plist */; };
 		9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */; };
 		9D45A19F23F2EF7E00E32150 /* AlertExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */; };
 		9D4C420E23FAE13700116B9E /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4C420D23FAE13700116B9E /* CollectionView.swift */; };
+		9D4CF5812448FEA800BFCF89 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D4CF5802448FEA800BFCF89 /* GoogleService-Info.plist */; };
 		9D5F205F242551500097B279 /* ScreenSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F205E242551500097B279 /* ScreenSizeExtension.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
@@ -42,10 +42,10 @@
 
 /* Begin PBXFileReference section */
 		9D01128C23EAFB0900A44C7B /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
-		9D13E2E1242EC47A0015D348 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordController.swift; sourceTree = "<group>"; };
 		9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtensions.swift; sourceTree = "<group>"; };
 		9D4C420D23FAE13700116B9E /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		9D4CF5802448FEA800BFCF89 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		9D5F205E242551500097B279 /* ScreenSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeExtension.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -198,7 +198,7 @@
 				9DCDF43B23D38CE700C4E9A7 /* Assets.xcassets */,
 				9DCDF43D23D38CE700C4E9A7 /* LaunchScreen.storyboard */,
 				9DCDF44023D38CE700C4E9A7 /* Info.plist */,
-				9D13E2E1242EC47A0015D348 /* GoogleService-Info.plist */,
+				9D4CF5802448FEA800BFCF89 /* GoogleService-Info.plist */,
 			);
 			path = StrideLearningApp;
 			sourceTree = "<group>";
@@ -264,7 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DCDF43F23D38CE700C4E9A7 /* LaunchScreen.storyboard in Resources */,
-				9D13E2E2242EC47A0015D348 /* GoogleService-Info.plist in Resources */,
+				9D4CF5812448FEA800BFCF89 /* GoogleService-Info.plist in Resources */,
 				9DCDF43C23D38CE700C4E9A7 /* Assets.xcassets in Resources */,
 				9DCDF43A23D38CE400C4E9A7 /* Main.storyboard in Resources */,
 			);
@@ -492,6 +492,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -512,6 +513,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
