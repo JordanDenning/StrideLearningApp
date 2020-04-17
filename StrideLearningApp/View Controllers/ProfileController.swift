@@ -38,7 +38,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     let imageandNameView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
         
@@ -268,7 +267,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
     func setupProfileImageView(_ user: User) {
         imageandNameView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageandNameView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        imageandNameView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20).isActive = true
+        imageandNameView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         imageandNameView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3).isActive = true
         
         //need x, y, width, height constraints
