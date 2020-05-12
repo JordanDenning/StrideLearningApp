@@ -16,7 +16,7 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
-    let weekStart = 3
+    let weekStart = 1
     var studentUid: String?
     var uid: String?
     var user: User?

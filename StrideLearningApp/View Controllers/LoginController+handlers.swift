@@ -73,6 +73,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                                 // your code with delay
                                 alertVC.dismiss(animated: true, completion: nil)
                                 let registerType = RegisterType()
+                                registerType.modalPresentationStyle = .fullScreen
                                 self.present(registerType, animated: true, completion: nil)
                                 registerType.loginController = self
                                 registerType.profileController = self.profileController

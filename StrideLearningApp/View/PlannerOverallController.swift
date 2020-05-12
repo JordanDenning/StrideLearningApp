@@ -18,7 +18,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
-    let weekStart = 3
+    let weekStart = 1
     var collectionView: CollectionView?
     var viewContainsMentorView = false
     var viewContainsStudentView = false

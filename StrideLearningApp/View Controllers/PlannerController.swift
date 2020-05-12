@@ -20,7 +20,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     var cellCount = Int()
     let tableView = UITableView()
     var weekUpToDate = Bool ()
-    var weekStart = 3
+    var weekStart = 1
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()

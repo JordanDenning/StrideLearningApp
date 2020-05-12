@@ -47,6 +47,7 @@
 		9D4C420D23FAE13700116B9E /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		9D4CF5802448FEA800BFCF89 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		9D5F205E242551500097B279 /* ScreenSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeExtension.swift; sourceTree = "<group>"; };
+		9D976D8B246AE76A007FAE91 /* Stride.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stride.entitlements; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -189,6 +190,7 @@
 		9DCDF43323D38CE400C4E9A7 /* StrideLearningApp */ = {
 			isa = PBXGroup;
 			children = (
+				9D976D8B246AE76A007FAE91 /* Stride.entitlements */,
 				9DC8EB6C23D6C62C00DD3EB7 /* View */,
 				9DC8EB3E23D5427A00DD3EB7 /* Controllers */,
 				9DC8EB4523D5468100DD3EB7 /* Helpers */,
@@ -491,8 +493,9 @@
 			baseConfigurationReference = EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StrideLearningApp/Stride.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -512,8 +515,9 @@
 			baseConfigurationReference = A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StrideLearningApp/Stride.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
