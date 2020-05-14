@@ -54,10 +54,24 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
             // [END register_for_notifications]
             return true
           }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        Database.database().reference().child("users").child(uid).child("notifications").observe(.value, with: { (snapshot) in
+            
+           if let notifications = snapshot.value as? Int {
+            UIApplication.shared.applicationIconBadgeNumber = notifications
+            }
+            
+        }, withCancel: nil)
+         
+    }
     
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 
-          UIApplication.shared.applicationIconBadgeNumber = 5
+        UIApplication.shared.applicationIconBadgeNumber = 5
 
         completionHandler(.newData)
     }
