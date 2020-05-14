@@ -23,6 +23,7 @@ class User: NSObject {
     var student: String?
     var students: [Student?]
     var fcmToken: String?
+    var notifications: Int?
     
     init(dictionary: [String: Any]) {
         self.name = dictionary["name"] as? String ?? ""
@@ -38,6 +39,7 @@ class User: NSObject {
         self.student = dictionary["student"] as? String
         self.students = dictionary["students"] as? [Student] ?? []
         self.fcmToken = dictionary["fcmToken"] as? String
+        self.notifications = dictionary["notifications"] as? Int
     }
 
 }

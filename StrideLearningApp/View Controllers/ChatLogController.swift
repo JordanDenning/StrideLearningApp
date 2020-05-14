@@ -320,6 +320,7 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         let fromName = currentUser!.name!
         let fromId = Auth.auth().currentUser!.uid
         let fcmToken = user!.fcmToken!
+        var notifications = user!.notifications!
         let timestamp = Int(Date().timeIntervalSince1970)
         let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp] as [String : Any]
         
@@ -339,9 +340,25 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(messageId)
             recipientUserMessagesRef.setValue(1)
             
-            let sender = PushNotificationSender()
-            sender.sendPushNotification(to: fcmToken, title: fromName, body: "New Message")
         }
+        
+        let ref2 = Database.database().reference().child("users").child(toId)
+        let usersRef = ref2.child("notifications")
+
+        ref2.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                return
+            }
+
+            let user = User(dictionary: dictionary)
+            notifications = user.notifications!
+            notifications += 1
+            usersRef.setValue(notifications)
+            let sender = PushNotificationSender()
+            sender.sendPushNotification(to: fcmToken, title: fromName, body: "New Message", badge: notifications)
+
+        }, withCancel: nil)
+
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -349,17 +366,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         return true
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
