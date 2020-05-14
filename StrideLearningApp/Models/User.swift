@@ -22,6 +22,7 @@ class User: NSObject {
     var type: String?
     var student: String?
     var students: [Student?]
+    var fcmToken: String?
     
     init(dictionary: [String: Any]) {
         self.name = dictionary["name"] as? String ?? ""
@@ -36,6 +37,7 @@ class User: NSObject {
         self.type = dictionary["type"] as? String
         self.student = dictionary["student"] as? String
         self.students = dictionary["students"] as? [Student] ?? []
+        self.fcmToken = dictionary["fcmToken"] as? String
     }
 
 }

@@ -319,6 +319,7 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         let toName = user!.name!
         let fromName = currentUser!.name!
         let fromId = Auth.auth().currentUser!.uid
+        let fcmToken = user!.fcmToken!
         let timestamp = Int(Date().timeIntervalSince1970)
         let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp] as [String : Any]
         
@@ -337,6 +338,9 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             
             let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(messageId)
             recipientUserMessagesRef.setValue(1)
+            
+            let sender = PushNotificationSender()
+            sender.sendPushNotification(to: fcmToken, title: fromName, body: "New Message")
         }
     }
     

@@ -13,6 +13,7 @@
 		9D4C420E23FAE13700116B9E /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4C420D23FAE13700116B9E /* CollectionView.swift */; };
 		9D4CF5812448FEA800BFCF89 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D4CF5802448FEA800BFCF89 /* GoogleService-Info.plist */; };
 		9D5F205F242551500097B279 /* ScreenSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F205E242551500097B279 /* ScreenSizeExtension.swift */; };
+		9D976D97246DE611007FAE91 /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D976D96246DE611007FAE91 /* PushNotificationSender.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
@@ -48,6 +49,7 @@
 		9D4CF5802448FEA800BFCF89 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		9D5F205E242551500097B279 /* ScreenSizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenSizeExtension.swift; sourceTree = "<group>"; };
 		9D976D8B246AE76A007FAE91 /* Stride.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stride.entitlements; sourceTree = "<group>"; };
+		9D976D96246DE611007FAE91 /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				9DC8EB6623D6705900DD3EB7 /* Extensions.swift */,
 				9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */,
 				9D5F205E242551500097B279 /* ScreenSizeExtension.swift */,
+				9D976D96246DE611007FAE91 /* PushNotificationSender.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				9DD5066224100F5F00631A31 /* MentorStudentView.swift in Sources */,
 				9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */,
 				9DC8EB6123D65CE000DD3EB7 /* User.swift in Sources */,
+				9D976D97246DE611007FAE91 /* PushNotificationSender.swift in Sources */,
 				9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */,
 				9DC8EB6E23D6C64200DD3EB7 /* UserCell.swift in Sources */,
 				EE62C66223E676F200DE785E /* PlannerController.swift in Sources */,
