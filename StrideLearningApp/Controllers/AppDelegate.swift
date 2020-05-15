@@ -147,6 +147,11 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
             print(userInfo)
 
             // Change this to your preferred presentation option
+            if self.window?.rootViewController?.topViewController is ChatLogController {
+                completionHandler([])
+            } else {
+                completionHandler([.alert, .badge, .sound])
+            }
             completionHandler([[.alert, .sound]])
           }
 
