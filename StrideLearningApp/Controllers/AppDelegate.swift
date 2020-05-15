@@ -158,6 +158,25 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
             if let messageID = userInfo[gcmMessageIDKey] {
               print("Message ID: \(messageID)")
             }
+            
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            
+            let ref = Database.database().reference().child("users").child(uid)
+            let usersRef = ref.child("notifications")
+
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+
+                let user = User(dictionary: dictionary)
+                var notifications = user.notifications!
+                notifications -= 1
+                usersRef.setValue(notifications)
+
+            }, withCancel: nil)
 
             // Print full message.
             print(userInfo)
