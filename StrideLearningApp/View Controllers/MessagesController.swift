@@ -111,21 +111,26 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         let ref = Database.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with: { (snapshot) in
             
-            let userId = snapshot.key
+            let chatroomId = snapshot.key
             
-            print(uid, userId)
-            Database.database().reference().child("user-messages").child(uid).child(userId).observe(.childAdded, with: { (snapshot) in
+//            let chatroomArr = chatroomId.components(separatedBy: "_")
+//            print(chatroomId)
+//            print(chatroomArr)
+//            let userId = chatroomArr[1]
+//            print(uid, userId)
+            
+            Database.database().reference().child("user-messages").child(uid).child(chatroomId).observe(.childAdded, with: { (snapshot) in
                 
                 let messageId = snapshot.key
-                self.fetchMessageWithMessageId(messageId)
+                self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId )
                 
             }, withCancel: nil)
             
         }, withCancel: nil)
     }
     
-    fileprivate func fetchMessageWithMessageId(_ messageId: String) {
-        let messagesReference = Database.database().reference().child("messages").child(messageId)
+    fileprivate func fetchMessageWithMessageId(_ messageId: String, chatroomId: String) {
+        let messagesReference = Database.database().reference().child("messages").child(chatroomId).child(messageId)
         
         messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
             
