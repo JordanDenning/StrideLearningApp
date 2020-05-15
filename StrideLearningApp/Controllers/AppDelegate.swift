@@ -127,11 +127,11 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
         }
 
         // [START ios_10_message_handling]
-        @available(iOS 10, *)
-        extension AppDelegate : UNUserNotificationCenterDelegate {
+@available(iOS 10, *)
+extension AppDelegate : UNUserNotificationCenterDelegate {
 
           // Receive displayed notifications for iOS 10 devices.
-          func userNotificationCenter(_ center: UNUserNotificationCenter,
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
                                       willPresent notification: UNNotification,
             withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             let userInfo = notification.request.content.userInfo
@@ -142,20 +142,43 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
             if let messageID = userInfo[gcmMessageIDKey] {
               print("Message ID: \(messageID)")
             }
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+                       return
+                   }
+                   
+                   let chatroomId = userInfo["user"] as! String
+                   
 
             // Print full message.
             print(userInfo)
 
             // Change this to your preferred presentation option
             if self.window?.rootViewController?.topViewController is ChatLogController {
+                let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
+                refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let messageNotifications = snapshot.value as? Int else {
+                    return
+                }
+
+                    let ref = Database.database().reference().child("users").child(uid).child("notifications")
+                    ref.observeSingleEvent(of: .value, with:{ (snapshot) in
+                    guard let overallNotifications = snapshot.value as? Int else {
+                        return
+                    }
+                        let notifications = overallNotifications - messageNotifications
+                        ref.setValue(notifications)
+                    }, withCancel: nil)
+                    refNotify.setValue(0)
+                }, withCancel: nil)
                 completionHandler([])
+                
             } else {
                 completionHandler([.alert, .badge, .sound])
             }
-            completionHandler([[.alert, .sound]])
-          }
+    }
 
-          func userNotificationCenter(_ center: UNUserNotificationCenter,
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
                                       didReceive response: UNNotificationResponse,
                                       withCompletionHandler completionHandler: @escaping () -> Void) {
             let userInfo = response.notification.request.content.userInfo
@@ -169,6 +192,13 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
             }
             
             let chatroomId = userInfo["user"] as! String
+            let chatroomArr = chatroomId.components(separatedBy: "_")
+            var chatPartnerId = uid
+        if uid == chatroomArr[0]{
+            chatPartnerId = chatroomArr[1]
+        } else {
+            chatPartnerId = chatroomArr[0]
+        }
             
             let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
             refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -186,29 +216,35 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
                 }, withCancel: nil)
                 refNotify.setValue(0)
             }, withCancel: nil)
-            
-//            let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
-//            
-//            let ref = Database.database().reference().child("users").child(uid)
-//            let usersRef = ref.child("notifications")
-//
-//            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//                guard let dictionary = snapshot.value as? [String: AnyObject] else {
-//                    return
-//                }
-//
-//                let user = User(dictionary: dictionary)
-//                var notifications = user.notifications!
-//                notifications -= 1
-//                usersRef.setValue(notifications)
-//
-//            }, withCancel: nil)
 
-            // Print full message.
+        // Print full message.
+        print(userInfo)
+
+        //open notification to specific chat page
+        let ref = Database.database().reference().child("users").child(chatPartnerId)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                return
+            }
+            
+            let user = User(dictionary: dictionary)
+            user.id = chatPartnerId
+            self.showChatControllerForUser(user)
             print(userInfo)
 
             completionHandler()
-          }
+            
+        }, withCancel: nil)
+    }
+    
+func showChatControllerForUser(_ user: User) {
+        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogController.user = user
+        if let nav = self.window?.rootViewController as? UINavigationController {
+            nav.pushViewController(chatLogController, animated: true)
+        }
+    }
+    
         }
         // [END ios_10_message_handling]
 
