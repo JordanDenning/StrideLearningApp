@@ -285,6 +285,9 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             message = messages[indexPath.row];
         }
         
+        let chatroomId = message.chatroomId!
+        updateNotifications(chatroomId)
+        
         guard let chatPartnerId = message.chatPartnerId() else {
             return
         }
@@ -302,6 +305,33 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }, withCancel: nil)
         
         searchController.searchBar.text = ""
+    }
+    
+    func updateNotifications(_ chatroomId: String){
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+
+
+        let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
+        refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
+        guard let messageNotifications = snapshot.value as? Int else {
+            return
+        }
+
+            let ref = Database.database().reference().child("users").child(uid).child("notifications")
+            ref.observeSingleEvent(of: .value, with:{ (snapshot) in
+            guard let overallNotifications = snapshot.value as? Int else {
+                return
+            }
+                let notifications = overallNotifications - messageNotifications
+                ref.setValue(notifications)
+            }, withCancel: nil)
+            refNotify.setValue(0)
+        }, withCancel: nil)
+        
+        
     }
     
     @objc func handleNewMessage() {

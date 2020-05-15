@@ -163,20 +163,41 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
                 return
             }
             
-            let ref = Database.database().reference().child("users").child(uid)
-            let usersRef = ref.child("notifications")
+            let chatroomId = userInfo["user"] as! String
+            
+            let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
+            refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let messageNotifications = snapshot.value as? Int else {
+                return
+            }
 
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                let ref = Database.database().reference().child("users").child(uid).child("notifications")
+                ref.observeSingleEvent(of: .value, with:{ (snapshot) in
+                guard let overallNotifications = snapshot.value as? Int else {
                     return
                 }
-
-                let user = User(dictionary: dictionary)
-                var notifications = user.notifications!
-                notifications -= 1
-                usersRef.setValue(notifications)
-
+                    let notifications = overallNotifications - messageNotifications
+                    ref.setValue(notifications)
+                }, withCancel: nil)
+                refNotify.setValue(0)
             }, withCancel: nil)
+            
+//            let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
+//            
+//            let ref = Database.database().reference().child("users").child(uid)
+//            let usersRef = ref.child("notifications")
+//
+//            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+//                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+//                    return
+//                }
+//
+//                let user = User(dictionary: dictionary)
+//                var notifications = user.notifications!
+//                notifications -= 1
+//                usersRef.setValue(notifications)
+//
+//            }, withCancel: nil)
 
             // Print full message.
             print(userInfo)

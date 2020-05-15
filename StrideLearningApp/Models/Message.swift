@@ -17,6 +17,7 @@ class Message: NSObject {
     var timestamp: NSNumber?
     var toId: String?
     var toName: String?
+    var chatroomId: String?
     
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
@@ -25,6 +26,7 @@ class Message: NSObject {
         self.toId = dictionary["toId"] as? String
         self.toName = dictionary["toName"] as? String
         self.timestamp = dictionary["timestamp"] as? NSNumber
+        self.chatroomId = dictionary["chatroomId"] as? String
     }
     
     func chatPartnerId() -> String? {

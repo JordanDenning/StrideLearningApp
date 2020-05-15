@@ -363,7 +363,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         let fromId = Auth.auth().currentUser!.uid
         let fromName = currentUser!.name!
         let fcmToken = user!.fcmToken!
-        var notifications = user!.notifications!
         let timestamp = Int(Date().timeIntervalSince1970)
         let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
         let ref = Database.database().reference().child("messages").child(chatroomId)
@@ -389,20 +388,32 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             
         }
         
+        //update messages notifications for user
+        let refNotify = ref.child(toId)
+        refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+           if let messages = snapshot.value as? Int {
+                let notifications = messages + 1
+                refNotify.setValue(notifications)
+           } else {
+                refNotify.setValue(1)
+            }
+            
+        }, withCancel: nil)
+        
+        //update users overall notifications
         let ref2 = Database.database().reference().child("users").child(toId)
         let usersRef = ref2.child("notifications")
 
-        ref2.observeSingleEvent(of: .value, with: { (snapshot) in
-            guard let dictionary = snapshot.value as? [String: AnyObject] else {
+        usersRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let notify = snapshot.value as? Int else {
                 return
             }
+            let notifications = notify + 1
 
-            let user = User(dictionary: dictionary)
-            notifications = user.notifications!
-            notifications += 1
             usersRef.setValue(notifications)
             let sender = PushNotificationSender()
-            sender.sendPushNotification(to: fcmToken, title: fromName, body: "New Message", badge: notifications)
+            sender.sendPushNotification(to: fcmToken, title: fromName, body: "New Message", badge: notifications, chatroomId:  chatroomId)
 
         }, withCancel: nil)
 
