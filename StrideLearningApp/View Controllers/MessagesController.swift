@@ -270,8 +270,25 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         cell.message = message
         
+        let uid = Auth.auth().currentUser?.uid
+
+        let messagesReference = Database.database().reference().child("messages").child(message.chatroomId!).child(uid!)
+
+        messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if let messages = snapshot.value as? Int {
+                if messages == 0 {
+                    cell.newMessageDot.isHidden = true
+                } else {
+                    cell.newMessageDot.isHidden = false
+                }
+               }
+           }, withCancel: nil)
+
+        
         return cell
     }
+    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
@@ -286,7 +303,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
         
         let chatroomId = message.chatroomId!
-        updateNotifications(chatroomId)
+        let cell = tableView.cellForRow(at: indexPath) as! UserCell
+        updateNotifications(chatroomId, cell: cell)
         
         guard let chatPartnerId = message.chatPartnerId() else {
             return
@@ -305,15 +323,15 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }, withCancel: nil)
         
         searchController.searchBar.text = ""
+        
+       
+        
     }
     
-    func updateNotifications(_ chatroomId: String){
+    func updateNotifications(_ chatroomId: String, cell: UserCell){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        
-
-
         let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
         refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
         guard let messageNotifications = snapshot.value as? Int else {
@@ -328,10 +346,17 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 let notifications = overallNotifications - messageNotifications
                 ref.setValue(notifications)
             }, withCancel: nil)
-            refNotify.setValue(0)
+            refNotify.setValue(0){
+                (error:Error?, ref:DatabaseReference) in
+                if let error = error {
+                    print("Data could not be saved: \(error).")
+                } else {
+                    print("Data saved successfully!")
+                    cell.newMessageDot.isHidden = true
+                }
+            }
+            
         }, withCancel: nil)
-        
-        
     }
     
     @objc func handleNewMessage() {
