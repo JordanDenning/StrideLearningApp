@@ -221,20 +221,25 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         print(userInfo)
 
         //open notification to specific chat page
-        let ref = Database.database().reference().child("users").child(chatPartnerId)
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            guard let dictionary = snapshot.value as? [String: AnyObject] else {
-                return
-            }
-            
-            let user = User(dictionary: dictionary)
-            user.id = chatPartnerId
-            self.showChatControllerForUser(user)
-            print(userInfo)
-
+        if self.window?.rootViewController?.topViewController is ChatLogController {
+            //if left in chatLogcontroller, don't push another onto stack
             completionHandler()
-            
-        }, withCancel: nil)
+        } else {
+            let ref = Database.database().reference().child("users").child(chatPartnerId)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let dictionary = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                
+                let user = User(dictionary: dictionary)
+                user.id = chatPartnerId
+                self.showChatControllerForUser(user)
+                print(userInfo)
+
+                completionHandler()
+                
+            }, withCancel: nil)
+        }
     }
     
 func showChatControllerForUser(_ user: User) {
