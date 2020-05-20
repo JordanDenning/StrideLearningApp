@@ -11,6 +11,8 @@ import Firebase
 
 class ChatLogController: UICollectionViewController, UITextViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    var chatroomId = String()
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var user: User? {
         didSet {
             navigationItem.title = user?.name
@@ -23,53 +25,13 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
     
     var messages = [Message]()
     
-//    func observeMessages() {
-//        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
-//            return
-//        }
-//
-//        let ref = Database.database().reference().child("users").child(uid)
-//        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//            guard let dictionary = snapshot.value as? [String: AnyObject] else {
-//                return
-//            }
-//
-//            self.currentUser = User(dictionary: dictionary)
-//            self.currentUser!.id = uid
-//
-//        }, withCancel: nil)
-//
-//
-//        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
-//        userMessagesRef.observe(.childAdded, with: { (snapshot) in
-//
-//            let messageId = snapshot.key
-//            let messagesRef = Database.database().reference().child("messages").child(messageId)
-//            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-//
-//                guard let dictionary = snapshot.value as? [String: AnyObject] else {
-//                    return
-//                }
-//
-//                let message = Message(dictionary: dictionary)
-//
-//                //do we need to attempt filtering anymore?
-//                self.messages.append(message)
-//                DispatchQueue.main.async(execute: {
-//                    self.collectionView?.reloadData()
-//                    self.scrollToBottom()
-//                    print("scrolled")
-//                })
-//
-//            }, withCancel: nil)
-//
-//        }, withCancel: nil)
-//    }
 
     func observeMessages() {
         guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
             return
         }
+        
+        appDelegate.currentChatPageId = toId
         
         let ref = Database.database().reference().child("users").child(uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -82,13 +44,13 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
 
         }, withCancel: nil)
 
-        let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
+        chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
 
         let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(chatroomId)
         userMessagesRef.observe(.childAdded, with: { (snapshot) in
 
             let messageId = snapshot.key
-            let messagesRef = Database.database().reference().child("messages").child(chatroomId).child(messageId)
+            let messagesRef = Database.database().reference().child("messages").child(self.chatroomId).child(messageId)
             messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
 
                 guard let dictionary = snapshot.value as? [String: AnyObject] else {
