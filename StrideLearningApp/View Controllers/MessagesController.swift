@@ -54,19 +54,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         tableView.delegate = self
         tableView.dataSource = self
-        self.tabBarController?.navigationItem.title = "Messages"
-        
-        configureSearchController()
-        
-        observeUserMessages()
-
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.navigationItem.title = "Messages"
-        self.tabBarController?.navigationItem.leftBarButtonItem = nil
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
-        
+//        self.navigationItem.title = "Messages"
         //navigation bar color
         let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
         self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
@@ -78,14 +66,26 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         //navigation button items
         self.navigationController?.navigationBar.tintColor = .white
         
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
+        
+        configureSearchController()
+        
+        observeUserMessages()
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         //removes empty table cells
         tableView.tableFooterView = UIView(frame: .zero)
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.searchController.dismiss(animated: false, completion: nil)
+        
+        
     }
     
     func configureSearchController() {
@@ -381,10 +381,12 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         if(searchActive) {
             searchController.dismiss(animated: false) {
                 self.navigationController?.pushViewController(chatLogController, animated: true)
+//                self.present(chatLogController, animated: true, completion: nil)
             }
         }
         else{
             navigationController?.pushViewController(chatLogController, animated: true)
+//            self.present(chatLogController, animated: true, completion: nil)
         }
     }
     
