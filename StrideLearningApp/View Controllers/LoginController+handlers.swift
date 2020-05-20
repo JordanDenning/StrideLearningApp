@@ -108,7 +108,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                                 }
 
                                 guard let url = url else { return }
-                                let values = ["name": firstName + " " + lastName, "firstName": firstName, "lastName": lastName, "email": email, "profileImageUrl": url.absoluteString]
+                                let values = ["name": firstName + " " + lastName, "firstName": firstName, "lastName": lastName, "email": email, "profileImageUrl": url.absoluteString, "fcmToken":AppDelegate.DEVICEID, "notifications": 0] as [String : Any]
 
                                 self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
                             })

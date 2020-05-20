@@ -11,6 +11,8 @@ import Firebase
 
 class ChatLogController: UICollectionViewController, UITextViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    var chatroomId = String()
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var user: User? {
         didSet {
             navigationItem.title = user?.name
@@ -23,48 +25,53 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
     
     var messages = [Message]()
     
+
     func observeMessages() {
-        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id, let fromId = Auth.auth().currentUser?.uid else {
             return
         }
+        
+        appDelegate.currentChatPageId = toId
         
         let ref = Database.database().reference().child("users").child(uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard let dictionary = snapshot.value as? [String: AnyObject] else {
                 return
             }
-            
+
             self.currentUser = User(dictionary: dictionary)
             self.currentUser!.id = uid
-            
+
         }, withCancel: nil)
-        
-        
-        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(toId)
+
+        chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
+
+        let userMessagesRef = Database.database().reference().child("user-messages").child(uid).child(chatroomId)
         userMessagesRef.observe(.childAdded, with: { (snapshot) in
-            
+
             let messageId = snapshot.key
-            let messagesRef = Database.database().reference().child("messages").child(messageId)
+            let messagesRef = Database.database().reference().child("messages").child(self.chatroomId).child(messageId)
             messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                
+
                 guard let dictionary = snapshot.value as? [String: AnyObject] else {
                     return
                 }
-                
+
                 let message = Message(dictionary: dictionary)
-                
+
                 //do we need to attempt filtering anymore?
                 self.messages.append(message)
                 DispatchQueue.main.async(execute: {
                     self.collectionView?.reloadData()
                     self.scrollToBottom()
-                    print("scrolled")
+                    //print("scrolled")
                 })
-                
+
             }, withCancel: nil)
-            
+
         }, withCancel: nil)
     }
+    
     
     let cellId = "cellId"
     
@@ -313,14 +320,18 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
     
     @objc func handleSend() {
         self.textHeightConstraint.constant = 35
-        let ref = Database.database().reference().child("messages")
-        let childRef = ref.childByAutoId()
         let toId = user!.id!
         let toName = user!.name!
-        let fromName = currentUser!.name!
         let fromId = Auth.auth().currentUser!.uid
+        let fromName = currentUser!.name!
+        let fcmToken = user!.fcmToken!
         let timestamp = Int(Date().timeIntervalSince1970)
-        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp] as [String : Any]
+        let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
+        let ref = Database.database().reference().child("messages").child(chatroomId)
+        let childRef = ref.childByAutoId()
+        let text = inputTextField.text!
+        
+        let values = ["text": text, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp, "chatroomId": chatroomId] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
@@ -332,12 +343,43 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             
             guard let messageId = childRef.key else { return }
             
-            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(toId).child(messageId)
+            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(chatroomId).child(messageId)
             userMessagesRef.setValue(1)
             
-            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(fromId).child(messageId)
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(chatroomId).child(messageId)
             recipientUserMessagesRef.setValue(1)
+            
         }
+        
+        //update messages notifications for user
+        let refNotify = ref.child(toId)
+        refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+           if let messages = snapshot.value as? Int {
+                let notifications = messages + 1
+                refNotify.setValue(notifications)
+           } else {
+                refNotify.setValue(1)
+            }
+            
+        }, withCancel: nil)
+        
+        //update users overall notifications
+        let ref2 = Database.database().reference().child("users").child(toId)
+        let usersRef = ref2.child("notifications")
+
+        usersRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let notify = snapshot.value as? Int else {
+                return
+            }
+            let notifications = notify + 1
+
+            usersRef.setValue(notifications)
+            let sender = PushNotificationSender()
+            sender.sendPushNotification(to: fcmToken, title: fromName, body: text, badge: notifications, chatroomId:  chatroomId)
+
+        }, withCancel: nil)
+
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -345,17 +387,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         return true
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

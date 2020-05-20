@@ -54,18 +54,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         tableView.delegate = self
         tableView.dataSource = self
-        self.tabBarController?.navigationItem.title = "Messages"
         
-        configureSearchController()
-        
-        observeUserMessages()
-
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.navigationItem.title = "Messages"
-        self.tabBarController?.navigationItem.leftBarButtonItem = nil
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
+        definesPresentationContext = true
         
         //navigation bar color
         let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
@@ -78,14 +68,26 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         //navigation button items
         self.navigationController?.navigationBar.tintColor = .white
         
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
+        
+        configureSearchController()
+        
+        observeUserMessages()
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         //removes empty table cells
         tableView.tableFooterView = UIView(frame: .zero)
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.searchController.dismiss(animated: false, completion: nil)
+        
+        
     }
     
     func configureSearchController() {
@@ -111,21 +113,26 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         let ref = Database.database().reference().child("user-messages").child(uid)
         ref.observe(.childAdded, with: { (snapshot) in
             
-            let userId = snapshot.key
+            let chatroomId = snapshot.key
             
-            print(uid, userId)
-            Database.database().reference().child("user-messages").child(uid).child(userId).observe(.childAdded, with: { (snapshot) in
+//            let chatroomArr = chatroomId.components(separatedBy: "_")
+//            print(chatroomId)
+//            print(chatroomArr)
+//            let userId = chatroomArr[1]
+//            print(uid, userId)
+            
+            Database.database().reference().child("user-messages").child(uid).child(chatroomId).observe(.childAdded, with: { (snapshot) in
                 
                 let messageId = snapshot.key
-                self.fetchMessageWithMessageId(messageId)
+                self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId )
                 
             }, withCancel: nil)
             
         }, withCancel: nil)
     }
     
-    fileprivate func fetchMessageWithMessageId(_ messageId: String) {
-        let messagesReference = Database.database().reference().child("messages").child(messageId)
+    fileprivate func fetchMessageWithMessageId(_ messageId: String, chatroomId: String) {
+        let messagesReference = Database.database().reference().child("messages").child(chatroomId).child(messageId)
         
         messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
             
@@ -265,8 +272,25 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         cell.message = message
         
+        let uid = Auth.auth().currentUser?.uid
+
+        let messagesReference = Database.database().reference().child("messages").child(message.chatroomId!).child(uid!)
+
+        messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if let messages = snapshot.value as? Int {
+                if messages == 0 {
+                    cell.newMessageDot.isHidden = true
+                } else {
+                    cell.newMessageDot.isHidden = false
+                }
+               }
+           }, withCancel: nil)
+
+        
         return cell
     }
+    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
@@ -279,6 +303,10 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         } else {
             message = messages[indexPath.row];
         }
+        
+        let chatroomId = message.chatroomId!
+        let cell = tableView.cellForRow(at: indexPath) as! UserCell
+        updateNotifications(chatroomId, cell: cell)
         
         guard let chatPartnerId = message.chatPartnerId() else {
             return
@@ -296,7 +324,37 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             
         }, withCancel: nil)
         
-        searchController.searchBar.text = ""
+    }
+    
+    func updateNotifications(_ chatroomId: String, cell: UserCell){
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
+        refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
+        guard let messageNotifications = snapshot.value as? Int else {
+            return
+        }
+
+            let ref = Database.database().reference().child("users").child(uid).child("notifications")
+            ref.observeSingleEvent(of: .value, with:{ (snapshot) in
+            guard let overallNotifications = snapshot.value as? Int else {
+                return
+            }
+                let notifications = overallNotifications - messageNotifications
+                ref.setValue(notifications)
+            }, withCancel: nil)
+            refNotify.setValue(0){
+                (error:Error?, ref:DatabaseReference) in
+                if let error = error {
+                    print("Data could not be saved: \(error).")
+                } else {
+                    print("Data saved successfully!")
+                    cell.newMessageDot.isHidden = true
+                }
+            }
+            
+        }, withCancel: nil)
     }
     
     @objc func handleNewMessage() {
@@ -318,6 +376,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
+        searchController.searchBar.text = ""
         if(searchActive) {
             searchController.dismiss(animated: false) {
                 self.navigationController?.pushViewController(chatLogController, animated: true)

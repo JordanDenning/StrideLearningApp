@@ -66,13 +66,12 @@ class UserCell: UITableViewCell {
         let textScreen = screenSize - 140
         let detailScreen = screenSize - 110
         
-        
         let textWidth = textLabel!.frame.width < textScreen ?  textLabel!.frame.width : textScreen
         let detailWidth = detailTextLabel!.frame.width < detailScreen ?  detailTextLabel!.frame.width : detailScreen
         
-        textLabel?.frame = CGRect(x: 64, y: textLabel!.frame.origin.y - 2, width: textWidth, height: textLabel!.frame.height)
+        textLabel?.frame = CGRect(x: 72, y: textLabel!.frame.origin.y - 2, width: textWidth, height: textLabel!.frame.height)
         
-        detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y + 2, width: detailWidth, height: detailTextLabel!.frame.height)
+        detailTextLabel?.frame = CGRect(x: 72, y: detailTextLabel!.frame.origin.y + 2, width: detailWidth, height: detailTextLabel!.frame.height)
         
         detailTextLabel?.numberOfLines = 1
         textLabel?.numberOfLines = 1
@@ -97,15 +96,33 @@ class UserCell: UITableViewCell {
         return label
     }()
     
+    let newMessageDot: UIView = {
+       let newMessage = UIView()
+        newMessage.translatesAutoresizingMaskIntoConstraints = false
+        newMessage.layer.cornerRadius = 7
+        newMessage.layer.borderWidth = 1.5
+        newMessage.layer.borderColor = UIColor(r:16, g:153, b:255).cgColor
+        newMessage.layer.backgroundColor = UIColor(r:16, g:153, b:255).cgColor
+        newMessage.layer.masksToBounds = true
+        return newMessage
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
         addSubview(timeLabel)
+        addSubview(newMessageDot)
+        
+        newMessageDot.rightAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        newMessageDot.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        newMessageDot.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        newMessageDot.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        newMessageDot.isHidden = true
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        profileImageView.leftAnchor.constraint(equalTo: newMessageDot.rightAnchor, constant: 4).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true

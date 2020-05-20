@@ -23,16 +23,27 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         view.backgroundColor = UIColor(r: 245, g:245, b:245)
         view.addSubview(imageandNameView)
         view.addSubview(buttonsContainerView)
+        
+        //navigation bar color
+        let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
+        self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
+                                                                    for: .default)
+        //navigation title properties
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]
+
+        //navigation button items
+        self.navigationController?.navigationBar.tintColor = .white
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        self.navigationItem.rightBarButtonItem = nil
 
         fetchUserAndSetupProfile()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.navigationItem.title = "Profile"
-        self.tabBarController?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        self.tabBarController?.navigationItem.rightBarButtonItem = nil
-    
+
+        
     }
 
     let imageandNameView: UIView = {

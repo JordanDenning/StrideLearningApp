@@ -316,6 +316,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
                 return
             }
             
+            guard let uid = Auth.auth().currentUser?.uid else {return}
+            let values = ["fcmToken":AppDelegate.DEVICEID] as [String : Any]
+            let ref = Database.database().reference().child("users").child(uid)
+            
+            ref.updateChildValues(values)
+            
             if let user = Auth.auth().currentUser {
                 if !user.isEmailVerified {
                     let alertVC = UIAlertController(title: "Verify Email", message: "You must verify your email before logging in. Would you like us to resend another email confirmation link?", preferredStyle: UIAlertController.Style.alert)

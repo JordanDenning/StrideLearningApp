@@ -10,18 +10,21 @@ import UIKit
 import Firebase
 
 class TabBarController: UITabBarController, UITabBarControllerDelegate {
-    
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let profileVC = ProfileController()
         profileVC.navigationItem.title = "Profile"
+        appDelegate.profileVC = profileVC
 
         let messagesVC = MessagesController()
         messagesVC.navigationItem.title = "Messages"
+        appDelegate.messagesVC = messagesVC
         
         let plannerVC = PlannerOverallController()
         plannerVC.title = "Planner"
+        appDelegate.profileVC = profileVC
         
         profileVC.messagesController = messagesVC
         profileVC.plannerController = plannerVC
@@ -39,7 +42,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         
         let controllers = [profileVC, messagesVC, plannerVC]
 
-        viewControllers = controllers
+        viewControllers = controllers.map { UINavigationController(rootViewController: $0)}
         
         selectedIndex = 1
 
