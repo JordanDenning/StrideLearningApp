@@ -229,8 +229,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 }
                     let notifications = overallNotifications - messageNotifications
                     ref.setValue(notifications)
+                    refNotify.setValue(0)
                 }, withCancel: nil)
-                refNotify.setValue(0)
             }, withCancel: nil)
 
         // Print full message.
