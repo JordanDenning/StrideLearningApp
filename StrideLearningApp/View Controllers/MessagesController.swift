@@ -54,7 +54,9 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         tableView.delegate = self
         tableView.dataSource = self
-//        self.navigationItem.title = "Messages"
+        
+        definesPresentationContext = true
+        
         //navigation bar color
         let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
         self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
@@ -322,10 +324,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             
         }, withCancel: nil)
         
-        searchController.searchBar.text = ""
-        
-       
-        
     }
     
     func updateNotifications(_ chatroomId: String, cell: UserCell){
@@ -378,15 +376,14 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
+        searchController.searchBar.text = ""
         if(searchActive) {
             searchController.dismiss(animated: false) {
                 self.navigationController?.pushViewController(chatLogController, animated: true)
-//                self.present(chatLogController, animated: true, completion: nil)
             }
         }
         else{
             navigationController?.pushViewController(chatLogController, animated: true)
-//            self.present(chatLogController, animated: true, completion: nil)
         }
     }
     

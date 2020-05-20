@@ -292,6 +292,7 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     func showPlannerControllerForUser(_ uid: String) {
         ref.child("student").setValue(uid)
         let collectionController = MentorCollectionView()
+        searchController.searchBar.text = ""
         if(searchActive) {
             searchController.dismiss(animated: false) {
                 self.plannerOverall!.navigationController?.pushViewController(collectionController, animated: true)

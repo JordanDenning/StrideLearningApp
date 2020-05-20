@@ -43,6 +43,8 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
         weekday = "Monday"
         week = "this-week"
         
+        definesPresentationContext = true
+        
         //navigation bar color
         let navBackgroundImage = UIImage(named:"navBarSmall")?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
         self.navigationController?.navigationBar.setBackgroundImage(navBackgroundImage,
@@ -95,7 +97,6 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                 if self.user?.type == "staff" {
                     self.navigationItem.title = "Students"
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.addNewStudent))
-//                    self.navigationItem.rightBarButtonItem?.tintColor = .white
                     //navigation title properties
                     self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.foregroundColor: UIColor.white,NSAttributedString.Key.font: UIFont(name: "MarkerFelt-Thin", size: 20) ?? UIFont.systemFont(ofSize: 20)]
                 }  else {
