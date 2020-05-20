@@ -329,8 +329,9 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         let chatroomId = (fromId < toId) ? fromId + "_" + toId : toId + "_" + fromId
         let ref = Database.database().reference().child("messages").child(chatroomId)
         let childRef = ref.childByAutoId()
+        let text = inputTextField.text!
         
-        let values = ["text": inputTextField.text!, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp, "chatroomId": chatroomId] as [String : Any]
+        let values = ["text": text, "toId": toId, "toName": toName, "fromId": fromId, "fromName": fromName, "timestamp": timestamp, "chatroomId": chatroomId] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
@@ -375,7 +376,7 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
 
             usersRef.setValue(notifications)
             let sender = PushNotificationSender()
-            sender.sendPushNotification(to: fcmToken, title: fromName, body: "New Message", badge: notifications, chatroomId:  chatroomId)
+            sender.sendPushNotification(to: fcmToken, title: fromName, body: text, badge: notifications, chatroomId:  chatroomId)
 
         }, withCancel: nil)
 
