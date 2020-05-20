@@ -289,6 +289,11 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     func setDefaultValue(item: String, inComponent: Int){
      if let indexPosition = weekChoices.firstIndex(of: item){
        weekView.selectRow(indexPosition, inComponent: inComponent, animated: true)
+        if indexPosition == 0 {
+            week = "this-week"
+        } else if indexPosition == 1 {
+            week = "next-week"
+        }
      }
     }
     
