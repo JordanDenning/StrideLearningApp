@@ -16,16 +16,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   let gcmMessageIDKey = "gcm.message_id"
   static var DEVICEID = String()
+  var currentChatPageId = String()
+    var messagesVC:MessagesController?
+    var profileVC:ProfileController?
+    var plannerVC:PlannerOverallController?
 
 
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        
-        window?.rootViewController = UINavigationController(rootViewController: TabBarController())
+    window = UIWindow(frame: UIScreen.main.bounds)
+    
+    let tabBar = TabBarController()
+    window?.rootViewController = tabBar
 
-        window?.makeKeyAndVisible()
+    window?.makeKeyAndVisible()
         //previous line replace using storyboards to just use viewcontroller code for layouts, better for when working in teams. Sets first view controller to tabBarController
         
           // [START set_messaging_delegate]
@@ -92,8 +97,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 //            print(userInfo)
 //          }
 
-          func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                           fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+          func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
             // If you are receiving a notification message while your app is in the background,
             // this callback will not be fired till the user taps on the notification launching the application.
             // TODO: Handle data of notification
@@ -148,13 +152,22 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                    }
                    
                    let chatroomId = userInfo["user"] as! String
+        let chatroomArr = chatroomId.components(separatedBy: "_")
+            var chatPartnerId = uid
+        if uid == chatroomArr[0]{
+            chatPartnerId = chatroomArr[1]
+        } else {
+            chatPartnerId = chatroomArr[0]
+        }
+
+        
                    
 
             // Print full message.
             print(userInfo)
-
-            // Change this to your preferred presentation option
-            if self.window?.rootViewController?.topViewController is ChatLogController {
+            
+            //if chat log is top controller, don't recieve notification, set notifications to 0 since you see it
+        if self.window?.rootViewController?.topViewController is ChatLogController && chatPartnerId == currentChatPageId {
                 let refNotify = Database.database().reference().child("messages").child(chatroomId).child(uid)
                 refNotify.observeSingleEvent(of: .value, with: { (snapshot) in
                 guard let messageNotifications = snapshot.value as? Int else {
@@ -173,7 +186,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 }, withCancel: nil)
                 completionHandler([])
                 
+            } else if self.window?.rootViewController?.topViewController is MessagesController {
+                completionHandler([])
             } else {
+                //recieve when in app
                 completionHandler([.alert, .badge, .sound])
             }
     }
@@ -221,10 +237,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         print(userInfo)
 
         //open notification to specific chat page
-        if self.window?.rootViewController?.topViewController is ChatLogController {
-            //if left in chatLogcontroller, don't push another onto stack
+        if self.window?.rootViewController?.topViewController is ChatLogController && chatPartnerId == currentChatPageId {
+            //if left in chatLogcontroller for user nothing happens
             completionHandler()
         } else {
+            // else open new chat log page for user you got notification from
             let ref = Database.database().reference().child("users").child(chatPartnerId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 guard let dictionary = snapshot.value as? [String: AnyObject] else {
@@ -242,15 +259,37 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         }
     }
     
-func showChatControllerForUser(_ user: User) {
+    func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        chatLogController.user = user
-        if let nav = self.window?.rootViewController as? UINavigationController {
-            nav.pushViewController(chatLogController, animated: true)
+            chatLogController.user = user
+        if (self.window?.rootViewController?.topViewController as? NewMessageController) != nil {
+            messagesVC?.dismiss(animated: true, completion: nil)
+        }
+        if (self.window?.rootViewController?.topViewController as? EditProfileController) != nil {
+            profileVC?.dismiss(animated: true, completion: nil)
+        }
+        if (self.window?.rootViewController?.topViewController as? EditPasswordController) != nil {
+            profileVC?.dismiss(animated: true, completion: nil)
+        }
+         if let alert = self.window?.rootViewController?.topViewController as? UIAlertController{
+             alert.dismiss(animated: true, completion: nil)
+        }
+        if  let student  = self.window?.rootViewController?.topViewController as? StudentList{
+            student.dismiss(animated: true, completion: nil)
+        }
+        if (self.window?.rootViewController?.topViewController as? MentorCollectionView) != nil {
+                plannerVC?.dismiss(animated: true, completion: nil)
+        }
+        if (self.window?.rootViewController?.topViewController as? ChatLogController) != nil {
+            messagesVC?.navigationController?.popViewController(animated: true)
+        }
+        if let nav = self.window?.rootViewController as? TabBarController{
+                nav.selectedViewController = nav.viewControllers?[1]
+                messagesVC!.showChatControllerForUser(user)
         }
     }
-    
-        }
+
+}
         // [END ios_10_message_handling]
 
 extension AppDelegate : MessagingDelegate {
