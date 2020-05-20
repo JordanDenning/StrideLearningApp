@@ -228,6 +228,8 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         vc.view.addSubview(weekLabel)
         vc.view.addSubview(weekView)
         
+        setDefaultValue(item: weekTitle, inComponent: 0)
+        
         let alert = UIAlertController(title: "Add New Task", message: "", preferredStyle: UIAlertController.Style.alert)
         
         alert.setValue(vc, forKey: "contentViewController")
@@ -279,5 +281,16 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         
         present(alert, animated: true)
         
+    }
+    
+    func setDefaultValue(item: String, inComponent: Int){
+     if let indexPosition = weekChoices.firstIndex(of: item){
+       weekView.selectRow(indexPosition, inComponent: inComponent, animated: true)
+        if indexPosition == 0 {
+            week = "this-week"
+        } else if indexPosition == 1 {
+            week = "next-week"
+        }
+     }
     }
 }
