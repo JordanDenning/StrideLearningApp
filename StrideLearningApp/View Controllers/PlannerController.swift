@@ -313,7 +313,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     func updateFirebaseWeek(_ oldWeek: String, _ newWeek: [[ToDoItem]]){
         for day in newWeek{
             for item in day{
-                ref.child(oldWeek).child(item.day).child(item.name).setValue(item.toAnyObject())
+                ref.child(oldWeek).child(item.day).child(item.key).setValue(item.toAnyObject())
             }
         }
     }

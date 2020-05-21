@@ -238,12 +238,23 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
             guard let taskTextField = alert.textFields?[0],
                 let task = taskTextField.text else { return }
             
+            var key = task
+            key = key.replacingOccurrences(of: ".", with: " ")
+            key = key.replacingOccurrences(of: "#", with: " ")
+            key = key.replacingOccurrences(of: "$", with: " ")
+            key = key.replacingOccurrences(of: "[", with: " ")
+            key = key.replacingOccurrences(of: "]", with: " ")
+            key = key.replacingOccurrences(of: "/", with: " ")
+            if key.last == " "{
+                key.removeLast()
+            }
+            
             let newItem = ToDoItem(name: task,
                                    addedByUser: Auth.auth().currentUser!.uid,
                                    day: self.weekday,
                                    completed: false)
             
-            let itemRef = self.ref.child(self.week).child(self.weekday).child(task)
+            let itemRef = self.ref.child(self.week).child(self.weekday).child(key)
             
             itemRef.setValue(newItem.toAnyObject())
             
