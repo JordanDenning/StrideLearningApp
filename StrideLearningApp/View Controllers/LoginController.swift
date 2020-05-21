@@ -157,6 +157,19 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
+    lazy var passwordReqs: UILabel = {
+        let label = UILabel()
+        label.text = "*Passwords must have at least 6 characters, one letter, and one special character."
+        label.textColor = UIColor(r: 150, g: 150, b: 150)
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.isHidden = true
+        
+        return label
+    }()
+    
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Stride_Blue")
@@ -234,6 +247,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         scrollView.addSubview(forgotPasswordButton)
         scrollView.addSubview(profileImageView)
         scrollView.addSubview(loginRegisterSegmentedControl)
+        scrollView.addSubview(passwordReqs)
         
         setupInputsContainerView()
         setupLoginRegisterButton()
@@ -377,11 +391,15 @@ class LoginController: UIViewController, UITextFieldDelegate {
         passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/5)
         passwordTextFieldHeightAnchor?.isActive = true
         
+        passwordTextField.placeholder = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? "Password" : "Password*"
+        
         // change height of passwordConfirmTextField
         passwordConfirmTextFieldHeightAnchor?.isActive = false
         passwordConfirmTextFieldHeightAnchor = passwordConfirmTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1/5)
         passwordConfirmTextFieldHeightAnchor?.isActive = true
         passwordConfirmTextField.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
+        
+        passwordReqs.isHidden = loginRegisterSegmentedControl.selectedSegmentIndex == 0
         
         hideForgotPasswordButton()
         
@@ -511,6 +529,11 @@ class LoginController: UIViewController, UITextFieldDelegate {
         passwordConfirmTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         passwordConfirmTextFieldHeightAnchor = passwordConfirmTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: 0)
         passwordConfirmTextFieldHeightAnchor?.isActive = true
+        
+        passwordReqs.centerXAnchor.constraint(equalTo: inputsContainerView.centerXAnchor).isActive = true
+        passwordReqs.topAnchor.constraint(equalTo: loginRegisterButton.bottomAnchor, constant: 4).isActive = true
+        passwordReqs.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
+        passwordReqs.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     func setupLoginRegisterButton() {
