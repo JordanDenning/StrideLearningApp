@@ -78,6 +78,22 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         return imageView
     }()
     
+    lazy var addProfilePicture: UIImageView = {
+        var imageView = UIImageView()
+        var image = UIImage(named: "task_v3")
+        imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        imageView.isUserInteractionEnabled = true
+        imageView.layer.borderColor = UIColor(r:16, g:153, b:255).cgColor
+        imageView.layer.cornerRadius = 70
+        imageView.image = imageView.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        imageView.tintColor = UIColor(r:16, g:153, b:255)
+        
+        return imageView
+    }()
+    
     let userName: UILabel = {
         let label = UILabel()
         label.text = "User Name"
@@ -286,11 +302,17 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         if let profileImageUrl = user.profileImageUrl {
             profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         }
+        imageandNameView.addSubview(addProfilePicture)
 
         profileImageView.centerXAnchor.constraint(equalTo: imageandNameView.centerXAnchor).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: imageandNameView.centerYAnchor, constant: -20).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        
+        addProfilePicture.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor, constant: 40).isActive = true
+        addProfilePicture.centerXAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: -7).isActive = true
+        addProfilePicture.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        addProfilePicture.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         if UIScreen.main.sizeType == .iPhone5 {
             // decrease size of profile picture
@@ -303,6 +325,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             profileImageView.widthAnchor.constraint(equalToConstant: 120).isActive = true
             profileImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         }
+
 
     
         imageandNameView.addSubview(userName)
