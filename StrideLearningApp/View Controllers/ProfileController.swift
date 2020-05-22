@@ -358,7 +358,7 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
         grade.text = user.grade
         school.text = user.school
         email.text = user.email
-        mentor.text = user.mentor
+        mentor.text = user.mentor?["mentorName"] as? String
         
         
         studentInputsContainerView.addSubview(gradeLabel)

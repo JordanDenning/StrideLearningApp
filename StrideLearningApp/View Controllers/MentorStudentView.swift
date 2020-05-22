@@ -110,8 +110,13 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
                 } else{
                    student = self.students[indexPath!.row]
                 }
-                
-                self.userRef.child(student.ID!).child("mentor").setValue("No Current Mentor")
+                guard let uid = Auth.auth().currentUser?.uid else{
+                    return
+                }
+                if uid == student.mentorId {
+                    let vals = ["mentorId": "", "mentorName": "No Current Mentor"]
+                    self.userRef.child(student.ID!).child("mentor").setValue(vals)
+                }
                 student.ref?.removeValue()
                
                 if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
