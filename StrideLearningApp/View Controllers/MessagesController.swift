@@ -52,6 +52,10 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.5
+        self.tableView.addGestureRecognizer(longPressGesture)
+        
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -114,20 +118,20 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         ref.observe(.childAdded, with: { (snapshot) in
             
             let chatroomId = snapshot.key
+            let ref = Database.database().reference().child("user-messages").child(uid).child(chatroomId)
             
-//            let chatroomArr = chatroomId.components(separatedBy: "_")
-//            print(chatroomId)
-//            print(chatroomArr)
-//            let userId = chatroomArr[1]
-//            print(uid, userId)
-            
-            Database.database().reference().child("user-messages").child(uid).child(chatroomId).observe(.childAdded, with: { (snapshot) in
+            ref.child("seeMessages").observe(.value, with: {(snapshot) in
                 
-                let messageId = snapshot.key
-                self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId )
+                let seeMessages = snapshot.value as! String
                 
+                if seeMessages == "yes" {
+                    ref.observe(.childAdded, with: { (snapshot) in
+                       let messageId = snapshot.key
+                       self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId )
+                                   
+                    }, withCancel: nil)
+                }
             }, withCancel: nil)
-            
         }, withCancel: nil)
     }
     
@@ -142,10 +146,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 if let chatPartnerId = message.chatPartnerId() {
                     self.messagesDictionary[chatPartnerId] = message
                 }
-                
                 self.attemptReloadOfTable()
             }
-            
         }, withCancel: nil)
     }
     
@@ -324,6 +326,48 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             
         }, withCancel: nil)
         
+    }
+    
+    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+                   return
+               }
+        let p = longPressGesture.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: p)
+        if indexPath == nil {
+            print("Long press on table view, not row.")
+        } else if longPressGesture.state == UIGestureRecognizer.State.began {
+            let alert=UIAlertController(title: "Remove Messages", message: "Are you sure you want to remove these messaes from your page?", preferredStyle: UIAlertController.Style.alert)
+            //create a UIAlertAction object for the button
+            let okAction=UIAlertAction(title: "Remove", style: .destructive, handler: {action in
+                var message: Message
+                if (self.searchActive){
+                    message = self.filtered[indexPath!.row]
+                    let chatPartnerId = message.chatPartnerId()!
+                    self.filtered.remove(at: indexPath!.row)
+                    self.messagesDictionary.removeValue(forKey: chatPartnerId)
+                    Database.database().reference().child("user-messages").child(uid).child(message.chatroomId!).child("seeMessages").setValue("no")
+                    self.searchController.searchBar.text = ""
+                    self.searchController.dismiss(animated: true, completion: nil)
+                } else{
+                   message = self.messages[indexPath!.row]
+                    let chatPartnerId = message.chatPartnerId()!
+                    self.messages.remove(at: indexPath!.row)
+                    self.messagesDictionary.removeValue(forKey: chatPartnerId)
+                    Database.database().reference().child("user-messages").child(uid).child(message.chatroomId!).child("seeMessages").setValue("no")
+                }
+
+                self.tableView.reloadData()
+            })
+            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+            })
+           
+            alert.addAction(cancelAction)
+            alert.addAction(okAction)
+            present(alert, animated: true, completion: nil)
+            return
+            
+        }
     }
     
     func updateNotifications(_ chatroomId: String, cell: UserCell){
