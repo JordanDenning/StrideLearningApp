@@ -584,6 +584,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 ref.child("type").setValue("staff")
                 let role = self.roleTextField.text
                 ref.child("role").setValue(role)
+                ref.child("student").setValue("")
             }
             
         })
