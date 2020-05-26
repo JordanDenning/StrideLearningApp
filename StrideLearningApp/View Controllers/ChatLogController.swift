@@ -347,6 +347,8 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             }
             
             self.inputTextField.text = nil
+            self.inputTextField.resignFirstResponder()
+            self.sendButton.isEnabled = false
             
             guard let messageId = childRef.key else { return }
             
