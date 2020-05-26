@@ -326,7 +326,6 @@ class ProfileController: UIViewController, UIImagePickerControllerDelegate, UINa
             profileImageView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         }
 
-
     
         imageandNameView.addSubview(userName)
         userName.text = user.name
