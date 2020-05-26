@@ -136,17 +136,29 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         }
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        self.adjustTextViewHeight()
+        sendButton.isEnabled = !inputTextField.text.isEmpty
+    }
+
+    
     var textHeightConstraint: NSLayoutConstraint!
+    
+    lazy var sendButton: UIButton = {
+        let sendButton = UIButton(type: .system)
+        sendButton.setTitle("Send", for: UIControl.State())
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        sendButton.isEnabled = false
+        
+        return sendButton
+    }()
   
     lazy var inputContainerView: UIView = {
         let containerView = UIView()
         containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 80)
         containerView.backgroundColor = .white
         
-        let sendButton = UIButton(type: .system)
-        sendButton.setTitle("Send", for: UIControl.State())
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         containerView.addSubview(sendButton)
         //x,y,w,h
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
@@ -163,7 +175,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         
         self.adjustTextViewHeight()
 
-        
         let separatorLineView = UIView()
         separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
@@ -176,10 +187,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         
         return containerView
     }()
-    
-    func textViewDidChange(_ textView: UITextView) {
-        self.adjustTextViewHeight()
-    }
 
     func adjustTextViewHeight() {
         
@@ -340,6 +347,8 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             }
             
             self.inputTextField.text = nil
+            self.inputTextField.resignFirstResponder()
+            self.sendButton.isEnabled = false
             
             guard let messageId = childRef.key else { return }
             
