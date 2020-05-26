@@ -22,6 +22,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     var searchActive : Bool = false
     var noResults: Bool = false
     var mentorName: String?
+    var mentorId: String?
     
     var mentorView: MentorStudentView?
     var searchController = UISearchController()
@@ -43,10 +44,18 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
+        mentorId = uid
         
         currentRef = ref.child(uid)
         
-        fetchUser()
+        currentRef?.child("name").observe(.value, with: { (snapshot) in
+        
+            if let name = snapshot.value as? String {
+                self.mentorName = name
+                }
+            }, withCancel: nil)
+            
+        fetchUsers()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -54,7 +63,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         configureSearchController()
     }
     
-    func fetchUser() {
+    func fetchUsers() {
         var count = 0
         Database.database().reference().child("users").queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
             //queryOrdered sorts alphabetically/lexilogically
@@ -234,61 +243,61 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if(searchActive && searchController.searchBar.text != ""){
             searchController.dismiss(animated: true, completion: nil)
-            dismiss(animated: true) {
-                print("Dismiss completed")
-                let user: User
-                user = self.filtered[indexPath.section][indexPath.row]
-                //get the user you tap on
-                let studentName = user.name
-                let id = user.id
-                let image = user.profileImageUrl
-                let grade = user.grade
-                let school = user.school
-                let newStudent = Student(name: studentName!, ID: id!, grade: grade!, school: school!, profileImageUrl: image!)
-                
-                self.ref.child(id!).child("mentor").setValue(self.mentorName)
-                
-                let itemRef = self.currentRef!.child("students").child(id!)
-                itemRef.setValue(newStudent.toAnyObject())
-            }
+            let user: User
+            user = self.filtered[indexPath.section][indexPath.row]
+            self.primaryMentorAlert(for: user)
         }
         else if(searchActive && searchController.searchBar.text == ""){
             searchController.dismiss(animated: true, completion: nil)
-            dismiss(animated: true) {
-                print("Dismiss completed")
-                let user: User
-                user = self.users[indexPath.section][indexPath.row]
-                let studentName = user.name
-                let id = user.id
-                let image = user.profileImageUrl
-                let grade = user.grade
-                let school = user.school
-                let newStudent = Student(name: studentName!, ID: id!, grade: grade!, school: school!, profileImageUrl: image!)
-                
-                self.ref.child(id!).child("mentor").setValue(self.mentorName)
-                
-                let itemRef = self.currentRef!.child("students").child(id!)
-                itemRef.setValue(newStudent.toAnyObject())
-            }
+            let user: User
+            user = self.users[indexPath.section][indexPath.row]
+            self.primaryMentorAlert(for: user)
         }
         else {
-            dismiss(animated: true) {
-                print("Dismiss completed")
-                let user: User
-                user = self.users[indexPath.section][indexPath.row]
-                let studentName = user.name
-                let id = user.id
-                let image = user.profileImageUrl
-                let grade = user.grade
-                let school = user.school
-                let newStudent = Student(name: studentName!, ID: id!,grade: grade!, school: school!, profileImageUrl: image!)
-                
-                self.ref.child(id!).child("mentor").setValue(self.mentorName)
-                
-                let itemRef = self.currentRef!.child("students").child(id!)
-                itemRef.setValue(newStudent.toAnyObject())
-            }
+            print("Dismiss completed")
+            let user: User
+            user = self.users[indexPath.section][indexPath.row]
+            primaryMentorAlert(for: user)
         }
+    }
+    
+    func primaryMentorAlert(for user: User){
+        let studentName = user.name
+        let id = user.id
+        let image = user.profileImageUrl
+        let grade = user.grade
+        let school = user.school
+        let mentorId = user.mentor?["mentorId"] as! String
+        let newStudent = Student(name: studentName!, ID: id!,grade: grade!, school: school!, mentorId: mentorId, profileImageUrl: image!)
+        
+        let message = "Are you " + studentName! + "'s primary mentor?"
+        
+        let alert = UIAlertController(title: "Primary Mentor", message: message , preferredStyle: UIAlertController.Style.alert)
+        
+        let okAction=UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
+            
+            let values = ["mentorId": self.mentorId, "mentorName": self.mentorName]
+            self.ref.child(id!).child("mentor").setValue(values)
+            
+            let itemRef = self.currentRef!.child("students").child(id!)
+            itemRef.setValue(newStudent.toAnyObject())
+            itemRef.child("mentorId").setValue(self.mentorId)
+        
+            self.dismiss(animated: true)
+        })
+        
+        let cancelAction=UIAlertAction(title: "No", style: .cancel, handler:{ (UIAlertAction) in
+                        
+            let itemRef = self.currentRef!.child("students").child(id!)
+            itemRef.setValue(newStudent.toAnyObject())
+        
+            self.dismiss(animated: true)
+        })
+        
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true, completion: nil)
     }
     
     //index

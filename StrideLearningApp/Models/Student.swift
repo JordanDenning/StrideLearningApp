@@ -16,14 +16,16 @@ class Student: NSObject {
     var ID: String?
     var grade: String?
     var school: String?
+    var mentorId: String?
     var profileImageUrl: String?
     
-    init(name: String, ID: String, grade: String, school: String, profileImageUrl: String) {
+    init(name: String, ID: String, grade: String, school: String, mentorId: String, profileImageUrl: String) {
         self.ref = nil
         self.name = name
         self.ID = ID
         self.grade = grade
         self.school = school
+        self.mentorId = mentorId
         self.profileImageUrl = profileImageUrl
     }
     
@@ -34,6 +36,7 @@ class Student: NSObject {
             let ID = value["ID"] as? String,
             let grade = value["grade"] as? String,
             let school = value["school"] as? String,
+            let mentorId = value["mentorId"] as? String,
             let profileImageUrl = value["profileImageUrl"] as? String else {
                 return nil
         }
@@ -43,6 +46,7 @@ class Student: NSObject {
         self.ID = ID
         self.grade = grade
         self.school = school
+        self.mentorId = mentorId
         self.profileImageUrl = profileImageUrl
     
 }
@@ -53,6 +57,7 @@ class Student: NSObject {
             "ID": ID,
             "grade": grade,
             "school": school,
+            "mentorId": mentorId,
             "profileImageUrl": profileImageUrl
         ]
     }
