@@ -309,8 +309,6 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     
     @objc func addNewStudent(){
         let studentListController = StudentList()
-        studentListController.mentorName = user?.name
-        studentListController.mentorView = mentorTableView
         let navController = UINavigationController(rootViewController: studentListController)
         present(navController, animated: true, completion: nil)
     }

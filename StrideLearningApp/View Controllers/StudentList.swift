@@ -48,7 +48,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         
         currentRef = ref.child(uid)
         
-        fetchUser()
+        currentRef?.child("name").observe(.value, with: { (snapshot) in
+        
+            if let name = snapshot.value as? String {
+                self.mentorName = name
+                }
+            }, withCancel: nil)
+            
+        fetchUsers()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -56,7 +63,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         configureSearchController()
     }
     
-    func fetchUser() {
+    func fetchUsers() {
         var count = 0
         Database.database().reference().child("users").queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
             //queryOrdered sorts alphabetically/lexilogically
@@ -269,7 +276,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         
         let okAction=UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
             
-            let values = ["mentorName": self.mentorName, "mentorId": self.mentorId]
+            let values = ["mentorId": self.mentorId, "mentorName": self.mentorName]
             self.ref.child(id!).child("mentor").setValue(values)
             
             let itemRef = self.currentRef!.child("students").child(id!)
