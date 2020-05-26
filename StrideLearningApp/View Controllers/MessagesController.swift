@@ -119,19 +119,16 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             
             let chatroomId = snapshot.key
             let ref = Database.database().reference().child("user-messages").child(uid).child(chatroomId)
-            
-            ref.child("seeMessages").observe(.value, with: {(snapshot) in
-                
-                let seeMessages = snapshot.value as! String
-                
-                if seeMessages == "yes" {
                     ref.observe(.childAdded, with: { (snapshot) in
-                       let messageId = snapshot.key
-                       self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId )
-                                   
+                        let messageId = snapshot.key
+                        ref.child("seeMessages").observeSingleEvent(of: .value, with: {(snapshot) in
+                            if let seeMessages = snapshot.value as? String {
+                                if seeMessages == "yes" {
+                                    self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId)
+                                }
+                        }
                     }, withCancel: nil)
-                }
-            }, withCancel: nil)
+                }, withCancel: nil)
         }, withCancel: nil)
     }
     
