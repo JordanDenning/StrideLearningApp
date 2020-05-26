@@ -334,6 +334,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         if indexPath == nil {
             print("Long press on table view, not row.")
         } else if longPressGesture.state == UIGestureRecognizer.State.began {
+            let cell = tableView.cellForRow(at: indexPath!) as! UserCell
             let alert=UIAlertController(title: "Remove Messages", message: "Are you sure you want to remove these messaes from your page?", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
             let okAction=UIAlertAction(title: "Remove", style: .destructive, handler: {action in
@@ -341,17 +342,21 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 if (self.searchActive){
                     message = self.filtered[indexPath!.row]
                     let chatPartnerId = message.chatPartnerId()!
+                    let chatroomId = message.chatroomId!
                     self.filtered.remove(at: indexPath!.row)
                     self.messagesDictionary.removeValue(forKey: chatPartnerId)
-                    Database.database().reference().child("user-messages").child(uid).child(message.chatroomId!).child("seeMessages").setValue("no")
+                    Database.database().reference().child("user-messages").child(uid).child(chatroomId).child("seeMessages").setValue("no")
+                    self.updateNotifications(chatroomId, cell: cell)
                     self.searchController.searchBar.text = ""
                     self.searchController.dismiss(animated: true, completion: nil)
                 } else{
                    message = self.messages[indexPath!.row]
                     let chatPartnerId = message.chatPartnerId()!
+                    let chatroomId = message.chatroomId!
                     self.messages.remove(at: indexPath!.row)
                     self.messagesDictionary.removeValue(forKey: chatPartnerId)
-                    Database.database().reference().child("user-messages").child(uid).child(message.chatroomId!).child("seeMessages").setValue("no")
+                    Database.database().reference().child("user-messages").child(uid).child(chatroomId).child("seeMessages").setValue("no")
+                    self.updateNotifications(chatroomId, cell: cell)
                 }
 
                 self.tableView.reloadData()
