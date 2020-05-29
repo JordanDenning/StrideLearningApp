@@ -9,7 +9,8 @@
 import UIKit
 import Firebase
 
-class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
+class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource, HeightForTextView, ToggleCheckBox, EditTask {
+
     var days: [String] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     var weeks: [String] = ["last-week", "this-week", "next-week"]
     var thisWeekTasks: [[ToDoItem]] = [[],[],[],[],[],[],[]]
@@ -24,12 +25,14 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
-    let tableViewHeight = CGFloat(integerLiteral: 45)
+    let tableViewHeight = CGFloat(integerLiteral: 50)
     var studentUid: String?
     var uid: String?
     var user: User?
+    var cellId = "cellId"
+    var textViewHeight = CGFloat()
+    var plannerUid = String()
 
-    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         contentView.addSubview(tableView)
@@ -37,11 +40,8 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         setupTableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        longPressGesture.minimumPressDuration = 0.5
-        tableView.addGestureRecognizer(longPressGesture)
+        tableView.register(TaskCell.self, forCellReuseIdentifier: cellId)
+        tableView.estimatedRowHeight = 45.0
         
        currentUser()
     }
@@ -57,11 +57,12 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                 self.user = User(dictionary: dictionary)
                 if self.user?.type == "staff" {
                     self.studentUid = self.user?.student
-                    self.ref = self.ref.child(self.studentUid!)
+                    self.plannerUid = self.studentUid!
                 }
                 else {
-                    self.ref = self.ref.child(uid)
+                    self.plannerUid = uid
                 }
+                self.ref = self.ref.child(self.plannerUid)
             }
             self.fetchTasks()
         }, withCancel: nil)
@@ -164,7 +165,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     //section header
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableView.sectionHeaderHeight))
-        view.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        view.backgroundColor = .white
         
         let label = UILabel(frame: CGRect(x: 12, y: 0, width: tableView.frame.size.width, height: tableViewHeight))
         label.text = days[section].description
@@ -172,11 +173,20 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
         
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: tableViewHeight))
+        button.backgroundColor = UIColor(r: 16, g: 153, b: 255)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 5
+        button.layer.borderColor = UIColor.white.cgColor
+        button.tag = section
+        button.addTarget(self, action: #selector(addTaskToWeek(_:)), for: .touchUpInside)
+        
         //header borders for spacing
         view.layer.cornerRadius = 10
         view.layer.borderWidth = 5
         view.layer.borderColor = UIColor.white.cgColor
         
+        view.addSubview(button)
         view.addSubview(label)
         
         return view
@@ -186,11 +196,10 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         return tableViewHeight
     }
     
-    
     //populate table rows with tasks array
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TaskCell
         var newItem: ToDoItem
         switch cellCount {
         case 0:
@@ -203,24 +212,172 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             newItem = thisWeekTasks[indexPath.section][indexPath.row]
         }
 
-        cell.textLabel?.text = newItem.name
-        cell.textLabel?.numberOfLines = 0
-        toggleCellCheckbox(cell, isCompleted: newItem.completed)
-        
-        func layoutSubviews() {
-            super.layoutSubviews()
-            
-            contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+        cell.textView.text = newItem.name
+        if newItem.completed {
+            cell.checkMark.setBackgroundImage(UIImage(named: "done2"), for: .normal)
+        } else {
+            cell.checkMark.setBackgroundImage(UIImage(named: "notDone"), for: .normal)
         }
-        
-        return cell
 
+        cell.delegate = self
+
+        return cell
     }
     
-    //check off task
+    //edit task
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        for case let textView as UITextView in cell.subviews {
+            textView.text = ""
+            textView.isUserInteractionEnabled = true
+            textView.becomeFirstResponder()
+            textView.tag = indexPath.row
+            return
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            var toDoItem: ToDoItem
+            switch self.cellCount {
+            case 0:
+                toDoItem = self.lastWeekTasks[(indexPath.section)][indexPath.row]
+            case 1:
+                toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+            case 2:
+                toDoItem = self.nextWeekTasks[indexPath.section][indexPath.row]
+            default:
+                toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+            }
+            
+            toDoItem.ref?.removeValue()
+            
+            self.tableView.reloadData()
+        }
+    }
+
+    private func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath)
+        -> CGFloat {
+               return textViewHeight + 70
+    }
+    
+    func heightOfTextView(height: CGFloat) {
+
+           textViewHeight = height + 8
+           self.tableView.beginUpdates()
+           self.tableView.endUpdates()
+        
+    }
+    
+    
+    @objc func addTaskToWeek(_ sender: UIButton){
+        let ref = Database.database().reference().child("to-do-items").child(plannerUid)
+        let newItem: ToDoItem
+        let day = sender.tag
+        var weekday = String()
+        var week = String()
+        switch day {
+        case 0:
+            weekday = "Monday"
+        case 1:
+            weekday = "Tuesday"
+        case 2:
+            weekday = "Wednesday"
+        case 3:
+            weekday = "Thursday"
+        case 4:
+            weekday = "Friday"
+        case 5:
+            weekday = "Saturday"
+        case 6:
+            weekday = "Sunday"
+        default:
+            weekday = "Monday"
+        }
+        
+        switch self.cellCount {
+        case 0:
+            week = "last-week"
+        case 1:
+            week = "this-week"
+        case 2:
+            week = "next-week"
+        default:
+            week = "this-week"
+        }
+        
+        newItem = ToDoItem(name: "",
+                               addedByUser: Auth.auth().currentUser!.uid,
+                               day: weekday,
+                               completed: false)
+        let itemRef = ref.child(week).child(weekday).child("new task")
+        itemRef.setValue(newItem.toAnyObject())
+    }
+    
+    func editTask(task: String, textView: UITextView) {
+        let ref = Database.database().reference().child("to-do-items").child(plannerUid)
+        if let indexPath = getCurrentTextViewPath(textView){
+            var toDoItem: ToDoItem
+            var week = String()
+            switch self.cellCount {
+            case 0:
+                week = "last-week"
+                toDoItem = self.lastWeekTasks[indexPath.section][indexPath.row]
+            case 1:
+                week = "this-week"
+                toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+            case 2:
+                week = "next-week"
+                toDoItem = self.nextWeekTasks[indexPath.section][indexPath.row]
+            default:
+                week = "this-week"
+                toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+            }
+            
+            var key = task
+            key = key.replacingOccurrences(of: ".", with: " ")
+            key = key.replacingOccurrences(of: "#", with: " ")
+            key = key.replacingOccurrences(of: "$", with: " ")
+            key = key.replacingOccurrences(of: "[", with: " ")
+            key = key.replacingOccurrences(of: "]", with: " ")
+            key = key.replacingOccurrences(of: "/", with: " ")
+            if key.last == " "{
+                key.removeLast()
+            }
+            
+            if key == "" {
+                let alert=UIAlertController(title: "Empty Task", message: "Cannot add an empty task. Please enter a task.", preferredStyle: UIAlertController.Style.alert)
+                //create a UIAlertAction object for the button
+                let okAction=UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: {action in
+
+                })
+                                alert.addAction(okAction)
+                self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+                return
+                
+            }
+            
+            let day = toDoItem.day
+            
+            let newItem = ToDoItem(name: task,
+                                   addedByUser: toDoItem.addedByUser,
+                                   day: day,
+                                   completed: toDoItem.completed)
+            
+            let itemRef = ref.child(week).child(day).child(key)
+            
+            itemRef.setValue(newItem.toAnyObject())
+            
+            toDoItem.ref?.removeValue()
+        }
+    }
+    
+    
+    func toggleCheckBox(_ sender: UIButton) {
+        if let indexPath = getCurrentButtonPath(sender) {
+        var completed = Bool()
+
         var toDoItem: ToDoItem
         switch cellCount {
         case 0:
@@ -232,61 +389,30 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         default:
             toDoItem = thisWeekTasks[indexPath.section][indexPath.row]
         }
-        
-        let toggledCompletion = !toDoItem.completed
-        toggleCellCheckbox(cell, isCompleted: toggledCompletion)
+            
+        completed = !toDoItem.completed
         toDoItem.ref?.updateChildValues([
-            "completed": toggledCompletion
+            "completed": completed
             ])
-    }
-    
-    func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
-        if !isCompleted {
-            cell.accessoryType = .none
-        } else {
-            cell.accessoryType = .checkmark
-        }
-    }
-    
-    //delete task
-    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
-        let p = longPressGesture.location(in: self.tableView)
-        let indexPath = self.tableView.indexPathForRow(at: p)
-        if indexPath == nil {
-            print("Long press on table view, not row.")
-        } else if longPressGesture.state == UIGestureRecognizer.State.began {
-            let alert=UIAlertController(title: "Delete Task", message: "Are you sure you want to delete this task?", preferredStyle: UIAlertController.Style.alert)
-            //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "Delete", style: .destructive, handler: {action in
-                var toDoItem: ToDoItem
-                switch self.cellCount {
-                case 0:
-                    toDoItem = self.lastWeekTasks[(indexPath!.section)][indexPath!.row]
-                case 1:
-                    toDoItem = self.thisWeekTasks[indexPath!.section][indexPath!.row]
-                case 2:
-                    toDoItem = self.nextWeekTasks[indexPath!.section][indexPath!.row]
-                default:
-                    toDoItem = self.thisWeekTasks[indexPath!.section][indexPath!.row]
-                }
-                toDoItem.ref?.removeValue()
-                if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
-                {
-                    self.tableView.cellForRow(at: indexPath!)?.accessoryType = UITableViewCell.AccessoryType.none
-                }
-                self.tableView.reloadData()
-            })
-            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
-                //dismiss alert
-            })
-            
-            alert.addAction(cancelAction)
-            alert.addAction(okAction)
-            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
-            return
             
         }
     }
+    
+    func getCurrentButtonPath(_ sender: UIButton) -> IndexPath? {
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        if let indexPath: IndexPath = tableView.indexPathForRow(at: buttonPosition) {
+            return indexPath
+        }
+        return nil
+    }
+    
+    func getCurrentTextViewPath(_ sender: UITextView) -> IndexPath? {
+           let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+           if let indexPath: IndexPath = tableView.indexPathForRow(at: buttonPosition) {
+               return indexPath
+           }
+           return nil
+       }
     
     func updateWeeks(){
         var count = 0
@@ -318,5 +444,3 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         }
     }
 }
-
-
