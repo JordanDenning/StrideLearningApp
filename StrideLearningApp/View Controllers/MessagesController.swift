@@ -114,20 +114,17 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         ref.observe(.childAdded, with: { (snapshot) in
             
             let chatroomId = snapshot.key
-            
-//            let chatroomArr = chatroomId.components(separatedBy: "_")
-//            print(chatroomId)
-//            print(chatroomArr)
-//            let userId = chatroomArr[1]
-//            print(uid, userId)
-            
-            Database.database().reference().child("user-messages").child(uid).child(chatroomId).observe(.childAdded, with: { (snapshot) in
-                
-                let messageId = snapshot.key
-                self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId )
-                
-            }, withCancel: nil)
-            
+            let ref = Database.database().reference().child("user-messages").child(uid).child(chatroomId)
+                    ref.observe(.childAdded, with: { (snapshot) in
+                        let messageId = snapshot.key
+                        ref.child("seeMessages").observeSingleEvent(of: .value, with: {(snapshot) in
+                            if let seeMessages = snapshot.value as? String {
+                                if seeMessages == "yes" {
+                                    self.fetchMessageWithMessageId(messageId, chatroomId: chatroomId)
+                                }
+                        }
+                    }, withCancel: nil)
+                }, withCancel: nil)
         }, withCancel: nil)
     }
     
@@ -142,10 +139,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 if let chatPartnerId = message.chatPartnerId() {
                     self.messagesDictionary[chatPartnerId] = message
                 }
-                
                 self.attemptReloadOfTable()
             }
-            
         }, withCancel: nil)
     }
     
@@ -305,8 +300,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
         
         let chatroomId = message.chatroomId!
-        let cell = tableView.cellForRow(at: indexPath) as! UserCell
-        updateNotifications(chatroomId, cell: cell)
+        updateNotifications(chatroomId)
         
         guard let chatPartnerId = message.chatPartnerId() else {
             return
@@ -326,7 +320,37 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
     }
     
-    func updateNotifications(_ chatroomId: String, cell: UserCell){
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            var message: Message
+            guard let uid = Auth.auth().currentUser?.uid else {
+                       return
+                   }
+            if (self.searchActive){
+                message = self.filtered[indexPath.row]
+                let chatPartnerId = message.chatPartnerId()!
+                let chatroomId = message.chatroomId!
+                self.filtered.remove(at: indexPath.row)
+                self.messagesDictionary.removeValue(forKey: chatPartnerId)
+                Database.database().reference().child("user-messages").child(uid).child(chatroomId).child("seeMessages").setValue("no")
+                self.updateNotifications(chatroomId)
+                self.searchController.searchBar.text = ""
+                self.searchController.dismiss(animated: true, completion: nil)
+            } else{
+               message = self.messages[indexPath.row]
+                let chatPartnerId = message.chatPartnerId()!
+                let chatroomId = message.chatroomId!
+                self.messages.remove(at: indexPath.row)
+                self.messagesDictionary.removeValue(forKey: chatPartnerId)
+                Database.database().reference().child("user-messages").child(uid).child(chatroomId).child("seeMessages").setValue("no")
+                self.updateNotifications(chatroomId)
+            }
+
+            self.tableView.reloadData()
+        }
+    }
+    
+    func updateNotifications(_ chatroomId: String){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -350,7 +374,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                     print("Data could not be saved: \(error).")
                 } else {
                     print("Data saved successfully!")
-                    cell.newMessageDot.isHidden = true
                 }
             }
             

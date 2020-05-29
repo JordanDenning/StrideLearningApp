@@ -352,11 +352,14 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             
             guard let messageId = childRef.key else { return }
             
-            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(chatroomId).child(messageId)
-            userMessagesRef.setValue(1)
+            let userMessagesRef = Database.database().reference().child("user-messages").child(fromId).child(chatroomId)
+            userMessagesRef.child(messageId).setValue(1)
+            userMessagesRef.child("seeMessages").setValue("yes")
             
-            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(chatroomId).child(messageId)
-            recipientUserMessagesRef.setValue(1)
+            
+            let recipientUserMessagesRef = Database.database().reference().child("user-messages").child(toId).child(chatroomId)
+            recipientUserMessagesRef.child(messageId).setValue(1)
+            recipientUserMessagesRef.child("seeMessages").setValue("yes")
             
         }
         
