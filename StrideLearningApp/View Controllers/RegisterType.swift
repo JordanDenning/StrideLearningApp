@@ -17,6 +17,10 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     var loginController: LoginController?
     var profileController: ProfileController?
     var plannerController: PlannerOverallController?
+    var middleSchoolGrades = ["6th", "7th", "8th"]
+    var highSchoolGrades = ["9th", "10th", "11th", "12th"]
+    var collegeGrades = ["Freshman", "Sophomore", "Junior", "Senior"]
+    var selectedGrade = "No Grade Selected"
     
     let scrollView: UIScrollView = {
         var sv = UIScrollView()
@@ -143,6 +147,36 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return label
     }()
     
+    lazy var schoolSegment: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Middle School", "High School", "College"])
+        sc.translatesAutoresizingMaskIntoConstraints = false
+            sc.tintColor = UIColor(r: 16, g: 153, b: 255)
+            sc.selectedSegmentIndex = 0
+            sc.layer.cornerRadius = 10
+        
+            
+            if #available(iOS 13, *) {
+                // selected option color
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+                
+                sc.selectedSegmentTintColor = UIColor(r: 16, g: 153, b: 255)
+            } else {
+                // selected option color
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+                
+                // color of other options
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+            }
+            
+
+            // color of other options
+            sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+        
+        sc.addTarget(self, action: #selector(changeSchool), for: .valueChanged)
+        return sc
+    }()
+    
+    
     let gradeLabel: UILabel = {
         let label = UILabel()
         label.text = "Grade"
@@ -151,6 +185,152 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
+    }()
+    
+    let grade6: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "6th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+
+        return button
+    }()
+
+    let grade7: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "7th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade8: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "8th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 2
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade9: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "9th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeGrade(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade10: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "10th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade11: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "11th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 2
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade12: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "12th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 3
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let freshman: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Freshman"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let sophomore: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Sophomore"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let junior: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Junior"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 2
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let senior: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Senior"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 3
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let middleButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
+    }()
+    
+    let highButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
+    }()
+    
+    let collegeButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
+    }()
+    
+    let gradeButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
     }()
     
     let gradeTextField: UITextField = {
@@ -303,12 +483,13 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         containerView.topAnchor.constraint(equalTo: typeSegmentedControl.bottomAnchor, constant: 15).isActive = true
         containerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         containerView.widthAnchor.constraint(equalTo: typeSegmentedControl.widthAnchor).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        containerView.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
         containerView.addSubview(studentView)
         containerView.addSubview(mentorView)
         setupStudentView()
         setupMentorView()
+        setupButtonViews()
     
     }
     
@@ -320,9 +501,11 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         studentView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         
         studentView.addSubview(studentLabel)
+        studentView.addSubview(schoolSegment)
         studentView.addSubview(gradeLabel)
-        studentView.addSubview(gradeTextField)
-        studentView.addSubview(gradeSeparatorView)
+        studentView.addSubview(middleButtons)
+        studentView.addSubview(highButtons)
+        studentView.addSubview(collegeButtons)
         studentView.addSubview(schoolLabel)
         studentView.addSubview(schoolTextField)
         studentView.addSubview(schoolSeparatorView)
@@ -339,26 +522,38 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         studentLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         studentLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
+        schoolSegment.topAnchor.constraint(equalTo: studentLabel.bottomAnchor, constant: 20).isActive = true
+        schoolSegment.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        
         //Grade
         gradeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
-        gradeLabel.topAnchor.constraint(equalTo: studentLabel.bottomAnchor, constant: 40).isActive = true
+        gradeLabel.topAnchor.constraint(equalTo: schoolSegment.bottomAnchor, constant: 20).isActive = true
         
-        gradeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
-        gradeTextField.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
-        gradeTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        middleButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
+        middleButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
+        middleButtons.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        middleButtons.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
-        //Grade Separator
-        gradeSeparatorView.topAnchor.constraint(equalTo: gradeLabel.bottomAnchor, constant: 12).isActive = true
-        gradeSeparatorView.rightAnchor.constraint(equalTo: studentView.rightAnchor, constant: -12).isActive = true
-        gradeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        gradeSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        highButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
+        highButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
+        highButtons.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        highButtons.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        
+        collegeButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
+        collegeButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
+        collegeButtons.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        collegeButtons.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        
+        highButtons.isHidden = true
+        collegeButtons.isHidden = true
+        middleButtons.isHidden = false
         
         //School
         schoolLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
-        schoolLabel.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
+        schoolLabel.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 20).isActive = true
         
         schoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
-        schoolTextField.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
+        schoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 20).isActive = true
         schoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
         //School Separator
@@ -381,6 +576,58 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         studentCodeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         studentCodeSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
+    }
+    
+    func setupButtonViews() {
+        //middle school
+        middleButtons.addSubview(grade6)
+        middleButtons.addSubview(grade7)
+        middleButtons.addSubview(grade8)
+        
+        grade6.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+        grade6.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        
+        grade7.topAnchor.constraint(equalTo: grade6.bottomAnchor, constant: 6).isActive = true
+        grade7.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        
+        grade8.topAnchor.constraint(equalTo: grade7.bottomAnchor, constant: 6).isActive = true
+        grade8.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        
+        //high school
+        highButtons.addSubview(grade9)
+        highButtons.addSubview(grade10)
+        highButtons.addSubview(grade11)
+        highButtons.addSubview(grade12)
+        
+        grade9.topAnchor.constraint(equalTo: highButtons.topAnchor).isActive = true
+        grade9.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        
+        grade10.topAnchor.constraint(equalTo: grade9.bottomAnchor, constant: 6).isActive = true
+        grade10.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        
+        grade11.topAnchor.constraint(equalTo: grade10.bottomAnchor, constant: 6).isActive = true
+        grade11.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        
+        grade12.topAnchor.constraint(equalTo: grade11.bottomAnchor, constant: 6).isActive = true
+        grade12.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        
+        //college
+        collegeButtons.addSubview(freshman)
+        collegeButtons.addSubview(sophomore)
+        collegeButtons.addSubview(junior)
+        collegeButtons.addSubview(senior)
+        
+        freshman.topAnchor.constraint(equalTo: collegeButtons.topAnchor).isActive = true
+        freshman.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        
+        sophomore.topAnchor.constraint(equalTo: freshman.bottomAnchor, constant: 6).isActive = true
+        sophomore.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        
+        junior.topAnchor.constraint(equalTo: sophomore.bottomAnchor, constant: 6).isActive = true
+        junior.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        
+        senior.topAnchor.constraint(equalTo: junior.bottomAnchor, constant: 6).isActive = true
+        senior.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
     }
     
     func setupMentorView(){
@@ -455,6 +702,131 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @objc func changeSchool(){
+        let school = schoolSegment.selectedSegmentIndex
+        switch school {
+        case 0:
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+        case 1:
+            middleButtons.isHidden = true
+            highButtons.isHidden = false
+            collegeButtons.isHidden = true
+        case 2:
+            middleButtons.isHidden = true
+            highButtons.isHidden = true
+            collegeButtons.isHidden = false
+        default:
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+        }
+    }
+    
+    @objc func changeGrade(_ sender: UIButton){
+        let school = schoolSegment.selectedSegmentIndex
+        let grade = sender.tag
+        let selected = UIImage(named: "done4")
+        let notSelected = UIImage(named: "notDone")
+        switch school {
+        case 0:
+            switch grade {
+            case 0:
+                grade6.button.setBackgroundImage(selected, for: .normal)
+                grade7.button.setBackgroundImage(notSelected, for: .normal)
+                grade8.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "6th"
+            case 1:
+                grade6.button.setBackgroundImage(notSelected, for: .normal)
+                grade7.button.setBackgroundImage(selected, for: .normal)
+                grade8.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "7th"
+            case 2:
+                grade6.button.setBackgroundImage(notSelected, for: .normal)
+                grade7.button.setBackgroundImage(notSelected, for: .normal)
+                grade8.button.setBackgroundImage(selected, for: .normal)
+                selectedGrade = "8th"
+            default:
+                grade6.button.setBackgroundImage(notSelected, for: .normal)
+                grade7.button.setBackgroundImage(notSelected, for: .normal)
+                grade8.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "No Grade Selected"
+            }
+        case 1:
+            switch grade {
+            case 0:
+                grade9.button.setBackgroundImage(selected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "9th"
+            case 1:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(selected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "10th"
+            case 2:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(selected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "11th"
+            case 3:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(selected, for: .normal)
+                selectedGrade = "12th"
+            default:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "No Grade Selected"
+            }
+        case 2:
+            switch grade {
+            case 0:
+                freshman.button.setBackgroundImage(selected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "Freshman"
+            case 1:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(selected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "Sophomore"
+            case 2:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(selected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "Junior"
+            case 3:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(selected, for: .normal)
+                selectedGrade = "Senior"
+            default:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                selectedGrade = "No Grade Selelcted"
+            }
+        default:
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+        }
+        
+    }
+    
     @objc func loginStarter(){
         if typeSegmentedControl.selectedSegmentIndex == 1 {
             let code = codeTextField.text
@@ -492,11 +864,11 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             
         } else{
             let code = studentCodeTextField.text
-            let grade = gradeTextField.text
+            let grade = selectedGrade
             let school = schoolTextField.text
             var accessCode = ""
             
-            if (code == "" || grade == "" || school == "") {
+            if (code == "" || grade == "No Grade Selected" || school == "") {
                 let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
                 
                 let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
