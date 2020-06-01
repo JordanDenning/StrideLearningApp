@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import SearchTextField
 
 class RegisterType: UIViewController, UITextFieldDelegate {
     
@@ -20,7 +21,11 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     var middleSchoolGrades = ["6th", "7th", "8th"]
     var highSchoolGrades = ["9th", "10th", "11th", "12th"]
     var collegeGrades = ["Freshman", "Sophomore", "Junior", "Senior"]
+    var highSchools = [String]()
+    var middleSchools = [String]()
+    var colleges = [String]()
     var selectedGrade = "No Grade Selected"
+    var schoolType = "Middle Schools"
     
     let scrollView: UIScrollView = {
         var sv = UIScrollView()
@@ -120,8 +125,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let codeTextField: UITextField = {
-        let tv = UITextField()
+    let codeTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.isSecureTextEntry = true
         
@@ -188,6 +193,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     }()
     
     let grade6: RadioButton = {
+//        let button = RadioButton(frame: CGRect(x: 0, y: 0, width: 100, height: 25))
         let button = RadioButton()
         button.label.text = "6th"
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -356,9 +362,13 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let schoolTextField: UITextField = {
-        let tv = UITextField()
+    let schoolTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
+//        tv.placeholder = "school name"
+//        tv.inlineMode = true
+//        tv.startVisible = true
+//        tv.startSuggestingImmediately = true
         
         return tv
     }()
@@ -380,8 +390,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let studentCodeTextField: UITextField = {
-        let tv = UITextField()
+    let studentCodeTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.isSecureTextEntry = true
         
@@ -443,7 +453,9 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         view.addSubview(scrollView)
         
+        fillSchoolArrays()
         setupScrollView()
+        
         
         mentorView.isHidden = true
         
@@ -466,6 +478,40 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         setupContainerView()
         setupTypeSegmentedControlAndLabel()
         setupButton()
+    }
+    
+    func fillSchoolArrays(){
+        Database.database().reference().child("Schools").child("Middle Schools").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+             for child in snapshot.children {
+                if let schoolName = child as? DataSnapshot {
+                    self.middleSchools.append(schoolName.key)
+                }
+             }
+            self.schoolTextField.filterStrings(self.middleSchools)
+         }, withCancel: nil)
+        
+        Database.database().reference().child("Schools").child("High Schools").observeSingleEvent(of: .value, with: { (snapshot) in
+             
+             for child in snapshot.children {
+                if let schoolName = child as? DataSnapshot {
+                    self.highSchools.append(schoolName.key)
+                }
+             }
+
+             
+         }, withCancel: nil)
+        
+        Database.database().reference().child("Schools").child("Colleges").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            for child in snapshot.children {
+               if let schoolName = child as? DataSnapshot {
+                   self.colleges.append(schoolName.key)
+               }
+            }
+
+            
+        }, withCancel: nil)
     }
     
     func setupTypeSegmentedControlAndLabel() {
@@ -531,18 +577,18 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         middleButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
         middleButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
-        middleButtons.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        middleButtons.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        middleButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        middleButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         highButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
         highButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
-        highButtons.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        highButtons.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        highButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        highButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         collegeButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
         collegeButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
-        collegeButtons.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        collegeButtons.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        collegeButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        collegeButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         highButtons.isHidden = true
         collegeButtons.isHidden = true
@@ -550,10 +596,10 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         //School
         schoolLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
-        schoolLabel.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 20).isActive = true
+        schoolLabel.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         
         schoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
-        schoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 20).isActive = true
+        schoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         schoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
         //School Separator
@@ -584,14 +630,23 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         middleButtons.addSubview(grade7)
         middleButtons.addSubview(grade8)
         
+//        grade6.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+//        grade6.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+//
+//        grade7.topAnchor.constraint(equalTo: grade6.bottomAnchor, constant: 6).isActive = true
+//        grade7.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+//
+//        grade8.topAnchor.constraint(equalTo: grade7.bottomAnchor, constant: 6).isActive = true
+//        grade8.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        
         grade6.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
         grade6.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
         
-        grade7.topAnchor.constraint(equalTo: grade6.bottomAnchor, constant: 6).isActive = true
-        grade7.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        grade7.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+        grade7.leftAnchor.constraint(equalTo: grade6.rightAnchor).isActive = true
         
-        grade8.topAnchor.constraint(equalTo: grade7.bottomAnchor, constant: 6).isActive = true
-        grade8.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        grade8.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+        grade8.leftAnchor.constraint(equalTo: grade7.rightAnchor).isActive = true
         
         //high school
         highButtons.addSubview(grade9)
@@ -602,14 +657,14 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         grade9.topAnchor.constraint(equalTo: highButtons.topAnchor).isActive = true
         grade9.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
         
-        grade10.topAnchor.constraint(equalTo: grade9.bottomAnchor, constant: 6).isActive = true
-        grade10.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        grade10.topAnchor.constraint(equalTo: highButtons.topAnchor).isActive = true
+        grade10.leftAnchor.constraint(equalTo: grade9.rightAnchor).isActive = true
         
-        grade11.topAnchor.constraint(equalTo: grade10.bottomAnchor, constant: 6).isActive = true
+        grade11.topAnchor.constraint(equalTo: grade10.bottomAnchor, constant: 12).isActive = true
         grade11.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
         
-        grade12.topAnchor.constraint(equalTo: grade11.bottomAnchor, constant: 6).isActive = true
-        grade12.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        grade12.topAnchor.constraint(equalTo: grade10.bottomAnchor, constant: 12).isActive = true
+        grade12.leftAnchor.constraint(equalTo: grade11.rightAnchor).isActive = true
         
         //college
         collegeButtons.addSubview(freshman)
@@ -620,14 +675,14 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         freshman.topAnchor.constraint(equalTo: collegeButtons.topAnchor).isActive = true
         freshman.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
         
-        sophomore.topAnchor.constraint(equalTo: freshman.bottomAnchor, constant: 6).isActive = true
-        sophomore.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        sophomore.topAnchor.constraint(equalTo: collegeButtons.topAnchor).isActive = true
+        sophomore.leftAnchor.constraint(equalTo: freshman.rightAnchor, constant: 30).isActive = true
         
-        junior.topAnchor.constraint(equalTo: sophomore.bottomAnchor, constant: 6).isActive = true
+        junior.topAnchor.constraint(equalTo: freshman.bottomAnchor, constant: 12).isActive = true
         junior.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
         
-        senior.topAnchor.constraint(equalTo: junior.bottomAnchor, constant: 6).isActive = true
-        senior.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        senior.topAnchor.constraint(equalTo: freshman.bottomAnchor, constant: 12).isActive = true
+        senior.leftAnchor.constraint(equalTo: junior.rightAnchor, constant: 30).isActive = true
     }
     
     func setupMentorView(){
@@ -709,18 +764,30 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             middleButtons.isHidden = false
             highButtons.isHidden = true
             collegeButtons.isHidden = true
+            schoolTextField.text = ""
+            schoolType = "Middle Schools"
+            schoolTextField.filterStrings(middleSchools)
         case 1:
             middleButtons.isHidden = true
             highButtons.isHidden = false
             collegeButtons.isHidden = true
+            schoolTextField.text = ""
+            schoolType = "High Schools"
+            schoolTextField.filterStrings(highSchools)
         case 2:
             middleButtons.isHidden = true
             highButtons.isHidden = true
             collegeButtons.isHidden = false
+            schoolTextField.text = ""
+            schoolType = "Colleges"
+            schoolTextField.filterStrings(colleges)
         default:
             middleButtons.isHidden = false
             highButtons.isHidden = true
             collegeButtons.isHidden = true
+            schoolTextField.text = ""
+            schoolType = "Middle Schools"
+            schoolTextField.filterStrings(middleSchools)
         }
     }
     
@@ -824,7 +891,6 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             highButtons.isHidden = true
             collegeButtons.isHidden = true
         }
-        
     }
     
     @objc func loginStarter(){
@@ -945,12 +1011,20 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             
             if self.typeSegmentedControl.selectedSegmentIndex == 0 {
                 ref.child("type").setValue("student")
-                let grade = self.gradeTextField.text
-                let school = self.schoolTextField.text
-                ref.child("grade").setValue(grade)
+                let school = self.schoolTextField.text!
+                ref.child("grade").setValue(self.selectedGrade)
                 ref.child("school").setValue(school)
                 let mentor = ["mentorId": "", "mentorName": "No Current Mentor"]
                 ref.child("mentor").setValue(mentor)
+                
+                let schoolRef = Database.database().reference().child("Schools").child(self.schoolType).child(school)
+                
+                schoolRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    if let studentCount = snapshot.value as? Int{
+                        let count = studentCount + 1
+                        schoolRef.setValue(count)
+                    }
+                }, withCancel: nil)
                 
             } else {
                 ref.child("type").setValue("staff")
@@ -963,25 +1037,20 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     }
     
     @objc func keyboardWillShow(notification:NSNotification){
-         
+
          let userInfo = notification.userInfo!
          var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
          keyboardFrame = self.view.convert(keyboardFrame, from: nil)
-         
+
          var contentInset:UIEdgeInsets = self.scrollView.contentInset
          contentInset.bottom = keyboardFrame.size.height + 20
          scrollView.contentInset = contentInset
      }
-     
+
      @objc func keyboardWillHide(notification:NSNotification){
-         
+
          let contentInset:UIEdgeInsets = UIEdgeInsets.zero
          scrollView.contentInset = contentInset
      }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
     
 }

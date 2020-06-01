@@ -17,9 +17,6 @@ class RadioButton: UIView {
         button.setBackgroundImage(selected, for: .selected)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
-//        button.isEnabled = fals
-//        button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
-
         return button
     }()
     var label: UILabel = {
@@ -43,13 +40,10 @@ class RadioButton: UIView {
         setupView()
       }
       
-
-    //in playground we should have a red rectangle
-//    let view = RadioButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
-
     func setupView(){
         addSubview(button)
         addSubview(label)
+
         
         button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         button.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -61,11 +55,7 @@ class RadioButton: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-       return CGSize(width: 150, height: 25)
-    }
-    
-    @objc func changeGrade(){
-        print("this button was selected")
+       return CGSize(width: 80, height: 25)
     }
 
 }
