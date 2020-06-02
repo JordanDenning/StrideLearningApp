@@ -21,6 +21,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     var currentRef: DatabaseReference?
     var searchActive : Bool = false
     var noResults: Bool = false
+    var studentsAdded = false
     var mentorName: String?
     var mentorId: String?
     
@@ -134,6 +135,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
                     
                     //if you use this setter, your app will crash if your class properties don't exactly match up with the firebase dictionary keys
                     self.users[count].append(user)
+                    self.studentsAdded = true
                     
                     //this will crash because of background thread, so lets use dispatch_async to fix
                     DispatchQueue.main.async(execute: {
@@ -143,6 +145,14 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
             }
             
         }, withCancel: nil)
+        
+        if !studentsAdded {
+            self.noStudentsLabel.isHidden = studentsAdded
+            tableView.backgroundView = noStudentsLabel
+            tableView.separatorStyle = .none
+        }
+
+        
     }
     
     func configureSearchController() {
@@ -205,7 +215,6 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         noResultsView()
-       
         if(searchActive && searchController.searchBar.text != "") {
             return filtered[section].count
         } else {
@@ -356,6 +365,7 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         }
         
         noResults = filterResults
+        noResultsView()
     }
     
     lazy var noResultsLabel: UILabel = {
@@ -368,16 +378,32 @@ class StudentList: UITableViewController, UISearchResultsUpdating, UISearchBarDe
         return label
     }()
     
+    lazy var noStudentsLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "No students available"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        label.isHidden = true
+        
+        return label
+    }()
+    
     func noResultsView() {
-        if(noResults){
+        if(searchController.searchBar.text! == "") {
+            noResultsLabel.isHidden = true
+            noStudentsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        } else if(noResults) {
             noResultsLabel.isHidden = false
             tableView.backgroundView = noResultsLabel
             tableView.separatorStyle = .none
-        }
-        else {
+        } else {
             noResultsLabel.isHidden = true
+            tableView.backgroundView = noResultsLabel
             tableView.separatorStyle = .singleLine
         }
+        
     }
     
     

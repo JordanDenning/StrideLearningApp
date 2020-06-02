@@ -327,13 +327,16 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     }()
     
     func noResultsView() {
-        if(noResults){
+        if(searchController.searchBar.text! == "") {
+            noResultsLabel.isHidden = true
+            tableView.separatorStyle = .singleLine
+        } else if(noResults) {
             noResultsLabel.isHidden = false
             tableView.backgroundView = noResultsLabel
             tableView.separatorStyle = .none
-        }
-        else {
+        } else {
             noResultsLabel.isHidden = true
+            tableView.backgroundView = noResultsLabel
             tableView.separatorStyle = .singleLine
         }
     }
