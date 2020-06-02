@@ -865,8 +865,305 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
          scrollView.contentInset = contentInset
      }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+    func fillSchoolArrays(){
+        Database.database().reference().child("Schools").child("Middle Schools").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+             for child in snapshot.children {
+                if let schoolName = child as? DataSnapshot {
+                    self.middleSchools.append(schoolName.key)
+                }
+             }
+            self.middleSchoolTextField.filterStrings(self.middleSchools)
+         }, withCancel: nil)
+        
+        Database.database().reference().child("Schools").child("High Schools").observeSingleEvent(of: .value, with: { (snapshot) in
+             
+             for child in snapshot.children {
+                if let schoolName = child as? DataSnapshot {
+                    self.highSchools.append(schoolName.key)
+                }
+             }
+            self.highSchoolTextField.filterStrings(self.highSchools)
+         }, withCancel: nil)
+        
+        Database.database().reference().child("Schools").child("Colleges").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            for child in snapshot.children {
+               if let schoolName = child as? DataSnapshot {
+                   self.colleges.append(schoolName.key)
+               }
+            }
+            self.collegeTextField.filterStrings(self.colleges)
+        }, withCancel: nil)
+    }
+    
+    func setupButtonsAndSegment(grade: String){
+        let selected = UIImage(named: "done4")
+        switch grade {
+        case "6th":
+            grade6.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 0
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+            middleGrade = "6th"
+            selectedGrade = "6th"
+            schoolType = "Middle Schools"
+        case "7th":
+            grade7.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 0
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+            middleGrade = "7th"
+            selectedGrade = "7th"
+            schoolType = "Middle Schools"
+        case "8th":
+            grade8.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 0
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+            middleGrade = "8th"
+            selectedGrade = "8th"
+            schoolType = "Middle Schools"
+        case "9th":
+            grade9.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 1
+            middleButtons.isHidden = true
+            highButtons.isHidden = false
+            collegeButtons.isHidden = true
+            highGrade = "9th"
+            selectedGrade = "9th"
+            schoolType = "High Schools"
+        case "10th":
+            grade10.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 1
+            middleButtons.isHidden = true
+            highButtons.isHidden = false
+            collegeButtons.isHidden = true
+            highGrade = "10th"
+            selectedGrade = "10th"
+            schoolType = "High Schools"
+        case "11th":
+            grade11.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 1
+            middleButtons.isHidden = true
+            highButtons.isHidden = false
+            collegeButtons.isHidden = true
+            highGrade = "11th"
+            selectedGrade = "11th"
+            schoolType = "High Schools"
+        case "12th":
+            grade12.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 1
+            middleButtons.isHidden = true
+            highButtons.isHidden = false
+            collegeButtons.isHidden = true
+            highGrade = "12th"
+            selectedGrade = "12th"
+            schoolType = "High Schools"
+        case "Freshman":
+            freshman.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 2
+            middleButtons.isHidden = true
+            highButtons.isHidden = true
+            collegeButtons.isHidden = false
+            collegeGrade = "Freshman"
+            selectedGrade = "Freshman"
+            schoolType = "Colleges"
+        case "Sophomore":
+            sophomore.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 2
+            middleButtons.isHidden = true
+            highButtons.isHidden = true
+            collegeButtons.isHidden = false
+            collegeGrade = "Sophomore"
+            selectedGrade = "Sophomore"
+            schoolType = "Colleges"
+        case "Junior":
+            junior.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 2
+            middleButtons.isHidden = true
+            highButtons.isHidden = true
+            collegeButtons.isHidden = false
+            collegeGrade = "Junior"
+            selectedGrade = "Junior"
+            schoolType = "Colleges"
+        case "Senior":
+            senior.button.setBackgroundImage(selected, for: .normal)
+            schoolSegment.selectedSegmentIndex = 2
+            middleButtons.isHidden = true
+            highButtons.isHidden = true
+            collegeButtons.isHidden = false
+            collegeGrade = "Senior"
+            selectedGrade = "Senior"
+            schoolType = "Colleges"
+            
+        default:
+            schoolSegment.selectedSegmentIndex = 0
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+            selectedGrade = "No Current Grade"
+        }
+    }
+    
+    @objc func changeSchool(){
+        let school = schoolSegment.selectedSegmentIndex
+        switch school {
+        case 0:
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+            middleSchoolTextField.isHidden = false
+            highSchoolTextField.isHidden = true
+            collegeTextField.isHidden = true
+            schoolType = "Middle Schools"
+            selectedGrade = middleGrade
+        case 1:
+            middleButtons.isHidden = true
+            highButtons.isHidden = false
+            collegeButtons.isHidden = true
+            middleSchoolTextField.isHidden = true
+            highSchoolTextField.isHidden = false
+            collegeTextField.isHidden = true
+            schoolType = "High Schools"
+            selectedGrade = highGrade
+        case 2:
+            middleButtons.isHidden = true
+            highButtons.isHidden = true
+            collegeButtons.isHidden = false
+            middleSchoolTextField.isHidden = true
+            highSchoolTextField.isHidden = true
+            collegeTextField.isHidden = false
+            schoolType = "Colleges"
+            selectedGrade = collegeGrade
+        default:
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+            middleSchoolTextField.isHidden = false
+            highSchoolTextField.isHidden = true
+            collegeTextField.isHidden = true
+            schoolType = "Middle Schools"
+            selectedGrade = "No Grade Selected"
+        }
+    }
+    
+    @objc func changeGrade(_ sender: UIButton){
+        let school = schoolSegment.selectedSegmentIndex
+        let grade = sender.tag
+        let selected = UIImage(named: "done4")
+        let notSelected = UIImage(named: "notDone")
+        switch school {
+        case 0:
+            switch grade {
+            case 0:
+                grade6.button.setBackgroundImage(selected, for: .normal)
+                grade7.button.setBackgroundImage(notSelected, for: .normal)
+                grade8.button.setBackgroundImage(notSelected, for: .normal)
+                middleGrade = "6th"
+                selectedGrade = "6th"
+            case 1:
+                grade6.button.setBackgroundImage(notSelected, for: .normal)
+                grade7.button.setBackgroundImage(selected, for: .normal)
+                grade8.button.setBackgroundImage(notSelected, for: .normal)
+                middleGrade = "7th"
+                selectedGrade = "7th"
+            case 2:
+                grade6.button.setBackgroundImage(notSelected, for: .normal)
+                grade7.button.setBackgroundImage(notSelected, for: .normal)
+                grade8.button.setBackgroundImage(selected, for: .normal)
+                middleGrade = "8th"
+                selectedGrade = "8th"
+            default:
+                grade6.button.setBackgroundImage(notSelected, for: .normal)
+                grade7.button.setBackgroundImage(notSelected, for: .normal)
+                grade8.button.setBackgroundImage(notSelected, for: .normal)
+                middleGrade = "No Grade Selected"
+                selectedGrade = "No Grade Selected"
+            }
+        case 1:
+            switch grade {
+            case 0:
+                grade9.button.setBackgroundImage(selected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "9th"
+                selectedGrade = "9th"
+            case 1:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(selected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "10th"
+                selectedGrade = "10th"
+            case 2:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(selected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "11th"
+                selectedGrade = "11th"
+            case 3:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(selected, for: .normal)
+                highGrade = "12th"
+                selectedGrade = "12th"
+            default:
+                grade9.button.setBackgroundImage(notSelected, for: .normal)
+                grade10.button.setBackgroundImage(notSelected, for: .normal)
+                grade11.button.setBackgroundImage(notSelected, for: .normal)
+                grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "No Grade Selected"
+                selectedGrade = "No Grade Selected"
+            }
+        case 2:
+            switch grade {
+            case 0:
+                freshman.button.setBackgroundImage(selected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "Freshman"
+                selectedGrade = "Freshman"
+            case 1:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(selected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "Sophomore"
+                selectedGrade = "Sophomore"
+            case 2:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(selected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "Junior"
+                selectedGrade = "Junior"
+            case 3:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(selected, for: .normal)
+                collegeGrade = "Senior"
+                selectedGrade = "Senior"
+            default:
+                freshman.button.setBackgroundImage(notSelected, for: .normal)
+                sophomore.button.setBackgroundImage(notSelected, for: .normal)
+                junior.button.setBackgroundImage(notSelected, for: .normal)
+                senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "No Grade Selelcted"
+                selectedGrade = "No Grade Selelcted"
+            }
+        default:
+            middleButtons.isHidden = false
+            highButtons.isHidden = true
+            collegeButtons.isHidden = true
+        }
     }
 }
