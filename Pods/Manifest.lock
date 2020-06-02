@@ -110,6 +110,7 @@ PODS:
   - nanopb/encode (0.3.9011)
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.4)
+  - SearchTextField (1.2.4)
 
 DEPENDENCIES:
   - Firebase
@@ -118,6 +119,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
+  - SearchTextField
 
 SPEC REPOS:
   trunk:
@@ -143,6 +145,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Protobuf
+    - SearchTextField
 
 SPEC CHECKSUMS:
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
@@ -167,7 +170,8 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
+  SearchTextField: 40dc3cc57def5a211f263cac263622c163bbc25a
 
-PODFILE CHECKSUM: 383a2f1efc6eecde96ab976f2fc41a5ab6a48654
+PODFILE CHECKSUM: 3a9f73a4bd4252821a3f8b53a0e2616f9cfc4cb5
 
 COCOAPODS: 1.9.1

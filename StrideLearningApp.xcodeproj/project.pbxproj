@@ -17,6 +17,7 @@
 		9D976D99246F0DC1007FAE91 /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */; };
 		9DAFE53C247DA491001EEB6F /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DAFE53B247DA491001EEB6F /* TaskCell.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
+		9DC89BAE2481A1FC00EA12EB /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */; };
 		9DC89BAA2480690400EA12EB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BA92480690400EA12EB /* ImageExtension.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
@@ -56,6 +57,7 @@
 		9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		9DAFE53B247DA491001EEB6F /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
 		9DC89BA92480690400EA12EB /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				9DAFE53B247DA491001EEB6F /* TaskCell.swift */,
 				EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */,
 				9D4C420D23FAE13700116B9E /* CollectionView.swift */,
+				9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -354,6 +357,7 @@
 				9D976D99246F0DC1007FAE91 /* ViewControllerExtension.swift in Sources */,
 				9DCDF43523D38CE400C4E9A7 /* AppDelegate.swift in Sources */,
 				9D5F205F242551500097B279 /* ScreenSizeExtension.swift in Sources */,
+				9DC89BAE2481A1FC00EA12EB /* RadioButton.swift in Sources */,
 				EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */,
 				9DD5066224100F5F00631A31 /* MentorStudentView.swift in Sources */,
 				9D01128D23EAFB0900A44C7B /* EditProfileController.swift in Sources */,
