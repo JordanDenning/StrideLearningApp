@@ -11,7 +11,6 @@ import Firebase
 
 protocol HeightForTextView {
     func heightOfTextView(height: CGFloat)
-
 }
 
 protocol ToggleCheckBox {
