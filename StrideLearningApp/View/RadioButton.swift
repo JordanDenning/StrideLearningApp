@@ -51,7 +51,7 @@ class RadioButton: UIView {
         button.widthAnchor.constraint(equalToConstant: 25).isActive = true
         
         label.leftAnchor.constraint(equalTo: button.rightAnchor, constant: 4).isActive = true
-        label.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
     
     override var intrinsicContentSize: CGSize {
