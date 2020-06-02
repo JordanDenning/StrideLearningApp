@@ -25,6 +25,9 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     var middleSchools = [String]()
     var colleges = [String]()
     var selectedGrade = "No Grade Selected"
+    var middleGrade = "No Grade Selected"
+    var highGrade = "No Grade Selected"
+    var collegeGrade = "No Grade Selected"
     var schoolType = "Middle Schools"
     
     let scrollView: UIScrollView = {
@@ -193,7 +196,6 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     }()
     
     let grade6: RadioButton = {
-//        let button = RadioButton(frame: CGRect(x: 0, y: 0, width: 100, height: 25))
         let button = RadioButton()
         button.label.text = "6th"
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -330,15 +332,6 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return view
     }()
     
-    let gradeButtons: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 10
-        view.layer.masksToBounds = true
-        
-        return view
-    }()
-    
     let gradeTextField: UITextField = {
         let tv = UITextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -362,13 +355,24 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let schoolTextField: SearchTextField = {
+    let middleSchoolTextField: SearchTextField = {
         let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
-//        tv.placeholder = "school name"
-//        tv.inlineMode = true
-//        tv.startVisible = true
-//        tv.startSuggestingImmediately = true
+        
+        return tv
+    }()
+    
+    let highSchoolTextField: SearchTextField = {
+        let tv = SearchTextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+
+        
+        return tv
+    }()
+    
+    let collegeTextField: SearchTextField = {
+        let tv = SearchTextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
     }()
@@ -488,7 +492,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                     self.middleSchools.append(schoolName.key)
                 }
              }
-            self.schoolTextField.filterStrings(self.middleSchools)
+            self.middleSchoolTextField.filterStrings(self.middleSchools)
          }, withCancel: nil)
         
         Database.database().reference().child("Schools").child("High Schools").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -498,8 +502,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                     self.highSchools.append(schoolName.key)
                 }
              }
-
-             
+            self.highSchoolTextField.filterStrings(self.highSchools)
          }, withCancel: nil)
         
         Database.database().reference().child("Schools").child("Colleges").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -509,8 +512,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                    self.colleges.append(schoolName.key)
                }
             }
-
-            
+            self.collegeTextField.filterStrings(self.colleges)
         }, withCancel: nil)
     }
     
@@ -553,14 +555,18 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         studentView.addSubview(highButtons)
         studentView.addSubview(collegeButtons)
         studentView.addSubview(schoolLabel)
-        studentView.addSubview(schoolTextField)
+        studentView.addSubview(middleSchoolTextField)
+        studentView.addSubview(highSchoolTextField)
+        studentView.addSubview(collegeTextField)
         studentView.addSubview(schoolSeparatorView)
         studentView.addSubview(studentCodeLabel)
         studentView.addSubview(studentCodeTextField)
         studentView.addSubview(studentCodeSeparatorView)
         
         gradeTextField.delegate = self
-        schoolTextField.delegate = self
+        middleSchoolTextField.delegate = self
+        highSchoolTextField.delegate = self
+        collegeTextField.delegate = self
         studentCodeTextField.delegate = self
         
         //studentLabel
@@ -568,6 +574,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         studentLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         studentLabel.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
+        //School Segment
         schoolSegment.topAnchor.constraint(equalTo: studentLabel.bottomAnchor, constant: 20).isActive = true
         schoolSegment.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         
@@ -598,9 +605,21 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         schoolLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
         schoolLabel.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         
-        schoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
-        schoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
-        schoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        middleSchoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        middleSchoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
+        middleSchoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        highSchoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        highSchoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
+        highSchoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        collegeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        collegeTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
+        collegeTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        middleSchoolTextField.isHidden = false
+        highSchoolTextField.isHidden = true
+        collegeTextField.isHidden = true
         
         //School Separator
         schoolSeparatorView.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 12).isActive = true
@@ -629,15 +648,6 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         middleButtons.addSubview(grade6)
         middleButtons.addSubview(grade7)
         middleButtons.addSubview(grade8)
-        
-//        grade6.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
-//        grade6.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
-//
-//        grade7.topAnchor.constraint(equalTo: grade6.bottomAnchor, constant: 6).isActive = true
-//        grade7.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
-//
-//        grade8.topAnchor.constraint(equalTo: grade7.bottomAnchor, constant: 6).isActive = true
-//        grade8.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
         
         grade6.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
         grade6.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
@@ -764,34 +774,42 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             middleButtons.isHidden = false
             highButtons.isHidden = true
             collegeButtons.isHidden = true
-            schoolTextField.text = ""
+            middleSchoolTextField.isHidden = false
+            highSchoolTextField.isHidden = true
+            collegeTextField.isHidden = true
             schoolType = "Middle Schools"
-            schoolTextField.filterStrings(middleSchools)
+            selectedGrade = middleGrade
         case 1:
             middleButtons.isHidden = true
             highButtons.isHidden = false
             collegeButtons.isHidden = true
-            schoolTextField.text = ""
+            middleSchoolTextField.isHidden = true
+            highSchoolTextField.isHidden = false
+            collegeTextField.isHidden = true
             schoolType = "High Schools"
-            schoolTextField.filterStrings(highSchools)
+            selectedGrade = highGrade
         case 2:
             middleButtons.isHidden = true
             highButtons.isHidden = true
             collegeButtons.isHidden = false
-            schoolTextField.text = ""
+            middleSchoolTextField.isHidden = true
+            highSchoolTextField.isHidden = true
+            collegeTextField.isHidden = false
             schoolType = "Colleges"
-            schoolTextField.filterStrings(colleges)
+            selectedGrade = collegeGrade
         default:
             middleButtons.isHidden = false
             highButtons.isHidden = true
             collegeButtons.isHidden = true
-            schoolTextField.text = ""
+            middleSchoolTextField.isHidden = false
+            highSchoolTextField.isHidden = true
+            collegeTextField.isHidden = true
             schoolType = "Middle Schools"
-            schoolTextField.filterStrings(middleSchools)
+            selectedGrade = "No Grade Selected"
         }
     }
     
-    @objc func changeGrade(_ sender: UIButton){
+   @objc func changeGrade(_ sender: UIButton) {
         let school = schoolSegment.selectedSegmentIndex
         let grade = sender.tag
         let selected = UIImage(named: "done4")
@@ -803,21 +821,25 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 grade6.button.setBackgroundImage(selected, for: .normal)
                 grade7.button.setBackgroundImage(notSelected, for: .normal)
                 grade8.button.setBackgroundImage(notSelected, for: .normal)
+                middleGrade = "6th"
                 selectedGrade = "6th"
             case 1:
                 grade6.button.setBackgroundImage(notSelected, for: .normal)
                 grade7.button.setBackgroundImage(selected, for: .normal)
                 grade8.button.setBackgroundImage(notSelected, for: .normal)
+                middleGrade = "7th"
                 selectedGrade = "7th"
             case 2:
                 grade6.button.setBackgroundImage(notSelected, for: .normal)
                 grade7.button.setBackgroundImage(notSelected, for: .normal)
                 grade8.button.setBackgroundImage(selected, for: .normal)
+                middleGrade = "8th"
                 selectedGrade = "8th"
             default:
                 grade6.button.setBackgroundImage(notSelected, for: .normal)
                 grade7.button.setBackgroundImage(notSelected, for: .normal)
                 grade8.button.setBackgroundImage(notSelected, for: .normal)
+                middleGrade = "No Grade Selected"
                 selectedGrade = "No Grade Selected"
             }
         case 1:
@@ -827,30 +849,35 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 grade10.button.setBackgroundImage(notSelected, for: .normal)
                 grade11.button.setBackgroundImage(notSelected, for: .normal)
                 grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "9th"
                 selectedGrade = "9th"
             case 1:
                 grade9.button.setBackgroundImage(notSelected, for: .normal)
                 grade10.button.setBackgroundImage(selected, for: .normal)
                 grade11.button.setBackgroundImage(notSelected, for: .normal)
                 grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "10th"
                 selectedGrade = "10th"
             case 2:
                 grade9.button.setBackgroundImage(notSelected, for: .normal)
                 grade10.button.setBackgroundImage(notSelected, for: .normal)
                 grade11.button.setBackgroundImage(selected, for: .normal)
                 grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "11th"
                 selectedGrade = "11th"
             case 3:
                 grade9.button.setBackgroundImage(notSelected, for: .normal)
                 grade10.button.setBackgroundImage(notSelected, for: .normal)
                 grade11.button.setBackgroundImage(notSelected, for: .normal)
                 grade12.button.setBackgroundImage(selected, for: .normal)
+                highGrade = "12th"
                 selectedGrade = "12th"
             default:
                 grade9.button.setBackgroundImage(notSelected, for: .normal)
                 grade10.button.setBackgroundImage(notSelected, for: .normal)
                 grade11.button.setBackgroundImage(notSelected, for: .normal)
                 grade12.button.setBackgroundImage(notSelected, for: .normal)
+                highGrade = "No Grade Selected"
                 selectedGrade = "No Grade Selected"
             }
         case 2:
@@ -860,30 +887,35 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 sophomore.button.setBackgroundImage(notSelected, for: .normal)
                 junior.button.setBackgroundImage(notSelected, for: .normal)
                 senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "Freshman"
                 selectedGrade = "Freshman"
             case 1:
                 freshman.button.setBackgroundImage(notSelected, for: .normal)
                 sophomore.button.setBackgroundImage(selected, for: .normal)
                 junior.button.setBackgroundImage(notSelected, for: .normal)
                 senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "Sophomore"
                 selectedGrade = "Sophomore"
             case 2:
                 freshman.button.setBackgroundImage(notSelected, for: .normal)
                 sophomore.button.setBackgroundImage(notSelected, for: .normal)
                 junior.button.setBackgroundImage(selected, for: .normal)
                 senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "Junior"
                 selectedGrade = "Junior"
             case 3:
                 freshman.button.setBackgroundImage(notSelected, for: .normal)
                 sophomore.button.setBackgroundImage(notSelected, for: .normal)
                 junior.button.setBackgroundImage(notSelected, for: .normal)
                 senior.button.setBackgroundImage(selected, for: .normal)
+                collegeGrade = "Senior"
                 selectedGrade = "Senior"
             default:
                 freshman.button.setBackgroundImage(notSelected, for: .normal)
                 sophomore.button.setBackgroundImage(notSelected, for: .normal)
                 junior.button.setBackgroundImage(notSelected, for: .normal)
                 senior.button.setBackgroundImage(notSelected, for: .normal)
+                collegeGrade = "No Grade Selelcted"
                 selectedGrade = "No Grade Selelcted"
             }
         default:
@@ -892,6 +924,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             collegeButtons.isHidden = true
         }
     }
+
     
     @objc func loginStarter(){
         if typeSegmentedControl.selectedSegmentIndex == 1 {
@@ -930,9 +963,52 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             
         } else{
             let code = studentCodeTextField.text
-            let grade = selectedGrade
-            let school = schoolTextField.text
             var accessCode = ""
+            let grade = selectedGrade
+            var school = ""
+            
+            var schoolArray = [String()]
+            var gradeArray = [String()]
+            switch schoolType {
+            case "Middle Schools":
+                school = middleSchoolTextField.text!
+                schoolArray = middleSchools
+                gradeArray = middleSchoolGrades
+            case "High Schools":
+                school = highSchoolTextField.text!
+                schoolArray = highSchools
+                gradeArray = highSchoolGrades
+            case "Colleges":
+                school = collegeTextField.text!
+                schoolArray = colleges
+                gradeArray = collegeGrades
+            default:
+                school = ""
+            }
+            
+            
+            if !schoolArray.contains(school) {
+                let alert = UIAlertController(title: "Invalid School", message: "Please select a school from the list, or choose 'Other' if you don't see your school.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: { (UIAlertAction) in
+                    self.middleSchoolTextField.text = ""
+                    self.highSchoolTextField.text = ""
+                    self.collegeTextField.text = ""
+                })
+                
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+            if !gradeArray.contains(selectedGrade) {
+                let alert = UIAlertController(title: "Invalid Grade", message: "Please select a grade.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: { (UIAlertAction) in
+                })
+                
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
             
             if (code == "" || grade == "No Grade Selected" || school == "") {
                 let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
@@ -1011,7 +1087,17 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             
             if self.typeSegmentedControl.selectedSegmentIndex == 0 {
                 ref.child("type").setValue("student")
-                let school = self.schoolTextField.text!
+                var school = ""
+                switch self.schoolType {
+                case "Middle Schools":
+                    school = self.middleSchoolTextField.text!
+                case "High Schools":
+                    school = self.highSchoolTextField.text!
+                case "Colleges":
+                    school = self.collegeTextField.text!
+                default:
+                    school = ""
+                }
                 ref.child("grade").setValue(self.selectedGrade)
                 ref.child("school").setValue(school)
                 let mentor = ["mentorId": "", "mentorName": "No Current Mentor"]
