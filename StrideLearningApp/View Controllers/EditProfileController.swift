@@ -17,6 +17,19 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
     var user: User?
     var viewContainsMentorView = false
     var viewContainsStudentView = false
+    var middleSchoolGrades = ["6th", "7th", "8th"]
+    var highSchoolGrades = ["9th", "10th", "11th", "12th"]
+    var collegeGrades = ["Freshman", "Sophomore", "Junior", "Senior"]
+    var highSchools = [String]()
+    var middleSchools = [String]()
+    var colleges = [String]()
+    var selectedGrade = "No Grade Selected"
+    var middleGrade = "No Grade Selected"
+    var highGrade = "No Grade Selected"
+    var collegeGrade = "No Grade Selected"
+    var schoolType = "Middle Schools"
+    var userType = "student"
+    var originalSchool = ""
     
     let scrollView: UIScrollView = {
         var sv = UIScrollView()
@@ -379,6 +392,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         view.addSubview(scrollView)
         
         setupScrollView()
+        fillSchoolArrays()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
@@ -407,7 +421,8 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 
                 self.user = User(dictionary: dictionary)
-                if self.user?.type == "staff" {
+                self.userType = self.user!.type!
+                if self.userType == "staff" {
                     self.setupMentorEditInfo(self.user!)
                     self.viewContainsMentorView = true
                     if self.viewContainsStudentView == true {
@@ -416,6 +431,8 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
                     }
                 }
                 else {
+                    self.originalSchool = self.user!.school!
+                    self.setupButtonViews()
                     self.setupStudentEditInfo(self.user!)
                     self.viewContainsStudentView = true
                     if self.viewContainsMentorView == true {
@@ -730,121 +747,229 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
     @objc func saveData() {
         let firstName = firstNameTextField.text
         let lastName = lastNameTextField.text
-        let grade = gradeTextField.text
+        let grade = selectedGrade
+        var school = ""
         let role = roleTextField.text
-        let school = schoolTextField.text
         var email = emailTextField.text
         email = email?.lowercased()
+        var allFieldsFilled = true
+        var correctSchool = true
         
         let user = Auth.auth().currentUser
         
-        // Prompt the user to re-provide their sign-in credentials
-        if email != user?.email {
-            //alert to change email please enter password
-            let alertController = UIAlertController(title: "Change Email", message: "Please enter your password to change your emal.", preferredStyle: .alert)
-            alertController.addTextField { (passwordTextField) in
-                passwordTextField.placeholder = "Enter Password"
-                passwordTextField.isSecureTextEntry = true
+        if userType == "staff" {
+            if (firstName == "" || lastName == "" || email == "" || role == "") {
+                allFieldsFilled = false
+                let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                
+                alertVC.addAction(okayAction)
+                self.present(alertVC, animated: true, completion: nil)
+            } else {
+                allFieldsFilled = true
             }
-            let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+            
+        } else {
+               var schoolArray = [String()]
+               var gradeArray = [String()]
+               switch schoolType {
+               case "Middle Schools":
+                   school = middleSchoolTextField.text!
+                   schoolArray = middleSchools
+                   gradeArray = middleSchoolGrades
+               case "High Schools":
+                   school = highSchoolTextField.text!
+                   schoolArray = highSchools
+                   gradeArray = highSchoolGrades
+               case "Colleges":
+                   school = collegeTextField.text!
+                   schoolArray = colleges
+                   gradeArray = collegeGrades
+               default:
+                   school = ""
+               }
+               
+               if !schoolArray.contains(school) {
+                    correctSchool = false
+                   let alert = UIAlertController(title: "Invalid School", message: "Please select a school from the list, or choose 'Other' if you don't see your school.", preferredStyle: UIAlertController.Style.alert)
+                   
+                   let okayAction = UIAlertAction(title: "Okay", style: .default, handler: { (UIAlertAction) in
+                       self.middleSchoolTextField.text = ""
+                       self.highSchoolTextField.text = ""
+                       self.collegeTextField.text = ""
+                   })
+                   
+                   alert.addAction(okayAction)
+                   self.present(alert, animated: true, completion: nil)
+               }
+            
+            if !gradeArray.contains(selectedGrade) {
+                 correctSchool = false
+                let alert = UIAlertController(title: "Invalid Grade", message: "Please select a grade.", preferredStyle: UIAlertController.Style.alert)
                 
-                let passwordTextField = alertController.textFields![0]
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: { (UIAlertAction) in
+                })
                 
-                guard let password = passwordTextField.text else {
-                    print("Form is not valid")
-                    return
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+            if (grade == "No Grade Selected" || school == "" || firstName == "" || lastName == "" || email == "") {
+                allFieldsFilled = false
+                let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                
+                alertVC.addAction(okayAction)
+                self.present(alertVC, animated: true, completion: nil)
+            } else {
+                allFieldsFilled = true
+            }
+        }
+        
+        if allFieldsFilled && correctSchool {
+            
+            if school != originalSchool {
+                let originalRef = Database.database().reference().child("Schools").child(schoolType).child(originalSchool)
+                let newRef = Database.database().reference().child("Schools").child(schoolType).child(school)
+                originalRef.observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let count = snapshot.value as? Int {
+                        let studentCount = count - 1
+                        originalRef.setValue(studentCount)
+                    }
+                    
+                }, withCancel: nil)
+                newRef.observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let count = snapshot.value as? Int {
+                        let studentCount = count + 1
+                        newRef.setValue(studentCount)
+                    }
+                    
+                }, withCancel: nil)
+                
+            }
+        
+            // Prompt the user to re-provide their sign-in credentials
+            if email != user?.email {
+                //alert to change email please enter password
+                let alertController = UIAlertController(title: "Change Email", message: "Please enter your password to change your emal.", preferredStyle: .alert)
+                alertController.addTextField { (passwordTextField) in
+                    passwordTextField.placeholder = "Enter Password"
+                    passwordTextField.isSecureTextEntry = true
                 }
-                
-                let credential = EmailAuthProvider.credential(withEmail: user?.email ?? "", password: password)
-                
-                user?.reauthenticate(with: credential, completion: { (usr, error) in
-                    if let error = error {
-                        print(error)
-                        self.handleError(error)
+                let okAction=UIAlertAction(title: "Send", style: UIAlertAction.Style.default, handler: {action in
+                    
+                    let passwordTextField = alertController.textFields![0]
+                    
+                    guard let password = passwordTextField.text else {
+                        print("Form is not valid")
                         return
                     }
-                    else{
-                        user?.updateEmail(to: email!, completion: { (error) in
-                            if let error = error {
-                                print(error)
-                                self.handleError(error)
-                                return
-                            }
-                            else {
-                                user?.sendEmailVerification(completion: { (error) in
-                                    if let error = error {
-                                        print(error)
-                                        self.handleError(error)
-                                        return
-                                    }
-                                    else{
-                                        let alert=UIAlertController(title: "Email Updated", message: "A confirmation email has been sent to your address. ", preferredStyle: UIAlertController.Style.alert)
-                                        //create a UIAlertAction object for the button
-                                        let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                                            //dismiss alert
-                                        })
-                                        alert.addAction(okAction)
-                                        self.present(alert, animated: true, completion: nil)
-                                    }
-                                })
-                                let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "role": role, "school": school, "email": email] as [String : AnyObject]
-                                
-                                guard let uid = Auth.auth().currentUser?.uid else {
+                    
+                    let credential = EmailAuthProvider.credential(withEmail: user?.email ?? "", password: password)
+                    
+                    user?.reauthenticate(with: credential, completion: { (usr, error) in
+                        if let error = error {
+                            print(error)
+                            self.handleError(error)
+                            return
+                        }
+                        else{
+                            user?.updateEmail(to: email!, completion: { (error) in
+                                if let error = error {
+                                    print(error)
+                                    self.handleError(error)
                                     return
                                 }
-                                
-                                let ref = Database.database().reference()
-                                let usersReference = ref.child("users").child(uid)
-                                
-                                usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                                else {
+                                    user?.sendEmailVerification(completion: { (error) in
+                                        if let error = error {
+                                            print(error)
+                                            self.handleError(error)
+                                            return
+                                        }
+                                        else{
+                                            let alert=UIAlertController(title: "Email Updated", message: "A confirmation email has been sent to your address. ", preferredStyle: UIAlertController.Style.alert)
+                                            //create a UIAlertAction object for the button
+                                            let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                                //dismiss alert
+                                            })
+                                            alert.addAction(okAction)
+                                            self.present(alert, animated: true, completion: nil)
+                                        }
+                                    })
+                                    var values = [String:AnyObject]()
+                                    if self.userType == "staff" {
+                                        values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "role": role, "email": email] as [String : AnyObject]
+                                    } else {
+                                        values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": self.selectedGrade,  "school": school, "email": email] as [String : AnyObject]
+                                    }
+
                                     
-                                    if let err = err {
-                                        print(err)
-                                        self.handleError(err)
+                                    guard let uid = Auth.auth().currentUser?.uid else {
                                         return
                                     }
-                                })
-                                self.dismiss(animated: true, completion: nil)
-                            }
-                        })
+                                    
+                                    let ref = Database.database().reference()
+                                    let usersReference = ref.child("users").child(uid)
+                                    
+                                    usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                                        
+                                        if let err = err {
+                                            print(err)
+                                            self.handleError(err)
+                                            return
+                                        }
+                                    })
+                                    self.dismiss(animated: true, completion: nil)
+                                }
+                            })
 
-                    }
+                        }
+                    })
                 })
-            })
-            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
-                //dismiss alert
-            })
-            
-            alertController.addAction(okAction)
-            alertController.addAction(cancelAction)
-            
-            self.present(alertController, animated: true, completion: nil)
-            
-        }
-        else {
-            let values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": grade, "role": role, "school": school, "email": email] as [String : AnyObject]
-            
-            guard let uid = Auth.auth().currentUser?.uid else {
-                return
-            }
-            
-            
-            let ref = Database.database().reference()
-            let usersReference = ref.child("users").child(uid)
-            
-            usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
+                    //dismiss alert
+                })
                 
-                if let err = err {
-                    print(err)
-                    self.handleError(err)
+                alertController.addAction(okAction)
+                alertController.addAction(cancelAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+                
+            }
+            else {
+                var values = [String:AnyObject]()
+                if self.userType == "staff" {
+                     values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "role": role, "email": email] as [String : AnyObject]
+                 } else {
+                     values = ["name": firstName! + " " + lastName!, "firstName": firstName, "lastName": lastName, "grade": self.selectedGrade,  "school": school, "email": email] as [String : AnyObject]
+                 }
+                 
+                
+                guard let uid = Auth.auth().currentUser?.uid else {
                     return
                 }
                 
-            })
-            
-            dismiss(animated: true, completion: nil)
+                
+                let ref = Database.database().reference()
+                let usersReference = ref.child("users").child(uid)
+                
+                usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                    
+                    if let err = err {
+                        print(err)
+                        self.handleError(err)
+                        return
+                    }
+                    
+                })
+                
+                dismiss(animated: true, completion: nil)
+            }
+            profileController?.updateData()
         }
-        profileController?.updateData()
     }
     
     
@@ -855,7 +980,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
          keyboardFrame = self.view.convert(keyboardFrame, from: nil)
          
          var contentInset:UIEdgeInsets = self.scrollView.contentInset
-         contentInset.bottom = keyboardFrame.size.height + 10
+         contentInset.bottom = keyboardFrame.size.height + 20
          scrollView.contentInset = contentInset
      }
      
