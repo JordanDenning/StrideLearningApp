@@ -9,21 +9,16 @@
 import UIKit
 import Firebase
 
-class MentorCollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource {
+class MentorCollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
    
     var ref = Database.database().reference().child("to-do-items")
-    var weeks = ["Last Week", "This Week", "Next Week"]
     let today = Date()
     let calendar = Calendar(identifier: .gregorian)
     var components = DateComponents()
     let weekStart = 1
     var studentUid: String?
-    var uid: String?
-    var user: User?
-    var plannerController: PlannerController?
-    var plannerOverall: PlannerOverallController?
+    var studentName : String?
     var onceOnly = false
-    var weekTitle = "This Week"
     
     
     let collectionView: UICollectionView = {
@@ -32,91 +27,160 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         layout.minimumLineSpacing = 0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .white
-        cv.isPagingEnabled = true
         cv.translatesAutoresizingMaskIntoConstraints = false
+        cv.isScrollEnabled = false
+        
         return cv
     }()
     
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            view.addSubview(collectionView)
-            view.backgroundColor = .white
+    let weekControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["Last Week", "This Week", "Next Week"])
+        let whiteImage = UIImage(color: .white)
+        segmentedControl.selectedSegmentIndex = 1
+        let screenSize = UIScreen.main.bounds.width
+        segmentedControl.frame.size.width = screenSize
+        segmentedControl.frame.size.height = 45
+        
+        if #available(iOS 13, *) {
+            segmentedControl.setBackgroundImage(whiteImage, for: .normal, barMetrics: .default)
+            segmentedControl.setDividerImage(whiteImage, forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
             
-            setupCollectionConstraints()
-            collectionView.delegate = self
-            collectionView.dataSource = self
+            // selected option color
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 16, g:153, b:255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .selected)
             
-            collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 50, g: 50, b:50), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .normal)
             
-            weekdayView.delegate = self
-            weekdayView.dataSource = self
+            segmentedControl.selectedSegmentTintColor = .clear
+        } else {
+            // selected option color
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 16, g: 153, b:255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .selected)
             
-            weekView.delegate = self
-            weekView.dataSource = self
+            // color of other options
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .normal)
             
-            weekday = "Monday"
-            week = "this-week"
-            
-            components = calendar.dateComponents([.weekday], from: today)
-            if (components.weekday != weekStart){
-                ref.child("weekUpToDate").setValue(false)
-            }
-    
+            segmentedControl.tintColor = .white
         }
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 16, g:153, b:255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], for: .selected)
+            
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 50, g: 50, b:50), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], for: .normal)
+        }
+                
+        segmentedControl.addTarget(self, action: #selector(changeWeek), for: .valueChanged)
+        
+        
+        return segmentedControl
+    }()
+    
+    let buttonBar: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor(r: 16, g:153, b:255)
+        v.layer.cornerRadius = 2
+        
+        return v
+    }()
+    
+    let topDivider: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor(r: 200, g: 200, b: 200)
+        v.layer.cornerRadius = 2
+        
+        return v
+    }()
+    
+    let bottomDivider: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor(r: 200, g: 200, b: 200)
+        v.layer.cornerRadius = 2
+        
+        return v
+    }()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        
+        view.addSubview(collectionView)
+        view.addSubview(weekControl)
+        view.addSubview(buttonBar)
+        view.addSubview(topDivider)
+        view.addSubview(bottomDivider)
+        
+        setupCollectionConstraints()
+        setupWeekControlConstraints()
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
+        
+        components = calendar.dateComponents([.weekday], from: today)
+        if (components.weekday != weekStart){
+            ref.child("weekUpToDate").setValue(false)
+        }
+
+    }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationItem.title = weekTitle
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(handleNewTask))
-        
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
+        if let name = studentName {
+            navigationItem.title = name
+        } else {
+            navigationItem.title = "Planner"
         }
         
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        if let studentId = studentUid {
+            ref = ref.child(studentId)
+        } else {
+            let alert = UIAlertController(title: "Error", message: "Something went wrong. We couldn't load this student's planner. Please try again.", preferredStyle: .alert)
             
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                self.user = User(dictionary: dictionary)
-                if self.user?.type == "staff" {
-                    self.studentUid = self.user?.student
-                    self.ref = self.ref.child(self.studentUid!)
-                }
-                else {
-                    self.ref = self.ref.child(uid)
-                }
-                
-            }
-        }, withCancel: nil)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            
+            alert.addAction(okAction)
+            
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     func setupCollectionConstraints() {
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: weekControl.bottomAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let center = CGPoint(x: scrollView.contentOffset.x + (scrollView.frame.width / 2), y: (scrollView.frame.height / 2))
-        if let ip = collectionView.indexPathForItem(at: center) {
-            let cell = ip.row
-            switch cell {
-            case 0:
-                tabBarController?.navigationItem.title = weeks[cell]
-                navigationItem.title = weeks[cell]
-                weekTitle = weeks[cell]
-            case 1:
-                tabBarController?.navigationItem.title = weeks[cell]
-                navigationItem.title = weeks[cell]
-                weekTitle = weeks[cell]
-            case 2:
-                tabBarController?.navigationItem.title = weeks[cell]
-                navigationItem.title = weeks[cell]
-                weekTitle = weeks[cell]
-            default:
-                tabBarController?.navigationItem.title = "Planner"
-                navigationItem.title = "Planner"
-                weekTitle = "Planner"
-            }
+    func setupWeekControlConstraints(){
+        weekControl.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        weekControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
+        buttonBar.topAnchor.constraint(equalTo: weekControl.bottomAnchor).isActive = true
+        buttonBar.heightAnchor.constraint(equalToConstant: 5).isActive = true
+        buttonBar.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        buttonBar.widthAnchor.constraint(equalTo: weekControl.widthAnchor, multiplier: 1 / CGFloat(weekControl.numberOfSegments)).isActive = true
+        
+        topDivider.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        topDivider.widthAnchor.constraint(equalTo: weekControl.widthAnchor).isActive = true
+        topDivider.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        topDivider.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
+        
+        bottomDivider.topAnchor.constraint(equalTo: buttonBar.bottomAnchor).isActive = true
+        bottomDivider.widthAnchor.constraint(equalTo: weekControl.widthAnchor).isActive = true
+        bottomDivider.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        bottomDivider.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
+    }
+    
+    @objc func changeWeek(){
+        let selectedWeek = weekControl.selectedSegmentIndex
+        collectionView.scrollToItem(at: IndexPath(item: selectedWeek, section: 0), at: .centeredHorizontally, animated: true)
+        
+        if selectedWeek == 2 {
+            buttonBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.buttonBar.frame.origin.x = (self.weekControl.frame.width / CGFloat(self.weekControl.numberOfSegments)) * CGFloat(selectedWeek)
+            print(self.buttonBar.frame.origin.x)
         }
     }
     
@@ -146,162 +210,4 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         return CGSize(width: collectionView.frame.size.width, height: collectionView.frame.size.height)
     }
     
-    //Set up PickerViews and their arrays
-    
-    let weekdayChoices = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-    let weekdayView = UIPickerView(frame: CGRect(x: 0, y: 20, width: 250, height: 100))
-    var weekday = String()
-    
-    let weekChoices = ["This Week","Next Week"]
-    let weekView = UIPickerView(frame: CGRect(x: 0, y: 150, width: 250, height: 100))
-    var week = String()
-    
-    //Populate PickerView
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if (pickerView == weekdayView) {
-            return weekdayChoices.count
-        }
-        else if (pickerView == weekView) {
-            return weekChoices.count
-        }
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if (pickerView == weekdayView) {
-            return weekdayChoices[row]
-        }
-        else if (pickerView == weekView) {
-            return weekChoices[row]
-        }
-        return nil
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if (pickerView == weekdayView) {
-            if row == 0 {
-                weekday = "Monday"
-            } else if row == 1 {
-                weekday = "Tuesday"
-            } else if row == 2 {
-                weekday = "Wednesday"
-            } else if row == 3 {
-                weekday = "Thursday"
-            } else if row == 4 {
-                weekday = "Friday"
-            } else if row == 5 {
-                weekday = "Saturday"
-            } else if row == 6 {
-                weekday = "Sunday"
-            }
-        }
-        else if (pickerView == weekView) {
-            if row == 0 {
-                week = "this-week"
-            } else if row == 1 {
-                week = "next-week"
-            }
-        }
-    }
-    
-    @objc func handleNewTask() {
-        
-        let vc = UIViewController()
-        vc.preferredContentSize = CGSize(width: 250,height: 270)
-        
-        let weekdayLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: 20))
-        weekdayLabel.textAlignment = .center
-        weekdayLabel.font = UIFont.boldSystemFont(ofSize: weekdayLabel.font.pointSize)
-        weekdayLabel.text = "Select Day"
-        vc.view.addSubview(weekdayLabel)
-        vc.view.addSubview(weekdayView)
-        
-        let weekLabel = UILabel(frame: CGRect(x: 0, y: 130, width: 250, height: 20))
-        weekLabel.textAlignment = .center
-        weekLabel.font = UIFont.boldSystemFont(ofSize: weekLabel.font.pointSize)
-        weekLabel.text = "Select Week"
-        vc.view.addSubview(weekLabel)
-        vc.view.addSubview(weekView)
-        
-        setDefaultValue(item: weekTitle, inComponent: 0)
-        
-        let alert = UIAlertController(title: "Add New Task", message: "", preferredStyle: UIAlertController.Style.alert)
-        
-        alert.setValue(vc, forKey: "contentViewController")
-        let okAction=UIAlertAction(title: "Add Task", style: .default, handler: { (UIAlertAction) in
-            
-            guard let taskTextField = alert.textFields?[0],
-                let task = taskTextField.text else { return }
-            
-            var key = task
-            key = key.replacingOccurrences(of: ".", with: " ")
-            key = key.replacingOccurrences(of: "#", with: " ")
-            key = key.replacingOccurrences(of: "$", with: " ")
-            key = key.replacingOccurrences(of: "[", with: " ")
-            key = key.replacingOccurrences(of: "]", with: " ")
-            key = key.replacingOccurrences(of: "/", with: " ")
-            if key.last == " "{
-                key.removeLast()
-            }
-            
-            let newItem = ToDoItem(name: task,
-                                   addedByUser: Auth.auth().currentUser!.uid,
-                                   day: self.weekday,
-                                   completed: false)
-            
-            let itemRef = self.ref.child(self.week).child(self.weekday).child(key)
-            
-            itemRef.setValue(newItem.toAnyObject())
-            
-            print("You selected " + self.weekday)
-            print("You selected " + self.week)
-            
-        })
-        let cancelAction=UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        
-        okAction.isEnabled = false
-        alert.addAction(cancelAction)
-        alert.addAction(okAction)
-        
-        var taskTextField = UITextField()
-        alert.addTextField { (field) in
-            taskTextField = field
-            taskTextField.placeholder = "Add a New Task"
-            
-            // Observe the UITextFieldTextDidChange notification to be notified in the below block when text is changed
-            NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: taskTextField, queue: OperationQueue.main, using:
-                {_ in
-                    // Being in this block means that something fired the UITextFieldTextDidChange notification.
-                    
-                    // Access the taskTextField and get the count of its non whitespace characters
-                    let textCount = taskTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
-                    let textIsNotEmpty = textCount > 0
-                    
-                    // If the text contains non whitespace characters, enable the OK Button
-                    okAction.isEnabled = textIsNotEmpty
-                    
-            })
-            
-        }
-        
-        present(alert, animated: true)
-        
-    }
-    
-    func setDefaultValue(item: String, inComponent: Int){
-     if let indexPosition = weekChoices.firstIndex(of: item){
-       weekView.selectRow(indexPosition, inComponent: inComponent, animated: true)
-        if indexPosition == 0 {
-            week = "this-week"
-        } else if indexPosition == 1 {
-            week = "next-week"
-        }
-     }
-    }
 }

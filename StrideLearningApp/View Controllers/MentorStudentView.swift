@@ -200,13 +200,16 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let uid: String
+        let name: String
         if(searchActive){
             uid = filtered[indexPath.row].ID!.description
+            name = filtered[indexPath.row].name!.description
         } else {
             uid = students[indexPath.row].ID!.description
+            name = students[indexPath.row].name!.description
         }
         tableView.deselectRow(at: indexPath, animated: true)
-        showPlannerControllerForUser(uid)
+        showPlannerControllerForUser(uid, name: name)
     }
     
     //MARK: SearchResultsController
@@ -294,9 +297,11 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         }
     }
     
-    func showPlannerControllerForUser(_ uid: String) {
+    func showPlannerControllerForUser(_ uid: String, name: String) {
         ref.child("student").setValue(uid)
         let collectionController = MentorCollectionView()
+        collectionController.studentName = name
+        collectionController.studentUid = uid
         searchController.searchBar.text = ""
         if(searchActive) {
             searchController.dismiss(animated: false) {

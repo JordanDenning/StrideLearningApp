@@ -15,8 +15,10 @@
 		9D5F205F242551500097B279 /* ScreenSizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F205E242551500097B279 /* ScreenSizeExtension.swift */; };
 		9D976D97246DE611007FAE91 /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D976D96246DE611007FAE91 /* PushNotificationSender.swift */; };
 		9D976D99246F0DC1007FAE91 /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */; };
+		9DAFE53C247DA491001EEB6F /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DAFE53B247DA491001EEB6F /* TaskCell.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
 		9DC89BAE2481A1FC00EA12EB /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */; };
+		9DC89BAA2480690400EA12EB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BA92480690400EA12EB /* ImageExtension.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
 		9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */; };
@@ -53,8 +55,10 @@
 		9D976D8B246AE76A007FAE91 /* Stride.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stride.entitlements; sourceTree = "<group>"; };
 		9D976D96246DE611007FAE91 /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
 		9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
+		9DAFE53B247DA491001EEB6F /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
+		9DC89BA92480690400EA12EB /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
 		9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 				9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */,
 				9D5F205E242551500097B279 /* ScreenSizeExtension.swift */,
 				9D976D96246DE611007FAE91 /* PushNotificationSender.swift */,
+				9DC89BA92480690400EA12EB /* ImageExtension.swift */,
 				9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */,
 			);
 			path = Helpers;
@@ -171,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				9DC8EB6D23D6C64200DD3EB7 /* UserCell.swift */,
+				9DAFE53B247DA491001EEB6F /* TaskCell.swift */,
 				EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */,
 				9D4C420D23FAE13700116B9E /* CollectionView.swift */,
 				9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */,
@@ -331,10 +337,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DE8B647241446B90010872F /* RegisterType.swift in Sources */,
+				9DC89BAA2480690400EA12EB /* ImageExtension.swift in Sources */,
 				9DC8EB6923D67E3C00DD3EB7 /* ChatLogController.swift in Sources */,
 				9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */,
 				EE9BE37123F1045A0011130B /* ToDoItem.swift in Sources */,
 				9DF1C9742411990000CFBC67 /* Student.swift in Sources */,
+				9DAFE53C247DA491001EEB6F /* TaskCell.swift in Sources */,
 				9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */,
 				9DC8EB6B23D6877800DD3EB7 /* Message.swift in Sources */,
 				9D45A19D23F1BE1F00E32150 /* EditPasswordController.swift in Sources */,
