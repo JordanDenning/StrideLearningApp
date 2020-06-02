@@ -12,7 +12,6 @@ import Firebase
 class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     var ref = Database.database().reference().child("to-do-items")
-    var weeks = ["Last Week", "This Week", "Next Week"]
     var studentUid: String?
     var uid: String?
     var user: User?
@@ -26,17 +25,90 @@ class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelega
         layout.minimumLineSpacing = 0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .white
-        cv.isPagingEnabled = true
         cv.translatesAutoresizingMaskIntoConstraints = false
+        cv.isScrollEnabled = false
+        
         return cv
+    }()
+    
+    let weekControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["Last Week", "This Week", "Next Week"])
+        let whiteImage = UIImage(color: .white)
+        segmentedControl.selectedSegmentIndex = 1
+        let screenSize = UIScreen.main.bounds.width
+        segmentedControl.frame.size.width = screenSize
+        segmentedControl.frame.size.height = 45
+        
+        if #available(iOS 13, *) {
+            segmentedControl.setBackgroundImage(whiteImage, for: .normal, barMetrics: .default)
+            segmentedControl.setDividerImage(whiteImage, forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
+            
+            // selected option color
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 16, g:153, b:255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .selected)
+            
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 50, g: 50, b:50), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .normal)
+            
+            segmentedControl.selectedSegmentTintColor = .clear
+        } else {
+            // selected option color
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 16, g: 153, b:255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .selected)
+            
+            // color of other options
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20)], for: .normal)
+            
+            segmentedControl.tintColor = .white
+        }
+        
+        if UIScreen.main.sizeType == .iPhone5 {
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 16, g:153, b:255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], for: .selected)
+            
+            segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(r: 50, g: 50, b:50), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], for: .normal)
+        }
+                
+        segmentedControl.addTarget(self, action: #selector(changeWeek), for: .valueChanged)
+        
+        
+        return segmentedControl
+    }()
+    
+    let buttonBar: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor(r: 16, g:153, b:255)
+        v.layer.cornerRadius = 2
+        
+        return v
+    }()
+    
+    let topDivider: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor(r: 200, g: 200, b: 200)
+        v.layer.cornerRadius = 2
+        
+        return v
+    }()
+    
+    let bottomDivider: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor(r: 200, g: 200, b: 200)
+        v.layer.cornerRadius = 2
+        
+        return v
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         addSubview(collectionView)
+        addSubview(weekControl)
+        addSubview(buttonBar)
+        addSubview(topDivider)
+        addSubview(bottomDivider)
         
         setupCollectionConstraints()
+        setupWeekControlConstraints()
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -47,37 +119,38 @@ class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelega
         super.init(coder: aDecoder)
     }
 
-
-        
     func setupCollectionConstraints() {
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: weekControl.bottomAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+     }
+    
+    func setupWeekControlConstraints(){
+        weekControl.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        weekControl.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        
+        buttonBar.topAnchor.constraint(equalTo: weekControl.bottomAnchor).isActive = true
+        buttonBar.heightAnchor.constraint(equalToConstant: 5).isActive = true
+        buttonBar.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
+        buttonBar.widthAnchor.constraint(equalTo: weekControl.widthAnchor, multiplier: 1 / CGFloat(weekControl.numberOfSegments)).isActive = true
+        
+        topDivider.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        topDivider.widthAnchor.constraint(equalTo: weekControl.widthAnchor).isActive = true
+        topDivider.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        topDivider.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
+        
+        bottomDivider.topAnchor.constraint(equalTo: buttonBar.bottomAnchor).isActive = true
+        bottomDivider.widthAnchor.constraint(equalTo: weekControl.widthAnchor).isActive = true
+        bottomDivider.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        bottomDivider.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let center = CGPoint(x: scrollView.contentOffset.x + (scrollView.frame.width / 2), y: (scrollView.frame.height / 2))
-        if let ip = collectionView.indexPathForItem(at: center) {
-            let cell = ip.row
-            switch cell {
-            case 0:
-                plannerOverall!.tabBarController?.navigationItem.title = weeks[cell]
-                plannerOverall!.navigationItem.title = weeks[cell]
-                plannerOverall!.weekTitle = weeks[cell]
-            case 1:
-                plannerOverall!.tabBarController?.navigationItem.title = weeks[cell]
-                plannerOverall!.navigationItem.title = weeks[cell]
-                plannerOverall!.weekTitle = weeks[cell]
-            case 2:
-                plannerOverall!.tabBarController?.navigationItem.title = weeks[cell]
-                plannerOverall!.navigationItem.title = weeks[cell]
-                plannerOverall!.weekTitle = weeks[cell]
-            default:
-                plannerOverall!.tabBarController?.navigationItem.title = "Planner"
-                plannerOverall!.navigationItem.title = "Planner"
-                plannerOverall!.weekTitle = "Planner"
-            }
+    @objc func changeWeek(){
+        let selectedWeek = weekControl.selectedSegmentIndex
+        collectionView.scrollToItem(at: IndexPath(item: selectedWeek, section: 0), at: .centeredHorizontally, animated: true)
+        UIView.animate(withDuration: 0.3) {
+            self.buttonBar.frame.origin.x = (self.weekControl.frame.width / CGFloat(self.weekControl.numberOfSegments)) * CGFloat(selectedWeek)
         }
     }
     
