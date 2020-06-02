@@ -41,10 +41,6 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         tableView.delegate = self
         tableView.dataSource = self
         
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        longPressGesture.minimumPressDuration = 0.5
-        self.tableView.addGestureRecognizer(longPressGesture)
-        
         setup()
         configureSearchController()
         fetchStudents(ref)
@@ -93,51 +89,6 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         tableView.tableHeaderView = searchController.searchBar
     }
     
-    @objc func handleLongPress(longPressGesture: UILongPressGestureRecognizer) {
-        let p = longPressGesture.location(in: self.tableView)
-        let indexPath = self.tableView.indexPathForRow(at: p)
-        if indexPath == nil {
-            print("Long press on table view, not row.")
-        } else if longPressGesture.state == UIGestureRecognizer.State.began {
-            let alert=UIAlertController(title: "Remove Student", message: "Are you sure you want to remove this student?", preferredStyle: UIAlertController.Style.alert)
-            //create a UIAlertAction object for the button
-            let okAction=UIAlertAction(title: "Remove", style: .destructive, handler: {action in
-                var student: Student
-                if (self.searchActive){
-                    student = self.filtered[indexPath!.row]
-                    self.searchController.searchBar.text = ""
-                    self.searchController.dismiss(animated: true, completion: nil)
-                } else{
-                   student = self.students[indexPath!.row]
-                }
-                guard let uid = Auth.auth().currentUser?.uid else{
-                    return
-                }
-                if uid == student.mentorId {
-                    let vals = ["mentorId": "", "mentorName": "No Current Mentor"]
-                    self.userRef.child(student.ID!).child("mentor").setValue(vals)
-                }
-                student.ref?.removeValue()
-               
-                if self.tableView.cellForRow(at: indexPath!)?.accessoryType == UITableViewCell.AccessoryType.checkmark
-                {
-                    self.tableView.cellForRow(at: indexPath!)?.accessoryType = UITableViewCell.AccessoryType.none
-                }
-                self.tableView.reloadData()
-            })
-            let cancelAction=UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {action in
-                
-                //dismiss alert
-            })
-           
-            alert.addAction(cancelAction)
-            alert.addAction(okAction)
-            plannerOverall!.present(alert, animated: true, completion: nil)
-            return
-            
-        }
-    }
-    
     //MARK: TableView
     
     //number of sections
@@ -165,7 +116,6 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
             noStudentsLabel.isHidden = false
             tableView.backgroundView = noStudentsLabel
             tableView.separatorStyle = .none
-            print("empty list")
         }
             
         return 0
@@ -211,6 +161,31 @@ class MentorStudentView: UIView, UITableViewDataSource, UITableViewDelegate, UIS
         tableView.deselectRow(at: indexPath, animated: true)
         showPlannerControllerForUser(uid, name: name)
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            var student: Student
+             if (self.searchActive){
+                 student = self.filtered[indexPath.row]
+                 self.searchController.searchBar.text = ""
+                 self.searchController.dismiss(animated: true, completion: nil)
+             } else{
+                student = self.students[indexPath.row]
+             }
+             guard let uid = Auth.auth().currentUser?.uid else{
+                 return
+             }
+             if uid == student.mentorId {
+                 let vals = ["mentorId": "", "mentorName": "No Current Mentor"]
+                 self.userRef.child(student.ID!).child("mentor").setValue(vals)
+             }
+             student.ref?.removeValue()
+            
+            }
+            self.tableView.reloadData()
+        }
+    
+
     
     //MARK: SearchResultsController
     
