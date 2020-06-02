@@ -263,11 +263,9 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     }
     
     func heightOfTextView(height: CGFloat) {
-
-           textViewHeight = height + 8
-           self.tableView.beginUpdates()
-           self.tableView.endUpdates()
-        
+       textViewHeight = height + 8
+       self.tableView.beginUpdates()
+       self.tableView.endUpdates()
     }
     
     
@@ -352,7 +350,8 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                 let okAction=UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: {action in
 
                 })
-                                alert.addAction(okAction)
+                
+                alert.addAction(okAction)
                 self.window?.rootViewController?.present(alert, animated: true, completion: nil)
                 return
                 
