@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Firebase
+import SearchTextField
 
 class EditProfileController: UIViewController, UITextFieldDelegate {
     
@@ -40,8 +41,8 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let firstNameTextField: UITextField = {
-        let tv = UITextField()
+    let firstNameTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -65,8 +66,8 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let lastNameTextField: UITextField = {
-        let tv = UITextField()
+    let lastNameTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -89,11 +90,141 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let gradeTextField: UITextField = {
-        let tv = UITextField()
-        tv.translatesAutoresizingMaskIntoConstraints = false
+    let grade6: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "6th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+
+        return button
+    }()
+
+    let grade7: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "7th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
         
-        return tv
+        return button
+    }()
+    
+    let grade8: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "8th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 2
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade9: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "9th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeGrade(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade10: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "10th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade11: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "11th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 2
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let grade12: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "12th"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 3
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let freshman: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Freshman"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let sophomore: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Sophomore"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let junior: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Junior"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 2
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let senior: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Senior"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 3
+        button.button.addTarget(self, action: #selector(changeGrade), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    let middleButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
+    }()
+    
+    let highButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
+    }()
+    
+    let collegeButtons: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
+        return view
     }()
     
     let gradeSeparatorView: UIView = {
@@ -113,8 +244,8 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let roleTextField: UITextField = {
-        let tv = UITextField()
+    let roleTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -136,8 +267,23 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let schoolTextField: UITextField = {
-        let tv = UITextField()
+    let middleSchoolTextField: SearchTextField = {
+        let tv = SearchTextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        
+        return tv
+    }()
+    
+    let highSchoolTextField: SearchTextField = {
+        let tv = SearchTextField()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+
+        
+        return tv
+    }()
+    
+    let collegeTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -160,8 +306,8 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let emailTextField: UITextField = {
-        let tv = UITextField()
+    let emailTextField: SearchTextField = {
+        let tv = SearchTextField()
         tv.translatesAutoresizingMaskIntoConstraints = false
         
         return tv
@@ -186,6 +332,35 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
+    }()
+    
+    lazy var schoolSegment: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Middle School", "High School", "College"])
+        sc.translatesAutoresizingMaskIntoConstraints = false
+            sc.tintColor = UIColor(r: 16, g: 153, b: 255)
+            sc.selectedSegmentIndex = 0
+            sc.layer.cornerRadius = 10
+        
+            
+            if #available(iOS 13, *) {
+                // selected option color
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+                
+                sc.selectedSegmentTintColor = UIColor(r: 16, g: 153, b: 255)
+            } else {
+                // selected option color
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .selected)
+                
+                // color of other options
+                sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+            }
+            
+
+            // color of other options
+            sc.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12)], for: .normal)
+        
+        sc.addTarget(self, action: #selector(changeSchool), for: .valueChanged)
+        return sc
     }()
     
     
@@ -257,7 +432,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
     func setupStudentEditInfo(_ user: User) {
         studentInputsContainerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
         studentInputsContainerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        studentInputsContainerView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        studentInputsContainerView.heightAnchor.constraint(equalToConstant: 400).isActive = true
         studentInputsContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -10).isActive = true
         
         studentInputsContainerView.addSubview(firstNameLabel)
@@ -266,11 +441,16 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         studentInputsContainerView.addSubview(lastNameLabel)
         studentInputsContainerView.addSubview(lastNameTextField)
         studentInputsContainerView.addSubview(lastNameSeparatorView)
+        studentInputsContainerView.addSubview(schoolSegment)
         studentInputsContainerView.addSubview(gradeLabel)
-        studentInputsContainerView.addSubview(gradeTextField)
+        studentInputsContainerView.addSubview(middleButtons)
+        studentInputsContainerView.addSubview(highButtons)
+        studentInputsContainerView.addSubview(collegeButtons)
         studentInputsContainerView.addSubview(gradeSeparatorView)
         studentInputsContainerView.addSubview(schoolLabel)
-        studentInputsContainerView.addSubview(schoolTextField)
+        studentInputsContainerView.addSubview(middleSchoolTextField)
+        studentInputsContainerView.addSubview(highSchoolTextField)
+        studentInputsContainerView.addSubview(collegeTextField)
         studentInputsContainerView.addSubview(schoolSeparatorView)
         studentInputsContainerView.addSubview(emailLabel)
         studentInputsContainerView.addSubview(emailTextField)
@@ -282,12 +462,23 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         lastNameTextField.text = user.lastName
         lastNameTextField.font = UIFont.systemFont(ofSize: 14)
         self.lastNameTextField.delegate = self
-        gradeTextField.text = user.grade
-        gradeTextField.font = UIFont.systemFont(ofSize: 14)
-        self.gradeTextField.delegate = self
-        schoolTextField.text = user.school
-        schoolTextField.font = UIFont.systemFont(ofSize: 14)
-        self.schoolTextField.delegate = self
+
+        if let grade = user.grade{
+            setupButtonsAndSegment(grade: grade)
+        }
+
+        middleSchoolTextField.text = user.school
+        highSchoolTextField.text = user.school
+        collegeTextField.text = user.school
+        
+        middleSchoolTextField.font = UIFont.systemFont(ofSize: 14)
+        highSchoolTextField.font = UIFont.systemFont(ofSize: 14)
+        collegeTextField.font = UIFont.systemFont(ofSize: 14)
+
+        middleSchoolTextField.delegate = self
+        highSchoolTextField.delegate = self
+        collegeTextField.delegate = self
+        
         emailTextField.text = user.email
         emailTextField.font = UIFont.systemFont(ofSize: 14)
         self.emailTextField.delegate = self
@@ -323,40 +514,12 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         lastNameSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        //Grade
-        gradeLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
-        gradeLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
-        
-        gradeTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
-        gradeTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
-        gradeTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
-        //Grade Separator
-        gradeSeparatorView.topAnchor.constraint(equalTo: gradeLabel.bottomAnchor, constant: 12).isActive = true
-        gradeSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
-        gradeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        gradeSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
-        //School
-        schoolLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
-        schoolLabel.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
-        
-        schoolTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
-        schoolTextField.topAnchor.constraint(equalTo: gradeSeparatorView.bottomAnchor, constant: 30).isActive = true
-        schoolTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
-        //School Separator
-        schoolSeparatorView.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 12).isActive = true
-        schoolSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
-        schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        schoolSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
         //Email
         emailLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         emailTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
-        emailTextField.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         emailTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email Separator
@@ -364,6 +527,55 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         emailSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        //School Segment
+        schoolSegment.topAnchor.constraint(equalTo: emailSeparatorView.bottomAnchor, constant: 30).isActive = true
+        schoolSegment.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        
+        //Grade
+        gradeLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
+        gradeLabel.topAnchor.constraint(equalTo: schoolSegment.bottomAnchor, constant: 30).isActive = true
+        
+        middleButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 45).isActive = true
+        middleButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
+        middleButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        middleButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        highButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 45).isActive = true
+        highButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
+        highButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        highButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        collegeButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 45).isActive = true
+        collegeButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
+        collegeButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        collegeButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        //School
+        schoolLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
+        schoolLabel.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 8).isActive = true
+        
+        middleSchoolTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
+        middleSchoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 8).isActive = true
+        middleSchoolTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        highSchoolTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
+        highSchoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 8).isActive = true
+        highSchoolTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        collegeTextField.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor).isActive = true
+        collegeTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor, constant: 8).isActive = true
+        collegeTextField.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
+        
+        middleSchoolTextField.isHidden = false
+        highSchoolTextField.isHidden = true
+        collegeTextField.isHidden = true
+        
+        //School Separator
+        schoolSeparatorView.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 12).isActive = true
+        schoolSeparatorView.rightAnchor.constraint(equalTo: studentInputsContainerView.rightAnchor, constant: -12).isActive = true
+        schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        schoolSeparatorView.widthAnchor.constraint(equalTo: studentInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
     }
     
@@ -457,6 +669,58 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
+    }
+    
+    func setupButtonViews() {
+        //middle school
+        middleButtons.addSubview(grade6)
+        middleButtons.addSubview(grade7)
+        middleButtons.addSubview(grade8)
+        
+        grade6.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+        grade6.leadingAnchor.constraint(equalTo: middleButtons.leadingAnchor).isActive = true
+        
+        grade7.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+        grade7.leftAnchor.constraint(equalTo: grade6.rightAnchor).isActive = true
+        
+        grade8.topAnchor.constraint(equalTo: middleButtons.topAnchor).isActive = true
+        grade8.leftAnchor.constraint(equalTo: grade7.rightAnchor).isActive = true
+        
+        //high school
+        highButtons.addSubview(grade9)
+        highButtons.addSubview(grade10)
+        highButtons.addSubview(grade11)
+        highButtons.addSubview(grade12)
+        
+        grade9.topAnchor.constraint(equalTo: highButtons.topAnchor).isActive = true
+        grade9.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        
+        grade10.topAnchor.constraint(equalTo: highButtons.topAnchor).isActive = true
+        grade10.leftAnchor.constraint(equalTo: grade9.rightAnchor).isActive = true
+        
+        grade11.topAnchor.constraint(equalTo: grade10.bottomAnchor, constant: 12).isActive = true
+        grade11.leadingAnchor.constraint(equalTo: highButtons.leadingAnchor).isActive = true
+        
+        grade12.topAnchor.constraint(equalTo: grade10.bottomAnchor, constant: 12).isActive = true
+        grade12.leftAnchor.constraint(equalTo: grade11.rightAnchor).isActive = true
+        
+        //college
+        collegeButtons.addSubview(freshman)
+        collegeButtons.addSubview(sophomore)
+        collegeButtons.addSubview(junior)
+        collegeButtons.addSubview(senior)
+        
+        freshman.topAnchor.constraint(equalTo: collegeButtons.topAnchor).isActive = true
+        freshman.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        
+        sophomore.topAnchor.constraint(equalTo: collegeButtons.topAnchor).isActive = true
+        sophomore.leftAnchor.constraint(equalTo: freshman.rightAnchor, constant: 30).isActive = true
+        
+        junior.topAnchor.constraint(equalTo: freshman.bottomAnchor, constant: 12).isActive = true
+        junior.leadingAnchor.constraint(equalTo: collegeButtons.leadingAnchor).isActive = true
+        
+        senior.topAnchor.constraint(equalTo: freshman.bottomAnchor, constant: 12).isActive = true
+        senior.leftAnchor.constraint(equalTo: junior.rightAnchor, constant: 30).isActive = true
     }
     
     @objc func handleCancel() {
