@@ -293,6 +293,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message: Message
+        let cell = tableView.cellForRow(at: indexPath) as! UserCell
         if(searchActive){
             message = filtered[indexPath.row]
         } else {
@@ -300,7 +301,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
         
         let chatroomId = message.chatroomId!
-        updateNotifications(chatroomId)
+        updateNotifications(chatroomId, cell: cell)
         
         guard let chatPartnerId = message.chatPartnerId() else {
             return
@@ -323,6 +324,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             var message: Message
+            let cell = tableView.cellForRow(at: indexPath) as! UserCell
             guard let uid = Auth.auth().currentUser?.uid else {
                        return
                    }
@@ -333,7 +335,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 self.filtered.remove(at: indexPath.row)
                 self.messagesDictionary.removeValue(forKey: chatPartnerId)
                 Database.database().reference().child("user-messages").child(uid).child(chatroomId).child("seeMessages").setValue("no")
-                self.updateNotifications(chatroomId)
+                self.updateNotifications(chatroomId, cell: cell)
                 self.searchController.searchBar.text = ""
                 self.searchController.dismiss(animated: true, completion: nil)
             } else{
@@ -343,14 +345,14 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 self.messages.remove(at: indexPath.row)
                 self.messagesDictionary.removeValue(forKey: chatPartnerId)
                 Database.database().reference().child("user-messages").child(uid).child(chatroomId).child("seeMessages").setValue("no")
-                self.updateNotifications(chatroomId)
+                self.updateNotifications(chatroomId, cell: cell)
             }
 
             self.tableView.reloadData()
         }
     }
     
-    func updateNotifications(_ chatroomId: String){
+    func updateNotifications(_ chatroomId: String, cell: UserCell){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
@@ -373,6 +375,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 if let error = error {
                     print("Data could not be saved: \(error).")
                 } else {
+                    cell.newMessageDot.isHidden = true
                     print("Data saved successfully!")
                 }
             }
