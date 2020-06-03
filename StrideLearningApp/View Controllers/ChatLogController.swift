@@ -81,7 +81,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         super.viewDidLoad()
         
         collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
-        //        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
@@ -280,6 +279,27 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         }
         
+        if let seconds = message.timestamp?.doubleValue {
+            let timestampDate = Date(timeIntervalSince1970: seconds)
+            let date = Date()
+            
+            let dateFormatter = DateFormatter()
+            if Calendar.current.isDateInYesterday(timestampDate) {
+                cell.timeLabel.text = "Yesterday"
+            } else {
+                if Calendar.current.isDateInToday(timestampDate){
+                    dateFormatter.dateFormat = "hh:mm a"
+                } else if Calendar.current.isDate(timestampDate, equalTo: date, toGranularity: .weekOfYear) {
+                    dateFormatter.dateFormat = "EEEE"
+                } else {
+                    dateFormatter.dateFormat = "M/d/yy"
+                }
+                
+                cell.timeLabel.text = dateFormatter.string(from: timestampDate)
+            }
+        }
+
+        
         if message.fromId == Auth.auth().currentUser?.uid {
             //outgoing blue
             cell.bubbleView.backgroundColor = UIColor(r: 16, g: 153, b: 255)
@@ -289,6 +309,9 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
             
+            cell.timeLabelRightAnchor?.isActive = true
+            cell.timeLabelLeftAnchor?.isActive = false
+            
         } else {
             //incoming gray
             cell.bubbleView.backgroundColor = UIColor(r: 240, g: 240, b: 240)
@@ -297,6 +320,9 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
             
             cell.bubbleViewRightAnchor?.isActive = false
             cell.bubbleViewLeftAnchor?.isActive = true
+            
+            cell.timeLabelRightAnchor?.isActive = false
+            cell.timeLabelLeftAnchor?.isActive = true
         }
     }
     
@@ -310,7 +336,7 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         
         //get estimated height somehow????
         if let text = messages[indexPath.item].text {
-            height = estimateFrameForText(text).height + 18
+            height = estimateFrameForText(text).height + 30
         }
         
         let width = UIScreen.main.bounds.width

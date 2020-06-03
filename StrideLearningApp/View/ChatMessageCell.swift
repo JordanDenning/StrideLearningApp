@@ -43,9 +43,21 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     
+    let timeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Time"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = UIColor(r: 100, g: 100, b: 100)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     var bubbleWidthAnchor: NSLayoutConstraint?
     var bubbleViewRightAnchor: NSLayoutConstraint?
     var bubbleViewLeftAnchor: NSLayoutConstraint?
+    var timeLabelRightAnchor: NSLayoutConstraint?
+    var timeLabelLeftAnchor: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,6 +65,7 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(bubbleView)
         addSubview(textView)
         addSubview(profileImageView)
+        addSubview(timeLabel)
         
         //x,y,w,h
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
@@ -69,7 +82,7 @@ class ChatMessageCell: UICollectionViewCell {
         bubbleWidthAnchor = bubbleView.widthAnchor.constraint(equalToConstant: 200)
         bubbleWidthAnchor?.isActive = true
         
-        bubbleView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        bubbleView.heightAnchor.constraint(equalTo: self.heightAnchor, constant: -12).isActive = true
         
         //ios 9 constraints
         //x,y,w,h
@@ -77,8 +90,14 @@ class ChatMessageCell: UICollectionViewCell {
         textView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         textView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
         
+        textView.heightAnchor.constraint(equalTo: self.heightAnchor, constant: -12).isActive = true
         
-        textView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        //time label
+        timeLabel.topAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: 2).isActive = true
+        timeLabelRightAnchor = timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10)
+        timeLabelRightAnchor?.isActive = true
+        timeLabelLeftAnchor = timeLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 10)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
