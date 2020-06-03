@@ -350,11 +350,35 @@ class LoginController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 else {
-                    self.messagesController?.observeUserMessages()
-                    self.profileController?.fetchUserAndSetupProfile()
-                    self.plannerController?.checkStudentOrMentor()
-                    
-                    self.dismiss(animated: true, completion: nil)
+                    ref.child("type").observeSingleEvent(of: .value, with: {(snapshot) in
+                         if snapshot.value as? String == nil {
+                            let alertVC = UIAlertController(title: "Missing Info", message: "Looks like you have some missing information. Let's fill this out now!", preferredStyle: UIAlertController.Style.alert)
+                                
+                            let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default) {(_) in
+                                let registerType = RegisterType()
+                                registerType.modalPresentationStyle = .fullScreen
+                                self.present(registerType, animated: true, completion: nil)
+                                registerType.loginController = self
+                                registerType.profileController = self.profileController
+                                registerType.plannerController = self.plannerController
+                                registerType.email = email
+                                registerType.password = password
+                            }
+                            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+                            
+                            alertVC.addAction(okayAction)
+                            alertVC.addAction(cancelAction)
+                            self.present(alertVC, animated: true, completion: nil)
+                         } else {
+                             self.messagesController?.observeUserMessages()
+                             self.profileController?.fetchUserAndSetupProfile()
+                             self.plannerController?.checkStudentOrMentor()
+
+                             self.dismiss(animated: true, completion: nil)
+                         }
+                     }, withCancel: nil)
+                     
+
                 }
             }
             

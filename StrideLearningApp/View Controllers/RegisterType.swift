@@ -460,6 +460,12 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         fillSchoolArrays()
         setupScrollView()
         
+        do {
+            try Auth.auth().signOut()
+        } catch let logoutError {
+            print(logoutError)
+        }
+        
         
         mentorView.isHidden = true
         
