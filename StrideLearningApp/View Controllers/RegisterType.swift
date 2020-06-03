@@ -29,6 +29,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     var highGrade = "No Grade Selected"
     var collegeGrade = "No Grade Selected"
     var schoolType = "Middle Schools"
+    var selectedRole = "No Role Selected"
     
     let scrollView: UIScrollView = {
         var sv = UIScrollView()
@@ -104,17 +105,32 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let roleTextField: UITextField = {
-        let tv = UITextField()
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        
-        return tv
+    let mentorButton: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Mentor"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeRole(_:)), for: .touchUpInside)
+
+        return button
     }()
     
-    let roleSeparatorView: UIView = {
+    let otherStaffButton: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Other Staff"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeRole(_:)), for: .touchUpInside)
+
+        return button
+    }()
+    
+    let roleButtons: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
         return view
     }()
     
@@ -544,6 +560,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         setupStudentView()
         setupMentorView()
         setupButtonViews()
+        setupRoleButtons()
     
     }
     
@@ -588,17 +605,17 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         gradeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
         gradeLabel.topAnchor.constraint(equalTo: schoolSegment.bottomAnchor, constant: 20).isActive = true
         
-        middleButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
+        middleButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 40).isActive = true
         middleButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
         middleButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
         middleButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
-        highButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
+        highButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 40).isActive = true
         highButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
         highButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
         highButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
-        collegeButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 16).isActive = true
+        collegeButtons.leftAnchor.constraint(equalTo: gradeLabel.rightAnchor, constant: 40).isActive = true
         collegeButtons.topAnchor.constraint(equalTo: gradeLabel.topAnchor).isActive = true
         collegeButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
         collegeButtons.heightAnchor.constraint(equalToConstant: 80).isActive = true
@@ -701,6 +718,17 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         senior.leftAnchor.constraint(equalTo: junior.rightAnchor, constant: 30).isActive = true
     }
     
+    func setupRoleButtons(){
+        roleButtons.addSubview(mentorButton)
+        roleButtons.addSubview(otherStaffButton)
+        
+        mentorButton.topAnchor.constraint(equalTo: roleButtons.topAnchor).isActive = true
+        mentorButton.leadingAnchor.constraint(equalTo: roleButtons.leadingAnchor).isActive = true
+        
+        otherStaffButton.topAnchor.constraint(equalTo: roleButtons.topAnchor).isActive = true
+        otherStaffButton.leftAnchor.constraint(equalTo: mentorButton.rightAnchor, constant: 15).isActive = true
+    }
+    
     func setupMentorView(){
         //mentorView
         mentorView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
@@ -710,13 +738,11 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         mentorView.addSubview(mentorLabel)
         mentorView.addSubview(roleLabel)
-        mentorView.addSubview(roleTextField)
-        mentorView.addSubview(roleSeparatorView)
+        mentorView.addSubview(roleButtons)
         mentorView.addSubview(codeLabel)
         mentorView.addSubview(codeTextField)
         mentorView.addSubview(codeSeparatorView)
         
-        roleTextField.delegate = self
         codeTextField.delegate = self
 
         
@@ -729,22 +755,17 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         roleLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 8).isActive = true
         roleLabel.topAnchor.constraint(equalTo: mentorLabel.bottomAnchor, constant: 40).isActive = true
         
-        roleTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
-        roleTextField.topAnchor.constraint(equalTo: roleLabel.topAnchor).isActive = true
-        roleTextField.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
-        
-        //role Separator
-        roleSeparatorView.topAnchor.constraint(equalTo: roleLabel.bottomAnchor, constant: 12).isActive = true
-        roleSeparatorView.rightAnchor.constraint(equalTo: mentorView.rightAnchor, constant: -12).isActive = true
-        roleSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        roleSeparatorView.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
+        roleButtons.leftAnchor.constraint(equalTo: roleLabel.rightAnchor, constant: 40).isActive = true
+        roleButtons.topAnchor.constraint(equalTo: roleLabel.topAnchor).isActive = true
+        roleButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        roleButtons.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
         //Code
         codeLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 8).isActive = true
-        codeLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
+        codeLabel.topAnchor.constraint(equalTo: roleButtons.bottomAnchor, constant: 30).isActive = true
         
         codeTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
-        codeTextField.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
+        codeTextField.topAnchor.constraint(equalTo: roleButtons.bottomAnchor, constant: 30).isActive = true
         codeTextField.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Code Separator
@@ -930,15 +951,35 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             collegeButtons.isHidden = true
         }
     }
+    
+    @objc func changeRole(_ sender: UIButton) {
+        let role = sender.tag
+        let selected = UIImage(named: "done4")
+        let notSelected = UIImage(named: "notDone")
+        switch role {
+        case 0:
+            mentorButton.button.setBackgroundImage(selected, for: .normal)
+            otherStaffButton.button.setBackgroundImage(notSelected, for: .normal)
+            selectedRole = "Mentor"
+        case 1:
+            mentorButton.button.setBackgroundImage(notSelected, for: .normal)
+            otherStaffButton.button.setBackgroundImage(selected, for: .normal)
+            selectedRole = "Other Staff"
+        default:
+            mentorButton.button.setBackgroundImage(notSelected, for: .normal)
+            otherStaffButton.button.setBackgroundImage(notSelected, for: .normal)
+            selectedRole = "No Role Selected"
+        }
+        
+    }
 
     
     @objc func loginStarter(){
         if typeSegmentedControl.selectedSegmentIndex == 1 {
             let code = codeTextField.text
-            let role = roleTextField.text
             var accessCode = ""
             
-            if (code == "" || role == "") {
+            if (code == "" || selectedRole == "No Role Selected") {
                 let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
                 
                 let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
@@ -1046,10 +1087,6 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 
             }, withCancel: nil)
         }
-        
-
-        
-        
     }
     
     func login(){
@@ -1120,8 +1157,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 
             } else {
                 ref.child("type").setValue("staff")
-                let role = self.roleTextField.text
-                ref.child("role").setValue(role)
+                ref.child("role").setValue(self.selectedRole)
                 ref.child("student").setValue("")
             }
             

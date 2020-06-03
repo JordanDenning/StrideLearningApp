@@ -30,6 +30,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
     var schoolType = "Middle Schools"
     var userType = "student"
     var originalSchool = ""
+    var selectedRole = "No Role Selected"
     
     let scrollView: UIScrollView = {
         var sv = UIScrollView()
@@ -257,17 +258,32 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let roleTextField: SearchTextField = {
-        let tv = SearchTextField()
-        tv.translatesAutoresizingMaskIntoConstraints = false
-        
-        return tv
+    let mentorButton: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Mentor"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 0
+        button.button.addTarget(self, action: #selector(changeRole(_:)), for: .touchUpInside)
+
+        return button
     }()
     
-    let roleSeparatorView: UIView = {
+    let otherStaffButton: RadioButton = {
+        let button = RadioButton()
+        button.label.text = "Other Staff"
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.button.tag = 1
+        button.button.addTarget(self, action: #selector(changeRole(_:)), for: .touchUpInside)
+
+        return button
+    }()
+    
+    let roleButtons: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = true
+        
         return view
     }()
     
@@ -424,6 +440,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
                 self.userType = self.user!.type!
                 if self.userType == "staff" {
                     self.setupMentorEditInfo(self.user!)
+                    self.setupRoleButtons()
                     self.viewContainsMentorView = true
                     if self.viewContainsStudentView == true {
                         self.studentInputsContainerView.removeFromSuperview()
@@ -501,7 +518,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         self.emailTextField.delegate = self
         
         
-        let multiplier = 0.65 as CGFloat
+        let multiplier = 0.70 as CGFloat
 
         //First Name
         firstNameLabel.leftAnchor.constraint(equalTo: studentInputsContainerView.leftAnchor, constant: 8).isActive = true
@@ -609,8 +626,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         mentorInputsContainerView.addSubview(lastNameTextField)
         mentorInputsContainerView.addSubview(lastNameSeparatorView)
         mentorInputsContainerView.addSubview(roleLabel)
-        mentorInputsContainerView.addSubview(roleTextField)
-        mentorInputsContainerView.addSubview(roleSeparatorView)
+        mentorInputsContainerView.addSubview(roleButtons)
         mentorInputsContainerView.addSubview(emailLabel)
         mentorInputsContainerView.addSubview(emailTextField)
         mentorInputsContainerView.addSubview(emailSeparatorView)
@@ -621,14 +637,14 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         lastNameTextField.text = user.lastName
         lastNameTextField.font = UIFont.systemFont(ofSize: 14)
         self.lastNameTextField.delegate = self
-        roleTextField.text = user.role
-        roleTextField.font = UIFont.systemFont(ofSize: 14)
-        self.roleTextField.delegate = self
+        if let role = user.role {
+            setupRole(role: role)
+        }
         emailTextField.text = user.email
         emailTextField.font = UIFont.systemFont(ofSize: 14)
         self.emailTextField.delegate = self
         
-        let multiplier = 0.65 as CGFloat
+        let multiplier = 0.70 as CGFloat
         
         //First Name
         firstNameLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
@@ -658,26 +674,12 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         lastNameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         lastNameSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
-        //Role
-        roleLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
-        roleLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
-        
-        roleTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
-        roleTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
-        roleTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
-        //Role Separator
-        roleSeparatorView.topAnchor.constraint(equalTo: roleLabel.bottomAnchor, constant: 12).isActive = true
-        roleSeparatorView.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor, constant: -12).isActive = true
-        roleSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        roleSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
-        
         //Email
         emailLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         
         emailTextField.rightAnchor.constraint(equalTo: mentorInputsContainerView.rightAnchor).isActive = true
-        emailTextField.topAnchor.constraint(equalTo: roleSeparatorView.bottomAnchor, constant: 30).isActive = true
+        emailTextField.topAnchor.constraint(equalTo: lastNameSeparatorView.bottomAnchor, constant: 30).isActive = true
         emailTextField.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Email Separator
@@ -686,6 +688,14 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: mentorInputsContainerView.widthAnchor, multiplier: multiplier).isActive = true
         
+        //Role
+        roleLabel.leftAnchor.constraint(equalTo: mentorInputsContainerView.leftAnchor, constant: 8).isActive = true
+        roleLabel.topAnchor.constraint(equalTo: emailSeparatorView.bottomAnchor, constant: 30).isActive = true
+        
+        roleButtons.leftAnchor.constraint(equalTo: roleLabel.rightAnchor, constant: 70).isActive = true
+        roleButtons.topAnchor.constraint(equalTo: roleLabel.topAnchor).isActive = true
+        roleButtons.widthAnchor.constraint(equalToConstant: 275).isActive = true
+        roleButtons.heightAnchor.constraint(equalToConstant: 25).isActive = true
     }
     
     func setupButtonViews() {
@@ -740,6 +750,17 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         senior.leftAnchor.constraint(equalTo: junior.rightAnchor, constant: 30).isActive = true
     }
     
+    func setupRoleButtons(){
+        roleButtons.addSubview(mentorButton)
+        roleButtons.addSubview(otherStaffButton)
+        
+        mentorButton.topAnchor.constraint(equalTo: roleButtons.topAnchor).isActive = true
+        mentorButton.leadingAnchor.constraint(equalTo: roleButtons.leadingAnchor).isActive = true
+        
+        otherStaffButton.topAnchor.constraint(equalTo: roleButtons.topAnchor).isActive = true
+        otherStaffButton.leftAnchor.constraint(equalTo: mentorButton.rightAnchor, constant: 15).isActive = true
+    }
+    
     @objc func handleCancel() {
         dismiss(animated: true, completion: nil)
     }
@@ -749,7 +770,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         let lastName = lastNameTextField.text
         let grade = selectedGrade
         var school = ""
-        let role = roleTextField.text
+        let role = selectedRole
         var email = emailTextField.text
         email = email?.lowercased()
         var allFieldsFilled = true
@@ -758,7 +779,7 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         let user = Auth.auth().currentUser
         
         if userType == "staff" {
-            if (firstName == "" || lastName == "" || email == "" || role == "") {
+            if (firstName == "" || lastName == "" || email == "" || role == "No Role Selected") {
                 allFieldsFilled = false
                 let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
                 
@@ -1134,6 +1155,19 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func setupRole(role: String) {
+        let selected = UIImage(named: "done4")
+        selectedRole = role
+        switch role {
+        case "Mentor":
+            mentorButton.button.setBackgroundImage(selected, for: .normal)
+        case "Other Staff":
+            otherStaffButton.button.setBackgroundImage(selected, for: .normal)
+        default:
+            selectedRole = "No Role Selected"
+        }
+    }
+    
     @objc func changeSchool(){
         let school = schoolSegment.selectedSegmentIndex
         switch school {
@@ -1291,4 +1325,26 @@ class EditProfileController: UIViewController, UITextFieldDelegate {
             collegeButtons.isHidden = true
         }
     }
+    
+    @objc func changeRole(_ sender: UIButton) {
+        let role = sender.tag
+        let selected = UIImage(named: "done4")
+        let notSelected = UIImage(named: "notDone")
+        switch role {
+        case 0:
+            mentorButton.button.setBackgroundImage(selected, for: .normal)
+            otherStaffButton.button.setBackgroundImage(notSelected, for: .normal)
+            selectedRole = "Mentor"
+        case 1:
+            mentorButton.button.setBackgroundImage(notSelected, for: .normal)
+            otherStaffButton.button.setBackgroundImage(selected, for: .normal)
+            selectedRole = "Other Staff"
+        default:
+            mentorButton.button.setBackgroundImage(notSelected, for: .normal)
+            otherStaffButton.button.setBackgroundImage(notSelected, for: .normal)
+            selectedRole = "No Role Selected"
+        }
+        
+    }
+
 }
