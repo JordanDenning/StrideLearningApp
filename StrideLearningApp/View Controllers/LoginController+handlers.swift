@@ -116,12 +116,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 })
             }
         })
-//        let registerType = RegisterType()
-//        registerType.modalPresentationStyle = .fullScreen
-//        self.present(registerType, animated: true, completion: nil)
-//        registerType.loginController = self
-//        registerType.profileController = self.profileController
-//        registerType.plannerController = self.plannerController
     }
     
     //password validation
