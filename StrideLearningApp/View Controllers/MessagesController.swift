@@ -215,7 +215,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         // add the spinner view controller
         addChild(child)
-        child.view.frame = view.frame
+        child.view.frame = view.safeAreaLayoutGuide.layoutFrame
         view.addSubview(child.view)
         child.didMove(toParent: self)
         
