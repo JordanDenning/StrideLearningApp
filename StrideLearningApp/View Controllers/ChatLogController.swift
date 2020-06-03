@@ -64,7 +64,6 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
                 DispatchQueue.main.async(execute: {
                     self.collectionView?.reloadData()
                     self.scrollToBottom()
-                    //print("scrolled")
                 })
 
             }, withCancel: nil)
