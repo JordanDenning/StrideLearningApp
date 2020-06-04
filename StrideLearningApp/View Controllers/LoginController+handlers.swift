@@ -34,7 +34,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         //password validation
         let validPassword = self.isValidPassword(password: password)
         if(!validPassword){
-            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must have at least 6 characters, one letter, and one special character.", preferredStyle: UIAlertController.Style.alert)
+            let alert=UIAlertController(title: "Error", message: "Invalid password. Password must be at least 6 characters containing at least one letter, number, and special character.", preferredStyle: UIAlertController.Style.alert)
             //create a UIAlertAction object for the button
             let okAction=UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
                 //dismiss alert
@@ -120,7 +120,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     
     //password validation
     func isValidPassword(password: String) -> Bool {
-        let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{6,}"
+        let passwordRegEx = "^(?=.*[a-z])(?=.*[$@$#!%*?&])(?=.*[0-9])[A-Za-z0-9$@$#!%*?&]{6,}"
         let passwordTest = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
         let result = passwordTest.evaluate(with: password)
         return result

@@ -159,7 +159,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     lazy var passwordReqs: UILabel = {
         let label = UILabel()
-        label.text = "*Passwords must have at least 6 characters, one letter, and one special character."
+        label.text = "*Password must be at least 6 characters containing at least one letter, number, and special character."
         label.textColor = UIColor(r: 150, g: 150, b: 150)
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
