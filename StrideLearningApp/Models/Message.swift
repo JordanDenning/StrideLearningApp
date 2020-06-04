@@ -18,6 +18,9 @@ class Message: NSObject {
     var toId: String?
     var toName: String?
     var chatroomId: String?
+    var imageUrl: String?
+    var imageWidth: NSNumber?
+    var imageHeight: NSNumber?
     
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
@@ -27,6 +30,9 @@ class Message: NSObject {
         self.toName = dictionary["toName"] as? String
         self.timestamp = dictionary["timestamp"] as? NSNumber
         self.chatroomId = dictionary["chatroomId"] as? String
+        self.imageUrl = dictionary["imageUrl"] as? String
+        self.imageWidth = dictionary["imageWidth"] as? NSNumber
+        self.imageHeight = dictionary["imageHeight"] as? NSNumber
     }
     
     func chatPartnerId() -> String? {
