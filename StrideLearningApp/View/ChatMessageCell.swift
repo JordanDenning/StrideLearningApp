@@ -10,6 +10,8 @@ import UIKit
 
 class ChatMessageCell: UICollectionViewCell {
     
+     var chatLogController: ChatLogController?
+    
     let textView: UITextView = {
         let tv = UITextView()
         tv.text = "SAMPLE TEXT FOR NOW"
@@ -53,6 +55,25 @@ class ChatMessageCell: UICollectionViewCell {
         return label
     }()
     
+    lazy var messageImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 16
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomTap)))
+        
+        return imageView
+    }()
+    
+    @objc func handleZoomTap(_ tapGesture: UITapGestureRecognizer) {
+        if let imageView = tapGesture.view as? UIImageView {
+            //PRO Tip: don't perform a lot of custom logic inside of a view class
+            self.chatLogController?.performZoomInForStartingImageView(imageView)
+        }
+    }
+    
     var bubbleWidthAnchor: NSLayoutConstraint?
     var bubbleViewRightAnchor: NSLayoutConstraint?
     var bubbleViewLeftAnchor: NSLayoutConstraint?
@@ -66,6 +87,13 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(textView)
         addSubview(profileImageView)
         addSubview(timeLabel)
+        
+        
+        bubbleView.addSubview(messageImageView)
+        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
+        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
         
         //x,y,w,h
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
