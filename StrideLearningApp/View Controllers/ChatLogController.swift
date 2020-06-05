@@ -164,10 +164,10 @@ class ChatLogController: UICollectionViewController, UITextViewDelegate, UIColle
         uploadImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleUploadTap)))
         containerView.addSubview(uploadImageView)
         //x,y,w,h
-        uploadImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        uploadImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 8).isActive = true
         uploadImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        uploadImageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        uploadImageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        uploadImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        uploadImageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
         containerView.addSubview(sendButton)
         //x,y,w,h
