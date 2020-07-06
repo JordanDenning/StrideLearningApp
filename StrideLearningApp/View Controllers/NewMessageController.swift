@@ -25,6 +25,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
     
     let tableViewHeight = CGFloat(integerLiteral: 30)
     
+    var user: User?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,24 +45,121 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         //navigation button items
         self.navigationController?.navigationBar.tintColor = .white
         
-        fetchUser()
-        
         tableView.delegate = self
         tableView.dataSource = self
         
         configureSearchController()
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            //for some reason uid = nil
+            return
+        }
+        
+        Database.database().reference().child("users").child(uid).observe(.value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                
+                self.user = User(dictionary: dictionary)
+                if self.user?.type == "staff" {
+                    self.fetchUsersForStaff()
+                } else {
+                    self.fetchUsersForStudents()
+                }
+            }
+        }, withCancel: nil)
     }
 
-    func fetchUser() {
+    func fetchUsersForStaff() {
         var count = 0
         Database.database().reference().child("users").queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
             //queryOrdered sorts alphabetically/lexilogically
             
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let user = User(dictionary: dictionary)
-                let letter = user.name?.prefix(1)
-                user.id = snapshot.key
-                
+        if let dictionary = snapshot.value as? [String: AnyObject] {
+            let user = User(dictionary: dictionary)
+            let letter = user.name?.prefix(1)
+            user.id = snapshot.key
+            
+            switch letter {
+            case "A":
+                count = 0
+            case "B":
+                count = 1
+            case "C":
+                count = 2
+            case "D":
+                count = 3
+            case "E":
+                count = 4
+            case "F":
+                count = 5
+            case "G":
+                count = 6
+            case "H":
+                count = 7
+            case "I":
+                count = 8
+            case "J":
+                count = 9
+            case "K":
+                count = 10
+            case "L":
+                count = 11
+            case "M":
+                count = 12
+            case "N":
+                count = 13
+            case "O":
+                count = 14
+            case "P":
+                count = 15
+            case "Q":
+                count = 16
+            case "R":
+                count = 17
+            case "S":
+                count = 18
+            case "T":
+                count = 19
+            case "U":
+                count = 20
+            case "V":
+                count = 21
+            case "W":
+                count = 22
+            case "X":
+                count = 23
+            case "Y":
+                count = 24
+            case "Z":
+                count = 25
+            default:
+                count = 0
+            }
+            
+            //if you use this setter, your app will crash if your class properties don't exactly match up with the firebase dictionary keys
+            self.users[count].append(user)
+            
+            //this will crash because of background thread, so lets use dispatch_async to fix
+            DispatchQueue.main.async(execute: {
+                self.tableView.reloadData()
+            })
+            
+            }
+            
+        }, withCancel: nil)
+    }
+    
+    func fetchUsersForStudents() {
+        var count = 0
+        Database.database().reference().child("users").queryOrdered(byChild: "name").observe(.childAdded, with: { (snapshot) in
+            //queryOrdered sorts alphabetically/lexilogically
+            
+        if let dictionary = snapshot.value as? [String: AnyObject] {
+            let user = User(dictionary: dictionary)
+            let letter = user.name?.prefix(1)
+            user.id = snapshot.key
+        
+            if user.type == "staff" {
                 switch letter {
                 case "A":
                     count = 0
@@ -118,7 +217,6 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
                     count = 0
                 }
                 
-                
                 //if you use this setter, your app will crash if your class properties don't exactly match up with the firebase dictionary keys
                 self.users[count].append(user)
                 
@@ -126,9 +224,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
                 DispatchQueue.main.async(execute: {
                     self.tableView.reloadData()
                 })
-                
-                //                user.name = dictionary["name"]
             }
+        }
             
         }, withCancel: nil)
     }
