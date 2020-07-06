@@ -17,8 +17,8 @@
 		9D976D99246F0DC1007FAE91 /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */; };
 		9DAFE53C247DA491001EEB6F /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DAFE53B247DA491001EEB6F /* TaskCell.swift */; };
 		9DC2414823E2562400F81AB9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2414723E2562400F81AB9 /* TabBarController.swift */; };
-		9DC89BAE2481A1FC00EA12EB /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */; };
 		9DC89BAA2480690400EA12EB /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BA92480690400EA12EB /* ImageExtension.swift */; };
+		9DC89BAE2481A1FC00EA12EB /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */; };
 		9DC8EB5723D6395200DD3EB7 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5623D6395100DD3EB7 /* LoginController.swift */; };
 		9DC8EB5D23D65AF000DD3EB7 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */; };
 		9DC8EB5F23D65B0000DD3EB7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */; };
@@ -57,8 +57,8 @@
 		9D976D98246F0DC0007FAE91 /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		9DAFE53B247DA491001EEB6F /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		9DC2414723E2562400F81AB9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
 		9DC89BA92480690400EA12EB /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
+		9DC89BAD2481A1FC00EA12EB /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
 		9DC8EB5623D6395100DD3EB7 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		9DC8EB5C23D65AF000DD3EB7 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
 		9DC8EB5E23D65B0000DD3EB7 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
@@ -515,7 +515,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = StrideLearningApp/Stride.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3;
+				CURRENT_PROJECT_VERSION = 1.4;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -537,7 +537,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = StrideLearningApp/Stride.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.3;
+				CURRENT_PROJECT_VERSION = 1.4;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
