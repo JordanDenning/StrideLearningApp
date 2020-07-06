@@ -224,7 +224,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         return cell
     }
     
-    //edit task
+    //add task
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
@@ -368,7 +368,9 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             
             itemRef.setValue(newItem.toAnyObject())
             
-            toDoItem.ref?.removeValue()
+            if toDoItem.key != key {
+                toDoItem.ref?.removeValue()
+            }
         }
     }
     
