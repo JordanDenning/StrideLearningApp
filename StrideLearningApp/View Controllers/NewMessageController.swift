@@ -48,8 +48,6 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
         tableView.delegate = self
         tableView.dataSource = self
         
-        configureSearchController()
-        
         guard let uid = Auth.auth().currentUser?.uid else {
             //for some reason uid = nil
             return
@@ -67,6 +65,8 @@ class NewMessageController: UITableViewController, UISearchResultsUpdating, UISe
                 }
             }
         }, withCancel: nil)
+        
+        configureSearchController()
     }
 
     func fetchUsersForStaff() {
