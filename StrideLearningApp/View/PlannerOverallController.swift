@@ -88,7 +88,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.addNewStudent))
                 }  else {
                     self.navigationItem.title = "Planner"
-                    self.navigationItem.rightBarButtonItem = nil
+                    self.navigationItem.rightBarButtonItem = self.editButtonItem
                     
                     self.components = self.calendar.dateComponents([.weekday], from: self.today)
                     if (self.components.weekday != self.weekStart){
@@ -103,6 +103,24 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         mentorTableView.searchController.dismiss(animated: false, completion: nil)
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+    
+        // overriding this method means we can attach custom functions to the button
+        super.setEditing(editing, animated: animated)
+    
+        if editing {
+            if let plannerController = collectionView?.plannerController {
+                plannerController.moveTask(editing: editing)
+            }
+            collectionView?.weekControl.isUserInteractionEnabled = false
+        } else {
+            if let plannerController = collectionView?.plannerController {
+                plannerController.moveTask(editing: editing)
+            }
+            collectionView?.weekControl.isUserInteractionEnabled = true
+        }
     }
     
     func checkStudentOrMentor(){
