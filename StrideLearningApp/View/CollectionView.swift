@@ -16,6 +16,8 @@ class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelega
     var uid: String?
     var user: User?
     var plannerOverall: PlannerOverallController?
+    var plannerController: PlannerController?
+    var plannerReference: [Int:PlannerController] = [:]
     var onceOnly = false
     
     
@@ -148,16 +150,19 @@ class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelega
     
     @objc func changeWeek(){
         let selectedWeek = weekControl.selectedSegmentIndex
-        collectionView.scrollToItem(at: IndexPath(item: selectedWeek, section: 0), at: .centeredHorizontally, animated: true)
+        let indexPath = IndexPath(item: selectedWeek, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         UIView.animate(withDuration: 0.3) {
             self.buttonBar.frame.origin.x = (self.weekControl.frame.width / CGFloat(self.weekControl.numberOfSegments)) * CGFloat(selectedWeek)
         }
+        plannerController = plannerReference[selectedWeek]
     }
     
     internal func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if !onceOnly {
             let indexToScrollTo = IndexPath(item: 1, section: 0)
             self.collectionView.scrollToItem(at: indexToScrollTo, at: .left, animated: false)
+            plannerController = plannerReference[1]
             onceOnly = true
         }
     }
@@ -169,6 +174,12 @@ class CollectionView: UIView, UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? PlannerController
         let cellCount = indexPath.row
+
+        plannerReference[cellCount] = cell
+        
+        if plannerController == nil {
+            plannerController = cell
+        }
         
         cell?.cellCount = cellCount
         
