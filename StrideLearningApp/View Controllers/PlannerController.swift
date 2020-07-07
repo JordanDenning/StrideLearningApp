@@ -43,7 +43,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         tableView.register(TaskCell.self, forCellReuseIdentifier: cellId)
         tableView.estimatedRowHeight = 45.0
         
-       currentUser()
+        currentUser()
     }
     
     func currentUser(){
@@ -87,7 +87,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         var count = 0
         for week in weeks {
             for day in days {
-                ref.child(week).child(day).observe(.value, with: {snapshot in
+                ref.child(week).child(day).queryOrdered(byChild: "priority").observe(.value, with: {snapshot in
                     var newItems: [ToDoItem] = []
                     switch snapshot.key {
                     case "Monday":
@@ -237,24 +237,105 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            var toDoItem: ToDoItem
-            switch self.cellCount {
-            case 0:
-                toDoItem = self.lastWeekTasks[(indexPath.section)][indexPath.row]
-            case 1:
-                toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
-            case 2:
-                toDoItem = self.nextWeekTasks[indexPath.section][indexPath.row]
-            default:
-                toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+    internal func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle
+    {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
+            self.deleteTask(indexPath: editActionsForRowAt)
+        }
+        delete.backgroundColor = .red
+
+
+        return [delete]
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let itemToMove: ToDoItem
+        let newDayInt = destinationIndexPath.section
+        let oldDayInt = sourceIndexPath.section
+        let newPriority = destinationIndexPath.row
+        let oldPriority = sourceIndexPath.row
+        var newDay = String()
+        var week = String()
+        var weekArray = [[ToDoItem]]()
+        
+        switch self.cellCount {
+        case 0:
+            week = "last-week"
+            weekArray = lastWeekTasks
+        case 1:
+            week = "this-week"
+            weekArray = thisWeekTasks
+        case 2:
+            week = "next-week"
+            weekArray = nextWeekTasks
+        default:
+            week = "this-week"
+            weekArray = thisWeekTasks
+        }
+        
+        itemToMove = weekArray[(oldDayInt)][oldPriority]
+        weekArray[oldDayInt].remove(at: oldPriority)
+        weekArray[newDayInt].insert(itemToMove, at: newPriority)
+        
+        switch newDayInt {
+        case 0:
+            newDay = "Monday"
+        case 1:
+            newDay = "Tuesday"
+        case 2:
+            newDay = "Wednesday"
+        case 3:
+            newDay = "Thursday"
+        case 4:
+            newDay = "Friday"
+        case 5:
+            newDay = "Saturday"
+        case 6:
+            newDay = "Sunday"
+        default:
+            newDay = "Monday"
+        }
+        
+        if newDay != itemToMove.day {
+            for i in 0..<weekArray[newDayInt].count {
+                let itemToUpdate = weekArray[newDayInt][i]
+                itemToUpdate.ref?.child("priority").setValue(i)
             }
             
-            toDoItem.ref?.removeValue()
+            for i in 0..<weekArray[oldDayInt].count {
+                let itemToUpdate = weekArray[oldDayInt][i]
+                itemToUpdate.ref?.child("priority").setValue(i)
+            }
+
+            itemToMove.ref?.child("day").setValue(newDay)
+            let ref = Database.database().reference().child("to-do-items").child(plannerUid)
             
-            self.tableView.reloadData()
+            let itemRef = ref.child(week).child(newDay).child(itemToMove.key)
+            
+            let newItem = ToDoItem(name: itemToMove.name,
+                                   addedByUser: itemToMove.addedByUser,
+                                   day: newDay,
+                                   completed: itemToMove.completed,
+                                   priority: newPriority)
+            
+            itemRef.setValue(newItem.toAnyObject())
+            itemToMove.ref?.removeValue()
+        } else {
+            for i in 0..<weekArray[oldDayInt].count {
+                let itemToUpdate = weekArray[oldDayInt][i]
+                itemToUpdate.ref?.child("priority").setValue(i)
+            }
         }
+        
+        self.tableView.reloadData()
     }
 
     private func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath)
@@ -268,6 +349,27 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
        self.tableView.endUpdates()
     }
     
+    func moveTask(editing: Bool) {
+        tableView.setEditing(editing, animated: false)
+    }
+    
+    func deleteTask(indexPath: IndexPath) {
+        var toDoItem: ToDoItem
+        switch self.cellCount {
+        case 0:
+            toDoItem = self.lastWeekTasks[indexPath.section][indexPath.row]
+        case 1:
+            toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+        case 2:
+            toDoItem = self.nextWeekTasks[indexPath.section][indexPath.row]
+        default:
+            toDoItem = self.thisWeekTasks[indexPath.section][indexPath.row]
+        }
+        
+        toDoItem.ref?.removeValue()
+        
+        self.tableView.reloadData()
+    }
     
     @objc func addTaskToWeek(_ sender: UIButton){
         let ref = Database.database().reference().child("to-do-items").child(plannerUid)
@@ -275,6 +377,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         let day = sender.tag
         var weekday = String()
         var week = String()
+        var priority = Int()
         switch day {
         case 0:
             weekday = "Monday"
@@ -297,18 +400,23 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         switch self.cellCount {
         case 0:
             week = "last-week"
+            priority = lastWeekTasks[day].count
         case 1:
             week = "this-week"
+            priority = thisWeekTasks[day].count
         case 2:
             week = "next-week"
+            priority = nextWeekTasks[day].count
         default:
             week = "this-week"
+            priority = thisWeekTasks[day].count
         }
         
         newItem = ToDoItem(name: "",
                                addedByUser: Auth.auth().currentUser!.uid,
                                day: weekday,
-                               completed: false)
+                               completed: false,
+                               priority: priority)
         let itemRef = ref.child(week).child(weekday).child("new task")
         itemRef.setValue(newItem.toAnyObject())
     }
@@ -362,7 +470,8 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             let newItem = ToDoItem(name: task,
                                    addedByUser: toDoItem.addedByUser,
                                    day: day,
-                                   completed: toDoItem.completed)
+                                   completed: toDoItem.completed,
+                                   priority: toDoItem.priority)
             
             let itemRef = ref.child(week).child(day).child(key)
             
