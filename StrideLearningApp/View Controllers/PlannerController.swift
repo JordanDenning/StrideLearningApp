@@ -43,6 +43,10 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
         tableView.register(TaskCell.self, forCellReuseIdentifier: cellId)
         tableView.estimatedRowHeight = 45.0
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         currentUser()
     }
     
@@ -522,7 +526,19 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                return indexPath
            }
            return nil
-       }
+    }
+    
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+            tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+    }
     
     func updateWeeks(){
         var count = 0
