@@ -977,6 +977,8 @@ class RegisterType: UIViewController, UITextFieldDelegate {
     @objc func loginStarter(){
         if typeSegmentedControl.selectedSegmentIndex == 1 {
             let code = codeTextField.text
+            var roleFieldsCorrect = false
+            var codeFieldsCorrect = false
             var accessCode = ""
             
             if (code == "" || selectedRole == "No Role Selected") {
@@ -984,8 +986,12 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 
                 let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
                 
+                roleFieldsCorrect = false
+                
                 alertVC.addAction(okayAction)
                 self.present(alertVC, animated: true, completion: nil)
+            } else  {
+                roleFieldsCorrect = true
             }
             
             Database.database().reference().child("mentor-access-code").child("code").observe(.value, with: { (snapshot) in
@@ -997,12 +1003,17 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                     
                     let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
                     
+                    codeFieldsCorrect = false
+                    
                     alertVC.addAction(okayAction)
                     self.codeTextField.text = ""
                     self.present(alertVC, animated: true, completion: nil)
                     
                 } else {
-                    self.login()
+                    codeFieldsCorrect = true
+                    if codeFieldsCorrect && roleFieldsCorrect {
+                        self.login()
+                    }
                 }
                 }
                 
@@ -1013,6 +1024,10 @@ class RegisterType: UIViewController, UITextFieldDelegate {
             var accessCode = ""
             let grade = selectedGrade
             var school = ""
+            var noEmptyFields = false
+            var gradeFieldCorrect = false
+            var schoolFieldCorrect = false
+            var codeFieldCorrect = false
             
             var schoolArray = [String()]
             var gradeArray = [String()]
@@ -1033,6 +1048,32 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                 school = ""
             }
             
+            if (code == "" || grade == "No Grade Selected" || school == "") {
+                let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
+                
+                noEmptyFields = false
+                
+                alertVC.addAction(okayAction)
+                self.present(alertVC, animated: true, completion: nil)
+            } else {
+                noEmptyFields = true
+            }
+            
+            if !gradeArray.contains(selectedGrade) {
+                let alert = UIAlertController(title: "Invalid Grade", message: "Please select a grade.", preferredStyle: UIAlertController.Style.alert)
+                
+                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: { (UIAlertAction) in
+                })
+                
+                gradeFieldCorrect = false
+                
+                alert.addAction(okayAction)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                gradeFieldCorrect = true
+            }
             
             if !schoolArray.contains(school) {
                 let alert = UIAlertController(title: "Invalid School", message: "Please select a school from the list, or choose 'Other' if you don't see your school.", preferredStyle: UIAlertController.Style.alert)
@@ -1043,29 +1084,13 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                     self.collegeTextField.text = ""
                 })
                 
-                alert.addAction(okayAction)
-                self.present(alert, animated: true, completion: nil)
-            }
-            
-            if !gradeArray.contains(selectedGrade) {
-                let alert = UIAlertController(title: "Invalid Grade", message: "Please select a grade.", preferredStyle: UIAlertController.Style.alert)
-                
-                let okayAction = UIAlertAction(title: "Okay", style: .default, handler: { (UIAlertAction) in
-                })
+                schoolFieldCorrect = false
                 
                 alert.addAction(okayAction)
                 self.present(alert, animated: true, completion: nil)
+            } else {
+                schoolFieldCorrect = true
             }
-            
-            if (code == "" || grade == "No Grade Selected" || school == "") {
-                let alertVC = UIAlertController(title: "Empty Fields", message: "Please fill out all fields.", preferredStyle: UIAlertController.Style.alert)
-                
-                let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
-                
-                alertVC.addAction(okayAction)
-                self.present(alertVC, animated: true, completion: nil)
-            }
-            
             
             Database.database().reference().child("student-access-code").child("code").observe(.value, with: { (snapshot) in
                 
@@ -1076,12 +1101,17 @@ class RegisterType: UIViewController, UITextFieldDelegate {
                         
                         let okayAction = UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil)
                         
+                        codeFieldCorrect = false
+                        
                         alertVC.addAction(okayAction)
                         self.studentCodeTextField.text = ""
                         self.present(alertVC, animated: true, completion: nil)
                         
                     } else {
-                        self.login()
+                        codeFieldCorrect = true
+                        if noEmptyFields && gradeFieldCorrect && schoolFieldCorrect && codeFieldCorrect {
+                            self.login()
+                        }
                     }
                 }
                 
