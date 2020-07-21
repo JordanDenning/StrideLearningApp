@@ -12,10 +12,6 @@ import Firebase
 class MentorCollectionView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
    
     var ref = Database.database().reference().child("to-do-items")
-    let today = Date()
-    let calendar = Calendar(identifier: .gregorian)
-    var components = DateComponents()
-    let weekStart = 1
     var studentUid: String?
     var studentName : String?
     var plannerController: PlannerController?
@@ -117,12 +113,6 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.dataSource = self
         
         collectionView.register(PlannerController.self, forCellWithReuseIdentifier: "cell")
-        
-        components = calendar.dateComponents([.weekday], from: today)
-        if (components.weekday != weekStart){
-            ref.child("weekUpToDate").setValue(false)
-        }
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -132,7 +122,13 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
             navigationItem.title = "Planner"
         }
         
-        self.navigationItem.rightBarButtonItem = self.editButtonItem
+
+        let editButton = self.editButtonItem
+        
+        let updateImage  = UIImage(named: "update")
+        let updateButton   = UIBarButtonItem(image: updateImage,  style: .plain, target: self, action: #selector(self.updateWeeks))
+        
+        self.navigationItem.rightBarButtonItems = [editButton, updateButton]
         
         if let studentId = studentUid {
             ref = ref.child(studentId)
@@ -174,6 +170,7 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         bottomDivider.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
     }
     
+
     override func setEditing(_ editing: Bool, animated: Bool) {
     
         // overriding this method means we can attach custom functions to the button
@@ -191,6 +188,23 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
             }
             weekControl.isUserInteractionEnabled = true
         }
+    }
+
+    @objc func updateWeeks(){
+        let alert = UIAlertController(title: "Update Weeks", message: "Are you sure you want to update your weeks? This action cannot be undone.", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Update", style: .default, handler: {action in
+            if let plannerController = self.plannerController {
+                plannerController.updateWeeks()
+            }
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        
+        self.present(alert, animated: true, completion: nil)
+
     }
     
     @objc func changeWeek(){
