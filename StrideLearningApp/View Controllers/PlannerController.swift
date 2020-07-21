@@ -20,11 +20,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
     var ref = Database.database().reference().child("to-do-items")
     var cellCount = Int()
     let tableView = UITableView()
-    var weekUpToDate = Bool ()
-    var weekStart = 1
-    let today = Date()
-    let calendar = Calendar(identifier: .gregorian)
-    var components = DateComponents()
     let tableViewHeight = CGFloat(integerLiteral: 50)
     var studentUid: String?
     var uid: String?
@@ -130,17 +125,6 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
                     }
                     
                     self.tableView.reloadData()
-                    if (week == "next-week" && count == 6 ) {
-                        self.ref.child("weekUpToDate").observe(.value, with: { (snapshot) in
-                            self.weekUpToDate = snapshot.value as? Bool ?? false
-                            self.components = self.calendar.dateComponents([.weekday], from: self.today)
-                            if(self.components.weekday == self.weekStart && !self.weekUpToDate ){
-                                self.updateWeeks()
-                            }
-                        }) { (error) in
-                            print(error.localizedDescription)
-                        }
-                    }
                 })
             }
            
@@ -556,9 +540,7 @@ class PlannerController: UICollectionViewCell, UITableViewDelegate, UITableViewD
             count += 1
         }
         ref.child("next-week").removeValue()
-        ref.child("weekUpToDate").setValue(true)
         
-        weekUpToDate = true
         tableView.reloadData()
     }
 

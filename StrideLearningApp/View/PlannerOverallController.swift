@@ -14,10 +14,6 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     var userRef: DatabaseReference?
     var toDoRef: DatabaseReference?
     var user: User?
-    let today = Date()
-    let calendar = Calendar(identifier: .gregorian)
-    var components = DateComponents()
-    let weekStart = 1
     var collectionView: CollectionView?
     var viewContainsMentorView = false
     var viewContainsStudentView = false
@@ -88,12 +84,13 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "task_v3"), style: .plain, target: self, action: #selector(self.addNewStudent))
                 }  else {
                     self.navigationItem.title = "Planner"
-                    self.navigationItem.rightBarButtonItem = self.editButtonItem
                     
-                    self.components = self.calendar.dateComponents([.weekday], from: self.today)
-                    if (self.components.weekday != self.weekStart){
-                        self.toDoRef!.child("weekUpToDate").setValue(false)
-                    }
+                    let editButton = self.editButtonItem
+                    
+                    let updateImage  = UIImage(named: "update")
+                    let updateButton   = UIBarButtonItem(image: updateImage,  style: .plain, target: self, action: #selector(self.updateWeeks))
+                    
+                    self.navigationItem.rightBarButtonItems = [editButton, updateButton]
                 }
             }
             
@@ -121,6 +118,23 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
             }
             collectionView?.weekControl.isUserInteractionEnabled = true
         }
+    }
+    
+    @objc func updateWeeks(){
+        let alert = UIAlertController(title: "Update Weeks", message: "Are you sure you want to update your weeks? This action cannot be undone.", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Update", style: .default, handler: {action in
+            if let plannerController = self.collectionView?.plannerController {
+                plannerController.updateWeeks()
+            }
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        
+        self.present(alert, animated: true, completion: nil)
+
     }
     
     func checkStudentOrMentor(){
@@ -154,6 +168,7 @@ class PlannerOverallController: UIViewController, UICollectionViewDelegateFlowLa
     func clearView(){
         if viewContainsStudentView {
             collectionView!.removeFromSuperview()
+            navigationItem.rightBarButtonItem = nil
             viewContainsStudentView = false
         }
         if viewContainsMentorView {
