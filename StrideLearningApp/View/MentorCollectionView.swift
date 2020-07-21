@@ -18,6 +18,8 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
     let weekStart = 1
     var studentUid: String?
     var studentName : String?
+    var plannerController: PlannerController?
+    var plannerReference: [Int:PlannerController] = [:]
     var onceOnly = false
     
     
@@ -130,6 +132,8 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
             navigationItem.title = "Planner"
         }
         
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
         if let studentId = studentUid {
             ref = ref.child(studentId)
         } else {
@@ -170,6 +174,25 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
         bottomDivider.centerXAnchor.constraint(equalTo: weekControl.centerXAnchor).isActive = true
     }
     
+    override func setEditing(_ editing: Bool, animated: Bool) {
+    
+        // overriding this method means we can attach custom functions to the button
+        super.setEditing(editing, animated: animated)
+    
+        if editing {
+            if let plannerController = plannerController {
+                plannerController.moveTask(editing: editing)
+            }
+            weekControl.isUserInteractionEnabled = false
+            weekControl.tintColor = .gray
+        } else {
+            if let plannerController = plannerController {
+                plannerController.moveTask(editing: editing)
+            }
+            weekControl.isUserInteractionEnabled = true
+        }
+    }
+    
     @objc func changeWeek(){
         let selectedWeek = weekControl.selectedSegmentIndex
         collectionView.scrollToItem(at: IndexPath(item: selectedWeek, section: 0), at: .centeredHorizontally, animated: true)
@@ -182,12 +205,14 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
             self.buttonBar.frame.origin.x = (self.weekControl.frame.width / CGFloat(self.weekControl.numberOfSegments)) * CGFloat(selectedWeek)
             print(self.buttonBar.frame.origin.x)
         }
+        plannerController = plannerReference[selectedWeek]
     }
     
     internal func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if !onceOnly {
             let indexToScrollTo = IndexPath(item: 1, section: 0)
             self.collectionView.scrollToItem(at: indexToScrollTo, at: .left, animated: false)
+            plannerController = plannerReference[1]
             onceOnly = true
         }
     }
@@ -199,6 +224,12 @@ class MentorCollectionView: UIViewController, UICollectionViewDataSource, UIColl
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? PlannerController
         let cellCount = indexPath.row
+        
+        plannerReference[cellCount] = cell
+        
+        if plannerController == nil {
+            plannerController = cell
+        }
         
         cell?.cellCount = cellCount
         
