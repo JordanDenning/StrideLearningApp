@@ -628,15 +628,15 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         schoolLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
         schoolLabel.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         
-        middleSchoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        middleSchoolTextField.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 12).isActive = true
         middleSchoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         middleSchoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
-        highSchoolTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        highSchoolTextField.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 12).isActive = true
         highSchoolTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         highSchoolTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
-        collegeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        collegeTextField.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 12).isActive = true
         collegeTextField.topAnchor.constraint(equalTo: middleButtons.bottomAnchor).isActive = true
         collegeTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
@@ -646,7 +646,7 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         
         //School Separator
         schoolSeparatorView.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 12).isActive = true
-        schoolSeparatorView.rightAnchor.constraint(equalTo: studentView.rightAnchor, constant: -12).isActive = true
+        schoolSeparatorView.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 12).isActive = true
         schoolSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         schoolSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
@@ -654,13 +654,13 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         studentCodeLabel.leftAnchor.constraint(equalTo: studentView.leftAnchor, constant: 8).isActive = true
         studentCodeLabel.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
         
-        studentCodeTextField.rightAnchor.constraint(equalTo: studentView.rightAnchor).isActive = true
+        studentCodeTextField.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 12).isActive = true
         studentCodeTextField.topAnchor.constraint(equalTo: schoolSeparatorView.bottomAnchor, constant: 30).isActive = true
         studentCodeTextField.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Code Separator
         studentCodeSeparatorView.topAnchor.constraint(equalTo: studentCodeLabel.bottomAnchor, constant: 12).isActive = true
-        studentCodeSeparatorView.rightAnchor.constraint(equalTo: studentView.rightAnchor, constant: -12).isActive = true
+        studentCodeSeparatorView.leftAnchor.constraint(equalTo: schoolLabel.rightAnchor, constant: 12).isActive = true
         studentCodeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         studentCodeSeparatorView.widthAnchor.constraint(equalTo: studentView.widthAnchor, multiplier: multiplier).isActive = true
         
@@ -764,13 +764,13 @@ class RegisterType: UIViewController, UITextFieldDelegate {
         codeLabel.leftAnchor.constraint(equalTo: mentorView.leftAnchor, constant: 8).isActive = true
         codeLabel.topAnchor.constraint(equalTo: roleButtons.bottomAnchor, constant: 30).isActive = true
         
-        codeTextField.rightAnchor.constraint(equalTo: mentorView.rightAnchor).isActive = true
+        codeTextField.leftAnchor.constraint(equalTo: codeLabel.rightAnchor, constant: 12).isActive = true
         codeTextField.topAnchor.constraint(equalTo: roleButtons.bottomAnchor, constant: 30).isActive = true
         codeTextField.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
         
         //Code Separator
         codeSeparatorView.topAnchor.constraint(equalTo: codeLabel.bottomAnchor, constant: 12).isActive = true
-        codeSeparatorView.rightAnchor.constraint(equalTo: mentorView.rightAnchor, constant: -12).isActive = true
+        codeSeparatorView.leftAnchor.constraint(equalTo: codeLabel.rightAnchor, constant: 12).isActive = true
         codeSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         codeSeparatorView.widthAnchor.constraint(equalTo: mentorView.widthAnchor, multiplier: multiplier).isActive = true
         
