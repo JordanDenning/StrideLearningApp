@@ -34,6 +34,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class MessagesController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
+    // MARK: - Properties
     
     let cellId = "cellId"
     var searchController = UISearchController()
@@ -43,12 +44,36 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     var searchActive : Bool = false
     var profileController: ProfileController?
     let image = UIImage(named: "message_v3")
+    var timer: Timer?
+    
+    lazy var noMessagesLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "You have not messaged anyone yet"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        
+        return label
+    }()
+    
+    lazy var noResultsLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        label.text = "No results available"
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        tableView.separatorStyle = .none
+        
+        return label
+    }()
 
+    //MARK: - View Initializing
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         checkIfUserIsLoggedIn()
+        
+        configureSearchController()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
@@ -70,15 +95,11 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         self.navigationItem.leftBarButtonItem = nil
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
-        
-        configureSearchController()
-        
-        observeUserMessages()
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        createSpinnerView()
         //removes empty table cells
         tableView.tableFooterView = UIView(frame: .zero)
     }
@@ -86,8 +107,15 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.searchController.dismiss(animated: false, completion: nil)
-        
-        
+    }
+    
+    func checkIfUserIsLoggedIn() {
+        if Auth.auth().currentUser?.uid == nil {
+            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+        } else {
+            createSpinnerView()
+            observeUserMessages()
+        }
     }
     
     func configureSearchController() {
@@ -144,27 +172,8 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }, withCancel: nil)
     }
     
-    fileprivate func attemptReloadOfTable() {
-        self.timer?.invalidate()
-        
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-    }
-    
-    var timer: Timer?
-    
-    @objc func handleReloadTable() {
-        self.messages = Array(self.messagesDictionary.values)
-        self.messages.sort(by: { (message1, message2) -> Bool in
-            
-            return message1.timestamp?.int32Value > message2.timestamp?.int32Value
-        })
-        
-        //this will crash because of background thread, so lets call this on dispatch_async main thread
-        DispatchQueue.main.async(execute: {
-            self.tableView.reloadData()
-        })
-    }
-    
+
+    //MARK: - Search Bar
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchActive = true;
         tableView.reloadData()
@@ -189,7 +198,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         
         searchController.searchBar.resignFirstResponder()
     }
-    
     
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text!
@@ -220,7 +228,7 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         child.didMove(toParent: self)
         
         // wait 0.8 seconds to simulate some work happening
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             // then remove the spinner view controller
             child.willMove(toParent: nil)
             child.view.removeFromSuperview()
@@ -228,13 +236,12 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) ->
-        Int {
-            
+    //MARK: - TableView
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         noResultsView()
 
         if (messages.count > 0) {
-            
             noMessagesLabel.isHidden = true
             if(searchActive) {
                 return filtered.count
@@ -245,7 +252,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
             
         else {
-            createSpinnerView()
             noMessagesLabel.isHidden = false
             tableView.backgroundView = noMessagesLabel
             tableView.separatorStyle = .none
@@ -352,6 +358,26 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }
     }
     
+    @objc func handleReloadTable() {
+        self.messages = Array(self.messagesDictionary.values)
+        self.messages.sort(by: { (message1, message2) -> Bool in
+            
+            return message1.timestamp?.int32Value > message2.timestamp?.int32Value
+        })
+        
+        //this will crash because of background thread, so lets call this on dispatch_async main thread
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
+    }
+    
+    fileprivate func attemptReloadOfTable() {
+        self.timer?.invalidate()
+        
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+    }
+    
+    
     func updateNotifications(_ chatroomId: String, cell: UserCell){
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -390,15 +416,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         present(navController, animated: true, completion: nil)
     }
     
-    func checkIfUserIsLoggedIn() {
-        if Auth.auth().currentUser?.uid == nil {
-            perform(#selector(handleLogout), with: nil, afterDelay: 0)
-        } else {
-            observeUserMessages()
-        }
-    }
-    
-    
     func showChatControllerForUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
@@ -412,26 +429,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
             navigationController?.pushViewController(chatLogController, animated: true)
         }
     }
-    
-    lazy var noMessagesLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-        label.text = "You have not messaged anyone yet"
-        label.textColor = UIColor.black
-        label.textAlignment = .center
-        tableView.separatorStyle = .none
-        
-        return label
-    }()
-    
-    lazy var noResultsLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-        label.text = "No results available"
-        label.textColor = UIColor.black
-        label.textAlignment = .center
-        tableView.separatorStyle = .none
-        
-        return label
-    }()
     
     func noResultsView() {
         if(searchActive) {
@@ -451,10 +448,10 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     }
     
     @objc func handleLogout() {
-
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
+            // TODO: Alert with error signing out
             print(logoutError)
         }
 
@@ -469,13 +466,15 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     
 }
 
+// MARK: - Spinner View
+
 class SpinnerViewController: UIViewController {
     var spinner = UIActivityIndicatorView(style: .whiteLarge)
     
     override func loadView() {
         view = UIView()
         view.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height)
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = .white
         
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.color = .black
