@@ -132,7 +132,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
     func observeUserMessages() {
         messages.removeAll()
         messagesDictionary.removeAll()
-        tableView.reloadData()
         
         guard let uid = Auth.auth().currentUser?.uid else {
             return
@@ -172,52 +171,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         }, withCancel: nil)
     }
     
-
-    //MARK: - Search Bar
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchActive = true;
-        tableView.reloadData()
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchActive = false;
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchActive = false;
-        filtered.removeAll()
-        tableView.reloadData()
-        //reloads OG data instead of filtered
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if !searchActive {
-            searchActive = true
-            tableView.reloadData()
-        }
-        
-        searchController.searchBar.resignFirstResponder()
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        let searchText = searchController.searchBar.text!
-        
-        filtered = messages.filter({ (text) -> Bool in
-            let name: NSString = text.toName! as NSString
-            let msg: NSString = text.text! as NSString
-            let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-            let msgRange = msg.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
-            return nameRange.location != NSNotFound || msgRange.location != NSNotFound
-        })
-        if(filtered.count == 0){
-            searchActive = false;
-            // display text saying no results found
-        } else {
-            searchActive = true;
-        }
-        self.tableView.reloadData()
-    }
-    
     func createSpinnerView() {
         let child = SpinnerViewController()
         
@@ -250,7 +203,6 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
                 return messages.count;
             }
         }
-            
         else {
             noMessagesLabel.isHidden = false
             tableView.backgroundView = noMessagesLabel
@@ -377,6 +329,51 @@ class MessagesController: UITableViewController, UISearchResultsUpdating, UISear
         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
+    //MARK: - Search Bar
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true;
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+        filtered.removeAll()
+        tableView.reloadData()
+        //reloads OG data instead of filtered
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if !searchActive {
+            searchActive = true
+            tableView.reloadData()
+        }
+        
+        searchController.searchBar.resignFirstResponder()
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text!
+        
+        filtered = messages.filter({ (text) -> Bool in
+            let name: NSString = text.toName! as NSString
+            let msg: NSString = text.text! as NSString
+            let nameRange = name.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            let msgRange = msg.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return nameRange.location != NSNotFound || msgRange.location != NSNotFound
+        })
+        if(filtered.count == 0){
+            searchActive = false;
+            // display text saying no results found
+        } else {
+            searchActive = true;
+        }
+        self.tableView.reloadData()
+    }
     
     func updateNotifications(_ chatroomId: String, cell: UserCell){
         guard let uid = Auth.auth().currentUser?.uid else {

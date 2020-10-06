@@ -370,9 +370,10 @@ class LoginController: UIViewController, UITextFieldDelegate {
                             alertVC.addAction(cancelAction)
                             self.present(alertVC, animated: true, completion: nil)
                          } else {
-                             self.messagesController?.observeUserMessages()
-                             self.profileController?.fetchUserAndSetupProfile()
-                             self.plannerController?.checkStudentOrMentor()
+                            self.messagesController?.createSpinnerView()
+                            self.messagesController?.observeUserMessages()
+                            self.profileController?.fetchUserAndSetupProfile()
+                            self.plannerController?.checkStudentOrMentor()
 
                              self.dismiss(animated: true, completion: nil)
                          }
@@ -581,7 +582,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         if loginRegisterSegmentedControl.selectedSegmentIndex == 1 {
             forgotPasswordButton.isHidden = true
         }
-        
         else {
             forgotPasswordButton.isHidden = false
         }
@@ -597,7 +597,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func keyboardWillShow(notification:NSNotification){
-        
         let userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
@@ -608,7 +607,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func keyboardWillHide(notification:NSNotification){
-        
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }
