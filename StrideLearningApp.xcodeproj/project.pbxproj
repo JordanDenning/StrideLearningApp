@@ -39,13 +39,15 @@
 		9DF1C9782411FEE100CFBC67 /* PlannerOverallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */; };
 		9DF1C97A2412D9BB00CFBC67 /* MentorCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF1C9792412D9BB00CFBC67 /* MentorCollectionView.swift */; };
 		9DFD619C23E8848B0064B92A /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFD619B23E8848B0064B92A /* ProfileController.swift */; };
-		E26776D0543BE553B34E47AE /* Pods_StrideLearningApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */; };
+		C1BD047699E4B883FBB3BB43 /* Pods_StrideLearningApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8CB96198EF88359B1A9A3C3 /* Pods_StrideLearningApp.framework */; };
 		EE0ABA7723D7910C00BF0C64 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */; };
 		EE62C66223E676F200DE785E /* PlannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE62C66123E676F200DE785E /* PlannerController.swift */; };
 		EE9BE37123F1045A0011130B /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9BE37023F1045A0011130B /* ToDoItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3004D1326B28CA2F42E88031 /* Pods-StrideLearningApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.debug.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.debug.xcconfig"; sourceTree = "<group>"; };
+		96B42111C8EB7D2014E5EEE3 /* Pods-StrideLearningApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.release.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.release.xcconfig"; sourceTree = "<group>"; };
 		9D01128C23EAFB0900A44C7B /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		9D45A19C23F1BE1F00E32150 /* EditPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPasswordController.swift; sourceTree = "<group>"; };
 		9D45A19E23F2EF7E00E32150 /* AlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtensions.swift; sourceTree = "<group>"; };
@@ -81,12 +83,10 @@
 		9DF1C9772411FEE100CFBC67 /* PlannerOverallController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlannerOverallController.swift; path = StrideLearningApp/View/PlannerOverallController.swift; sourceTree = SOURCE_ROOT; };
 		9DF1C9792412D9BB00CFBC67 /* MentorCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MentorCollectionView.swift; path = StrideLearningApp/View/MentorCollectionView.swift; sourceTree = SOURCE_ROOT; };
 		9DFD619B23E8848B0064B92A /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
-		A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.release.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.release.xcconfig"; sourceTree = "<group>"; };
-		EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrideLearningApp.debug.xcconfig"; path = "Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp.debug.xcconfig"; sourceTree = "<group>"; };
 		EE0ABA7623D7910C00BF0C64 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		EE62C66123E676F200DE785E /* PlannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlannerController.swift; sourceTree = "<group>"; };
 		EE9BE37023F1045A0011130B /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
-		F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StrideLearningApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F8CB96198EF88359B1A9A3C3 /* Pods_StrideLearningApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StrideLearningApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,28 +94,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E26776D0543BE553B34E47AE /* Pods_StrideLearningApp.framework in Frameworks */,
+				C1BD047699E4B883FBB3BB43 /* Pods_StrideLearningApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C579067CE39CE690F23DDB0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F8CB96198EF88359B1A9A3C3 /* Pods_StrideLearningApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		29A2915AF5B9A7F3B0FCC1FF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */,
-				A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */,
+				3004D1326B28CA2F42E88031 /* Pods-StrideLearningApp.debug.xcconfig */,
+				96B42111C8EB7D2014E5EEE3 /* Pods-StrideLearningApp.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		3A089DAAD3CD317C29485008 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				F0B0B74384FFFE3D3A345E5E /* Pods_StrideLearningApp.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		9DC8EB3E23D5427A00DD3EB7 /* Controllers */ = {
@@ -190,7 +190,7 @@
 				9DCDF43323D38CE400C4E9A7 /* StrideLearningApp */,
 				9DCDF43223D38CE400C4E9A7 /* Products */,
 				29A2915AF5B9A7F3B0FCC1FF /* Pods */,
-				3A089DAAD3CD317C29485008 /* Frameworks */,
+				0C579067CE39CE690F23DDB0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -227,11 +227,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DCDF44323D38CE700C4E9A7 /* Build configuration list for PBXNativeTarget "StrideLearningApp" */;
 			buildPhases = (
-				2AF900ABCAD2C871512DD9E3 /* [CP] Check Pods Manifest.lock */,
+				B043602065B8DD832A11143C /* [CP] Check Pods Manifest.lock */,
 				9DCDF42D23D38CE300C4E9A7 /* Sources */,
 				9DCDF42E23D38CE300C4E9A7 /* Frameworks */,
 				9DCDF42F23D38CE300C4E9A7 /* Resources */,
-				1F920C1FAF30F83BE2B85C80 /* [CP] Embed Pods Frameworks */,
+				F81F69FB5CE030A4FA65F57A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -290,24 +290,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1F920C1FAF30F83BE2B85C80 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2AF900ABCAD2C871512DD9E3 /* [CP] Check Pods Manifest.lock */ = {
+		B043602065B8DD832A11143C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -327,6 +310,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F81F69FB5CE030A4FA65F57A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-StrideLearningApp/Pods-StrideLearningApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -444,7 +444,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -500,7 +500,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -512,19 +512,20 @@
 		};
 		9DCDF44423D38CE700C4E9A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EC2AF674513A98ED20C0720F /* Pods-StrideLearningApp.debug.xcconfig */;
+			baseConfigurationReference = 3004D1326B28CA2F42E88031 /* Pods-StrideLearningApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = StrideLearningApp/Stride.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.8;
+				CURRENT_PROJECT_VERSION = 2.0;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.stridelearning.stride;
 				PRODUCT_NAME = Stride;
 				SWIFT_VERSION = 5.0;
@@ -534,19 +535,20 @@
 		};
 		9DCDF44523D38CE700C4E9A7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A17014950B2EE34D2B18D530 /* Pods-StrideLearningApp.release.xcconfig */;
+			baseConfigurationReference = 96B42111C8EB7D2014E5EEE3 /* Pods-StrideLearningApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = StrideLearningApp/Stride.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.8;
+				CURRENT_PROJECT_VERSION = 2.0;
 				DEVELOPMENT_TEAM = M7377GFLJS;
 				INFOPLIST_FILE = StrideLearningApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.stridelearning.stride;
 				PRODUCT_NAME = Stride;
 				SWIFT_VERSION = 5.0;
